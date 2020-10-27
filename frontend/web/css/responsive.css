@@ -1,0 +1,55 @@
+@media(max-width: 1199px){
+
+.service-list { max-width: 100%;}
+}
+
+@media(max-width: 1024px){
+   section.slider-sec .carousel-caption h3 {
+    font-size: 34px;
+    margin-bottom: 10px;
+}
+section.slider-sec .carousel-item img {height: 500px;}
+section.slider-sec .carousel-right img {margin-top: 50%;}
+section.slider-sec .carousel-caption h3 {font-size: 32px;} 
+section.slider-sec .carousel-caption ul li { font-size: 15px;}
+
+
+}
+
+@media(max-width: 991px){
+
+section.slider-sec .carousel-caption {
+    top: 25%;
+    max-width: 90%;
+}
+#dpr-heading-5d676cc42629c-9850 h2 {
+    font-size: 25px;
+    line-height: 30px;
+}
+}
+
+@media(max-width: 767px){
+.carousel-right {display: none;}
+section.slider-sec .carousel-caption { max-width: 100%; padding: 30px 30px;} 
+section.slider-sec .carousel-item img { height: 400px;}
+}
+
+@media(max-width: 565px){
+ .inner-page { padding-top: 60px;}
+.card-signin { margin-bottom: 20px !important;}   
+}
+
+@media(max-width: 480px){
+  .inner-page { padding-top: 40px;}  
+  .card-signin .card-img-top { padding: 12px;}
+  .card-signin h5 { font-size: 20px;}
+  .card-signin .card-body { padding: .8rem 0px;}
+  button.btn.login-btn, form.form-register .reg-div .btn { padding: 8px 20px; font-size: 14px;margin: 10px auto;}
+  p.ins-sec { margin-bottom: 0;}
+  .form-signin .input-group {margin-bottom: 15px !important;}
+  .reg-div { margin: 25px auto;}
+  .social-reg a {padding: 0 8px;}
+  form.form-register p { font-size: 14px; margin-top: 21px;}
+  .reg-option label {font-size: 14px;}
+  .form-signin, .form-register {padding: 10px 10px;}
+}
