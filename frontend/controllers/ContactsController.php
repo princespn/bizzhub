@@ -13,14 +13,16 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\data\SqlDataProvider;
+use yii\data\ArrayDataProvider;
+use yii\data\sort;
 use yii\helpers\ArrayHelper;
-
+use yii\db\Query;
 
 
 /**
  * Site controller
  */
-class ContactController extends Controller
+class ContactsController extends Controller
 {
     /**
      * @return array
@@ -63,7 +65,7 @@ class ContactController extends Controller
     public function actionIndex()
     {
         $model = new Contact();
-        $count = Yii::$app->db->createCommand('
+        /*$count = Yii::$app->db->createCommand('
                 SELECT COUNT(*) FROM contact WHERE status=:status
             ', [':status' => 1])->queryScalar();
         $provider = new SqlDataProvider([
@@ -75,18 +77,45 @@ class ContactController extends Controller
             ],
             'sort' => [
                 'attributes' => [
-                    'title',
-                    'view_count',
-                    'created_at',
+                    'first_name',
+                    'last_name',
+                    'email',
                 ],
+            ],
+        ]);*/
+        //$model = $provider;
+        $sort = new Sort([
+            'attributes' => [
+                'age',
+                'name' => [
+                    'asc' => ['first_name' => SORT_ASC, 'last_name' => SORT_ASC],
+                    'desc' => ['first_name' => SORT_DESC, 'last_name' => SORT_DESC],
+                    'default' => SORT_DESC,
+                    'label' => 'Name',
+                ],
+                // or any other attribute
             ],
         ]);
 
-        //$models = $provider->getModels();
+
+        $query = new Query;
+        $data_array = $query->from('contact')->all();
+        $provider = new ArrayDataProvider([
+            'allModels' => $data_array,
+            'sort' => $sort, // HERE is your $sort
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+
+
+
+
+        $models = $provider->getModels();
 
         return $this->render('index',[
                 'dataProvider' => $provider,
-                'model' => $model,
+                'model' => $models,
             ]);
     }
 
@@ -98,12 +127,11 @@ class ContactController extends Controller
         $role = Yii::$app->authManager->getRoles();
         
         $model = new Contact();
-        $contact_data = Yii::$app->request->post();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $contact_data = Yii::$app->request->post();
-            //print_r($contact_data );die;
-            $model->save();
-            return $this->redirect(['index']);
+        if(!empty(Yii::$app->request->post())){            
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                $model->save();
+                return $this->redirect(['index']);
+            }
         }
         $agent_array = $model->getuserByRole('agent');
         foreach($agent_array as $a_user){
@@ -113,6 +141,37 @@ class ContactController extends Controller
             'model' => $model,
             'agent_array'=>$agent_arr
         ]);
+    }
+
+    public function actionEdit($id)
+    {
+        $model = new Contact();
+        //$model = $model->findByPk($id);
+        $model->setModel($this->findModel($id));
+        
+        if(!empty(Yii::$app->request->post())){            
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                $model->save();
+                return $this->redirect(['index']);
+            }
+        }
+        $agent_array = $model->getuserByRole('agent');
+        foreach($agent_array as $a_user){
+            $agent_arr[$a_user['id']]=$a_user['username'];
+        }
+        return $this->render('add', [
+            'model' => $model,
+            'agent_array'=>$agent_arr
+        ]);
+    }
+
+    public function actionDelete($id)
+    {
+        $model = new Contact();        
+        if(!empty($id)){
+            $model->deleteContatsById($id);           
+            return $this->redirect(['index']);            
+        }
     }
 
     /**

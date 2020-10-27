@@ -9,37 +9,38 @@ use kartik\select2\Select2;
 
 $this->title = Yii::t('frontend', 'Add New Contact');
 ?>
-<div class="container">
+<div class="container mt-5">
+
   <div class="row justify-content-center">
       <div class="col-lg-8">
-        <h1><?php echo Html::encode($this->title) ?></h1>
+      		<div class="list-head">
+		      <h2>Add New Contacts</h2>
+		    </div>
+        <!-- <h1><?php echo Html::encode($this->title) ?></h1> -->
         <?php $form = ActiveForm::begin(['id' => 'contact-form','class'=>'contact-form']); ?>
-          <div class="col-md-6-left">
               <div class="exclusive-list">
-                <div class="contact-box">                          
+                <div class="contact-form">                          
                   <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="col-md-6">
                       <?php echo $form->field($model, 'first_name') ?>
                     </div>
-                  </div>
-                  <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="col-md-6">
                       <?php echo $form->field($model, 'last_name') ?>
                     </div>
                   </div>
                   <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="col-md-6">
                       
-                      <?php echo $form->field($model, 'agent_id') ?>
+                      <?php //echo $form->field($model, 'agent_id') ?>
 
                       <?php
-                      /*echo $form->field($model, 'agent_id')->widget(Select2::classname(), [
-    'data' => $agent_array,
-    'options' => ['multiple' => true,'placeholder' => 'Select a state ...'],
-    'pluginOptions' => [
-        'allowClear' => true
-    ],
-]);*/
+                      echo $form->field($model, 'agent_id')->widget(Select2::classname(), [
+                            'data' => $agent_array,
+                            'options' => ['multiple' => true,'placeholder' => 'Select a agent','class'=>'form-control'],
+                            'pluginOptions' => [
+                                'allowClear' => true
+                            ],
+                        ]);
 
                        /*echo Select2::widget([
                           'name' => 'agent_id',
@@ -51,12 +52,23 @@ $this->title = Yii::t('frontend', 'Add New Contact');
                           ],
                       ]); */?>
                     </div>
+                    <div class="col-md-6">
+                      <?php echo $form->field($model, 'email')->input('email') ?>
+                    </div>
                   </div>
-                </div>
-              </div>
-          </div>
 
-          <div class="col-md-6-right">
+                  <div class="form-row">
+                    <div class="col-md-6">
+                      <?php echo $form->field($model, 'phone') ?>
+                    </div>
+                    <div class="col-md-6">
+                      <?php echo $form->field($model, 'list') ?>
+                    </div>
+                  </div>
+
+               
+
+ <!--          <div class="col-md-6-right">
               <div class="exclusive-list">
                 <div class="contact-box">
                   <div class="form-row">
@@ -76,10 +88,13 @@ $this->title = Yii::t('frontend', 'Add New Contact');
                   </div>                          
                 </div>
               </div>
-          </div>
+          </div> -->
           <div class="form-group">
-              <?php echo Html::submitButton(Yii::t('frontend', 'Submit'), ['class' => 'btn btn-primary', 'name' => 'contact']) ?>
+              <?php echo Html::submitButton(Yii::t('frontend', 'Submit'), ['class' => 'btn submit-btn', 'name' => 'contacts']) ?>
           </div>
           <?php ActiveForm::end(); ?>
+
+           </div>
+        </div>
       </div>
     </div>

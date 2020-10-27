@@ -87,7 +87,7 @@ $this->beginContent('@frontend/views/layouts/_clear.php')
                 <?=Html::a('Training', 'javascript:void(0)', ['class'=>'nav-link']);?>
               </li>
               <li class="nav-item">
-                <?=Html::a('Contact', Url::to(['contact/index']), ['class'=>'nav-link']);?>
+                <?=Html::a('Contacts', Url::to(['contacts/index']), ['class'=>'nav-link']);?>
               </li>
               <li class="nav-item">
                 <?=Html::a('Settings', 'javascript:void(0)', ['class'=>'nav-link']);?>

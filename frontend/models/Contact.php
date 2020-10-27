@@ -4,6 +4,16 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\db\ActiveRecord;
+use yii\db\BaseActiveRecord;
+use yii\db\ActiveQuery;
+use app\components\Defaults;
+use yii\db\Query;
+
+
+
+
+
 //use common\models\Contact;
 //use yii\db\Expression;
 
@@ -35,7 +45,13 @@ class Contact extends Model
             //['phone', 'filter', 'filter' => 'trim'],
             //[['phone'], ['numerical', 'integerOnly'=>true]],
             //['phone','length','max'=>10],
-            [['id','email','phone','first_name', 'last_name','agent_id','list'], 'safe'],
+            /*['created_date','default',
+              'value'=>time(),
+              'setOnEmpty'=>false,'on'=>'update'],
+            ['created_date,updated_date','default',
+              'value'=>time(),
+              'setOnEmpty'=>false,'on'=>'insert'],*/
+            [['id','email','phone','first_name', 'last_name','agent_id','list','created_date','created_date'], 'safe'],
         ];
     }
 
@@ -92,6 +108,10 @@ class Contact extends Model
             ->from('contact')
             ->where(['email' => $this->email])
             ->One();
+        if(isset($this->agent_id)){
+            $this->agent_id = json_encode($this->agent_id);
+        }
+        //print_r($this);die;    
         if ($this->validate()) {   
             if(!empty($rows)){ 
                 Yii::$app->db->createCommand()
@@ -129,6 +149,28 @@ class Contact extends Model
         return $agent;
     }
 
+    /*public function getUser($id)
+    {
+        $ids = json_decode(json)
+        print_r($data);die;
+        $agent = [];
+        $agent = (new \yii\db\Query())
+            ->select(['id', 'username'])
+            ->from('user a')
+            ->leftJoin('rbac_auth_assignment b', 'a.id = b.user_id')
+            ->where(['b.item_name' => $role])
+            ->All();
+        return $agent;
+    }*/
 
+    public function deleteContatsById($id)
+    {
+        (new \yii\db\Query())
+            ->createCommand()
+            ->delete('contact', ['id' => $id])
+            ->execute();
+
+        return ;
+    }
     
 }

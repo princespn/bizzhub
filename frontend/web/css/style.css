@@ -207,3 +207,33 @@ form.contact-form .form-check-label {
 form.contact-form .form-control{
     border: 1px solid #343031; color:  #343031;
 }
+.contact-list-sec {
+    padding: 20px;
+    box-shadow: 0 0 4px #ddd;
+}
+.btn.add-btn {
+    display: inline-block;
+    background: #3a3667;
+    color: #fff;
+    margin-bottom: 15px;padding: 6px 25px;
+}
+.contact-form {
+    padding: 20px; box-shadow: 0 0 4px #ddd;
+}
+.btn.submit-btn {
+    background: #3a3667;
+    color: #fff;
+    padding: 6px 30px;display: block;
+margin: 10px 0 0 auto;
+}
+.contact-form .form-control {
+    border: 1px solid #343031; color:#343031; 
+}
+.form-control:focus{box-shadow: none;}
+.contact-list-sec .table thead {
+    background-color: #d3dff1; font-size: 15px;
+}
+.contact-list-sec .table tr td{font-size: 14px; color: #231f20;}
+.contact-list-sec .table tr td, .contact-list-sec .table tr th{border: 0;}
+
+.contact-list-sec .table-striped tbody tr:nth-of-type(2n+1){background-color: transparent;}
