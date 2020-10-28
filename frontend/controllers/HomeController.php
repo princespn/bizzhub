@@ -12,6 +12,8 @@ use yii\filters\PageCache;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\Response;
+use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * Site controller
@@ -21,8 +23,8 @@ class HomeController extends Controller
     /**
      * @return array
      */
-    public $layout = "home";
-    public function behaviors()
+    //public $layout = "home";
+    /*public function behaviors()
     {
         return [
             [
@@ -30,6 +32,24 @@ class HomeController extends Controller
                 'only' => ['sitemap'],
                 'duration' => Time::SECONDS_IN_AN_HOUR,
             ]
+        ];
+    }*/
+
+    public function behaviors()
+    {
+        return [            
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [                   
+                    [                    
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['agent'],
+                    ],                   
+
+                ],
+            ],
+
         ];
     }
 

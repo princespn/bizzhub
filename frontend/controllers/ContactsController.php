@@ -13,10 +13,10 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\data\SqlDataProvider;
-use yii\data\ArrayDataProvider;
-use yii\data\sort;
 use yii\helpers\ArrayHelper;
 use yii\db\Query;
+use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 
 /**
@@ -27,8 +27,8 @@ class ContactsController extends Controller
     /**
      * @return array
      */
-    public $layout = "home";
-    public function behaviors()
+    //public $layout = "home";
+    /*public function behaviors()
     {
         return [
             [
@@ -36,6 +36,24 @@ class ContactsController extends Controller
                 'only' => ['sitemap'],
                 'duration' => Time::SECONDS_IN_AN_HOUR,
             ]
+        ];
+    }*/
+
+    public function behaviors()
+    {
+        return [            
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [                   
+                    [                    
+                        'actions' => ['index','add','edit','delete'],
+                        'allow' => true,
+                        'roles' => ['agent'],
+                    ],                   
+
+                ],
+            ],
+
         ];
     }
 
@@ -65,7 +83,7 @@ class ContactsController extends Controller
     public function actionIndex()
     {
         $model = new Contact();
-        /*$count = Yii::$app->db->createCommand('
+        $count = Yii::$app->db->createCommand('
                 SELECT COUNT(*) FROM contact WHERE status=:status
             ', [':status' => 1])->queryScalar();
         $provider = new SqlDataProvider([
@@ -82,34 +100,8 @@ class ContactsController extends Controller
                     'email',
                 ],
             ],
-        ]);*/
+        ]);
         //$model = $provider;
-        $sort = new Sort([
-            'attributes' => [
-                'age',
-                'name' => [
-                    'asc' => ['first_name' => SORT_ASC, 'last_name' => SORT_ASC],
-                    'desc' => ['first_name' => SORT_DESC, 'last_name' => SORT_DESC],
-                    'default' => SORT_DESC,
-                    'label' => 'Name',
-                ],
-                // or any other attribute
-            ],
-        ]);
-
-
-        $query = new Query;
-        $data_array = $query->from('contact')->all();
-        $provider = new ArrayDataProvider([
-            'allModels' => $data_array,
-            'sort' => $sort, // HERE is your $sort
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-        ]);
-
-
-
 
         $models = $provider->getModels();
 
@@ -129,6 +121,10 @@ class ContactsController extends Controller
         $model = new Contact();
         if(!empty(Yii::$app->request->post())){            
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                //$contact_data = Yii::$app->request->post();
+                //$agent_ids = json_encode($contact_data['Contact']['agent_id']);
+                //$agent_ids = serialize($contact_data['Contact']['agent_id']);
+                //$contact_data['Contact']['agent_id'] = $agent_ids;
                 $model->save();
                 return $this->redirect(['index']);
             }

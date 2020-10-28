@@ -38,7 +38,7 @@ $this->title = Yii::t('frontend', 'Login');
                     </div>
                 </div>
             </div>
-
+            <?php /*
             <div class="card">
                 <div class="card-body">
                     <h4 class="text-muted text-center"><?php echo Yii::t('frontend', 'Log in with')  ?></h4>
@@ -53,7 +53,7 @@ $this->title = Yii::t('frontend', 'Login');
                     </ul>
                     <?php yii\authclient\widgets\AuthChoice::end(); ?>
                 </div>
-            </div>
+            </div>*/?>
         </div>
     </div>
 </div>

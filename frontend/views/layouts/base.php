@@ -6,24 +6,29 @@
 
 use yii\bootstrap4\Nav;
 use yii\bootstrap4\NavBar;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 $this->beginContent('@frontend/views/layouts/_clear.php')
 ?>
-<header>
+<header class="sticky">
+  <div class="container-fluid">
     <?php NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' => Html::img('@web/img/logo.png'),
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => ['navbar-dark', 'bg-dark', 'navbar-expand-md'],
+            'class' => ['navbar navbar-expand-lg'],
         ],
     ]); ?>
     <?php echo Nav::widget([
         'options' => ['class' => ['navbar-nav', 'justify-content-end', 'ml-auto']],
         'items' => [
-            ['label' => Yii::t('frontend', 'Home'), 'url' => ['/site/index']],
-            ['label' => Yii::t('frontend', 'About'), 'url' => ['/page/view', 'slug'=>'about']],
-            ['label' => Yii::t('frontend', 'Articles'), 'url' => ['/article/index']],
-            ['label' => Yii::t('frontend', 'Contact'), 'url' => ['/site/contact']],
+            ['label' => Yii::t('frontend', 'Home'), 'url' => ['/home']],
+            ['label' => Yii::t('frontend', 'Documents'), 'url' => ['#', 'slug'=>'about']],
+            ['label' => Yii::t('frontend', 'Resources'), 'url' => ['#']],
+            ['label' => Yii::t('frontend', 'Training'), 'url' => ['#']],
+            ['label' => Yii::t('frontend', 'Contacts'), 'url' => ['/contacts']],
+            ['label' => Yii::t('frontend', 'Settings'), 'url' => ['#']],
             ['label' => Yii::t('frontend', 'Signup'), 'url' => ['/user/sign-in/signup'], 'visible'=>Yii::$app->user->isGuest],
             ['label' => Yii::t('frontend', 'Login'), 'url' => ['/user/sign-in/login'], 'visible'=>Yii::$app->user->isGuest],
             [
@@ -46,7 +51,7 @@ $this->beginContent('@frontend/views/layouts/_clear.php')
                     ]
                 ]
             ],
-            [
+            /*[
                 'label'=>Yii::t('frontend', 'Language'),
                 'items'=>array_map(function ($code) {
                     return [
@@ -55,22 +60,28 @@ $this->beginContent('@frontend/views/layouts/_clear.php')
                         'active' => Yii::$app->language === $code
                     ];
                 }, array_keys(Yii::$app->params['availableLocales']))
-            ]
+            ]*/
         ]
     ]); ?>
     <?php NavBar::end(); ?>
-</header>
+  </div>
+</header> 
 
 <main class="flex-shrink-0" role="main">
     <?php echo $content ?>
 </main>
-
+<script type="text/javascript">
+$(document).ready(function() {
+    $(".dropdown-toggle").dropdown();
+});
+</script>
 <footer class="footer mt-auto py-3">
     <div class="container">
+        <?php /*
         <div class="d-flex flex-row justify-content-between">
             <div>&copy; My Company <?php echo date('Y') ?></div>
             <div><?php echo Yii::powered() ?></div>
-        </div>
+        </div> */ ?>
     </div>
 </footer>
 <?php $this->endContent() ?>
