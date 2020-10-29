@@ -17,6 +17,9 @@ use yii\helpers\ArrayHelper;
 use yii\db\Query;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\db\ActiveRecord;
+use yii\db\BaseActiveRecord;
+//use yii\db\ActiveQuery;
 
 
 /**
@@ -142,20 +145,27 @@ class ContactsController extends Controller
     public function actionEdit($id)
     {
         $model = new Contact();
-        //$model = $model->findByPk($id);
-        $model->setModel($this->findModel($id));
-        
-        if(!empty(Yii::$app->request->post())){            
-            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-                $model->save();
-                return $this->redirect(['index']);
-            }
-        }
+        //$myModel = Contact::find(10);
         $agent_array = $model->getuserByRole('agent');
         foreach($agent_array as $a_user){
             $agent_arr[$a_user['id']]=$a_user['username'];
         }
-        return $this->render('add', [
+        //$modelData = $model->getDataById($id);
+        //print_r($modelData);die;
+        $model->attributes = $model->getDataById($id);
+
+
+        //$model = $model->findByPk($id);
+        //$model->setModel($model);
+        
+        if(!empty(Yii::$app->request->post())){            
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                $model->update();
+                return $this->redirect(['index']);
+            }
+        }
+        
+        return $this->render('edit', [
             'model' => $model,
             'agent_array'=>$agent_arr
         ]);

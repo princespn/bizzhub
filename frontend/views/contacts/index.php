@@ -69,8 +69,7 @@ $this->title = Yii::$app->name;
                  'header'=>'Actions',
                     'buttons' => [
                         'edit' => function ($url, $model) {
-                            return Html::a ( '<i class="fa fa-edit" aria-hidden="true"></i>', 'javascript:void(0)', [
-                                        'title' => Yii::t('app', 'contacts-edit'),
+                            return Html::a ( '<i class="fa fa-edit" aria-hidden="true"></i>', ['contacts/edit','id'=>$model['id']], ['title' => Yii::t('app', 'contacts-edit'),
                             ]);
                         },
                         'delete' => function ($url, $model) {

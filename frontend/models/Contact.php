@@ -9,6 +9,8 @@ use yii\db\BaseActiveRecord;
 use yii\db\ActiveQuery;
 use app\components\Defaults;
 use yii\db\Query;
+use yii\base\Exception;
+use yii\helpers\Url;
 
 
 
@@ -29,6 +31,16 @@ class Contact extends Model
     public $phone;
     public $list;
     public $agent_id;
+    public $updated_date;
+    public $created_date;
+
+
+
+
+    public static function tableName()
+    {
+        return '{{%contact}}';
+    }
 
     /**
      * @inheritdoc
@@ -51,7 +63,7 @@ class Contact extends Model
             ['created_date,updated_date','default',
               'value'=>time(),
               'setOnEmpty'=>false,'on'=>'insert'],*/
-            [['id','email','phone','first_name', 'last_name','agent_id','list','created_date','created_date'], 'safe'],
+            [['id','email','phone','first_name', 'last_name','agent_id','list','updated_date','created_date'], 'safe'],
         ];
     }
 
@@ -137,8 +149,41 @@ class Contact extends Model
     }
 
 
+    public function update()
+    {
+        $model = new Contact();
+        $rows = (new \yii\db\Query())
+            ->select(['id', 'email','agent_id'])
+            ->from('contact')
+            ->where(['email' => $this->email])
+            ->One();
+        if(isset($this->agent_id)){
+            $this->agent_id = json_encode($this->agent_id);
+        }
+        //print_r($this);die;    
+        if ($this->validate()) {   
+            if(!empty($rows)){ 
+                Yii::$app->db->createCommand()
+                 ->update('contact', [
+                    'first_name' => $this->first_name,
+                    'last_name' => $this->last_name,
+                    'phone' => $this->phone,
+                    'list' => $this->list,
+                    'agent_id' => $this->agent_id,
+                    'updated_date'=>time()
+                ],
+                ['id' => $rows['id']])
+                 ->execute();    
+            }
+            return !$model->hasErrors();
+        }
+        return null;
+    }
+
+
     public function getuserByRole($role)
     {
+
         $agent = [];
         $agent = (new \yii\db\Query())
             ->select(['id', 'username'])
@@ -147,6 +192,20 @@ class Contact extends Model
             ->where(['b.item_name' => $role])
             ->All();
         return $agent;
+    }
+
+
+    public function getDataById($id)
+    {
+        //die('dddd');
+        $data = [];
+        $table = $this->tableName();
+        $data = (new \yii\db\Query())
+            ->select(['*'])
+            ->from($table)
+            ->where(['id' => $id])
+            ->one();
+        return $data;
     }
 
     /*public function getUser($id)
