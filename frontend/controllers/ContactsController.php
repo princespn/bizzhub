@@ -13,6 +13,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\data\SqlDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\db\Query;
 use yii\filters\VerbFilter;
@@ -86,7 +87,7 @@ class ContactsController extends Controller
     public function actionIndex()
     {
         $model = new Contact();
-        $count = Yii::$app->db->createCommand('
+        /*$count = Yii::$app->db->createCommand('
                 SELECT COUNT(*) FROM contact WHERE status=:status
             ', [':status' => 1])->queryScalar();
         $provider = new SqlDataProvider([
@@ -103,8 +104,44 @@ class ContactsController extends Controller
                     'email',
                 ],
             ],
-        ]);
+        ]);*/
         //$model = $provider;
+        $user_id = 2;
+        $query = new Query();        
+            $rows = $query->select("*")
+            ->from('contact')
+            ->where(['status' => 1])
+            //->andwhere(['FIND_IN_SET', 'agent_id', $user_id])
+            ->all();
+            $agent = $model->getuserByRole('agent');
+            foreach($agent as $a_id){
+                $agent_id_arr[$a_id['id']]=$a_id['username'];
+            }
+            /*foreach($rows as $data){
+                if($data['agent_id']){
+                    $agentid = explode(",", $data['agent_id']);
+                    if(count($agentid) > 1){
+                        foreach($agentid as $aid){
+                            //echo $agent_id_arr[$aid];die;
+                            $data_arr['agent_name']=$agent_id_arr[$aid];
+                        }
+                    }else{
+                        die('ddd');
+                        $data_arr['agent_name']=$agent_id_arr[$data['agent_id']];
+                    }
+                }
+                $data_arr = $data;
+            }
+            print_r($data_arr);die;*/
+        $provider = new ArrayDataProvider([
+            'allModels' => $rows,
+            'sort' => [
+                'attributes' => ['id'],
+            ],
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
 
         $models = $provider->getModels();
 
@@ -124,12 +161,19 @@ class ContactsController extends Controller
         $model = new Contact();
         if(!empty(Yii::$app->request->post())){            
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-                //$contact_data = Yii::$app->request->post();
-                //$agent_ids = json_encode($contact_data['Contact']['agent_id']);
-                //$agent_ids = serialize($contact_data['Contact']['agent_id']);
-                //$contact_data['Contact']['agent_id'] = $agent_ids;
-                $model->save();
-                return $this->redirect(['index']);
+                $model->attributes= Yii::$app->request->post();
+                $rows = (new \yii\db\Query())
+                    ->select(['id', 'email','agent_id'])
+                    ->from('contact')
+                    ->where(['email' => $model->attributes['email']])
+                    ->One();
+                if(!empty($rows)){
+                    Yii::$app->session->setFlash('error', "This email id is already use.");
+                }else{    
+                    $model->save();
+                    return $this->redirect(['index']);
+                    Yii::$app->session->setFlash('success', "Contact saved successfull.");
+                }
             }
         }
         $agent_array = $model->getuserByRole('agent');

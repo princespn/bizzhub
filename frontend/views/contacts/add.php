@@ -11,6 +11,22 @@ $this->title = Yii::t('frontend', 'Add New Contact');
 ?>
 <div class="container mt-5">
 
+<?php if (Yii::$app->session->hasFlash('success')): ?>
+    <div class="alert alert-success alert-dismissable">
+         <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+         <h4><i class="icon fa fa-check"></i>Saved!</h4>
+         <?= Yii::$app->session->getFlash('success') ?>
+    </div>
+<?php endif; ?>
+
+
+<?php if (Yii::$app->session->hasFlash('error')): ?>
+    <div class="alert alert-danger alert-dismissable">
+         <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+         <h4><i class="fa fa-exclamation-circle"></i>Error!</h4>
+         <?= Yii::$app->session->getFlash('error') ?>
+    </div>
+<?php endif; ?>
   <div class="row justify-content-center">
       <div class="col-lg-8">
       		<div class="list-head">
@@ -40,17 +56,7 @@ $this->title = Yii::t('frontend', 'Add New Contact');
                             'pluginOptions' => [
                                 'allowClear' => true
                             ],
-                        ]);
-
-                       /*echo Select2::widget([
-                          'name' => 'agent_id',
-                          'value' => 'agent_id',
-                          'data' => $agent_array,
-                          'options' => ['multiple' => true, 'placeholder' => 'Select Agent ...'],
-                          'pluginOptions' => [
-                              'allowClear' => true
-                          ],
-                      ]); */?>
+                        ]);?>
                     </div>
                     <div class="col-md-6">
                       <?php echo $form->field($model, 'email')->input('email') ?>
@@ -65,30 +71,6 @@ $this->title = Yii::t('frontend', 'Add New Contact');
                       <?php echo $form->field($model, 'list') ?>
                     </div>
                   </div>
-
-               
-
- <!--          <div class="col-md-6-right">
-              <div class="exclusive-list">
-                <div class="contact-box">
-                  <div class="form-row">
-                    <div class="form-group col-md-6">
-                      <?php echo $form->field($model, 'email')->input('email') ?>
-                    </div>
-                  </div>
-                  <div class="form-row">
-                    <div class="form-group col-md-6">
-                      <?php echo $form->field($model, 'phone') ?>
-                    </div>
-                  </div>
-                  <div class="form-row">
-                    <div class="form-group col-md-6">
-                      <?php echo $form->field($model, 'list') ?>
-                    </div>
-                  </div>                          
-                </div>
-              </div>
-          </div> -->
           <div class="form-group">
               <?php echo Html::submitButton(Yii::t('frontend', 'Submit'), ['class' => 'btn submit-btn', 'name' => 'contacts']) ?>
           </div>

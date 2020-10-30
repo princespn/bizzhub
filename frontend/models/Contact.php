@@ -121,7 +121,7 @@ class Contact extends Model
             ->where(['email' => $this->email])
             ->One();
         if(isset($this->agent_id)){
-            $this->agent_id = json_encode($this->agent_id);
+            $this->agent_id = implode(",", $this->agent_id);
         }
         //print_r($this);die;    
         if ($this->validate()) {   
@@ -158,7 +158,7 @@ class Contact extends Model
             ->where(['email' => $this->email])
             ->One();
         if(isset($this->agent_id)){
-            $this->agent_id = json_encode($this->agent_id);
+            $this->agent_id = implode(",", $this->agent_id);
         }
         //print_r($this);die;    
         if ($this->validate()) {   
