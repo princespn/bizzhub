@@ -33,6 +33,7 @@ class Contact extends Model
     public $agent_id;
     public $updated_date;
     public $created_date;
+    public $other;
 
 
 
@@ -63,7 +64,7 @@ class Contact extends Model
             ['created_date,updated_date','default',
               'value'=>time(),
               'setOnEmpty'=>false,'on'=>'insert'],*/
-            [['id','email','phone','first_name', 'last_name','agent_id','list','updated_date','created_date'], 'safe'],
+            [['id','email','phone','first_name', 'last_name','agent_id','list','updated_date','created_date','other'], 'safe'],
         ];
     }
 
@@ -123,6 +124,9 @@ class Contact extends Model
         if(isset($this->agent_id)){
             $this->agent_id = implode(",", $this->agent_id);
         }
+        if(isset($this->other)){
+            $this->other = json_encode($this->other);
+        }
         //print_r($this);die;    
         if ($this->validate()) {   
             if(!empty($rows)){ 
@@ -139,6 +143,7 @@ class Contact extends Model
                             'agent_id'=>$this->agent_id,
                             'phone'=>$this->phone,
                             'list'=>$this->list,
+                            'other'=>$this->other,
                         ]
                     )
                     ->execute();   
@@ -160,6 +165,9 @@ class Contact extends Model
         if(isset($this->agent_id)){
             $this->agent_id = implode(",", $this->agent_id);
         }
+        if(isset($this->other)){
+            $this->other = json_encode($this->other);
+        }
         //print_r($this);die;    
         if ($this->validate()) {   
             if(!empty($rows)){ 
@@ -170,6 +178,7 @@ class Contact extends Model
                     'phone' => $this->phone,
                     'list' => $this->list,
                     'agent_id' => $this->agent_id,
+                    'other'=>$this->other,
                     'updated_date'=>time()
                 ],
                 ['id' => $rows['id']])

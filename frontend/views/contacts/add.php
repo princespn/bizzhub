@@ -71,6 +71,13 @@ $this->title = Yii::t('frontend', 'Add New Contact');
                       <?php echo $form->field($model, 'list') ?>
                     </div>
                   </div>
+                  <div class="text-items"></div>
+                  <!--<p class="text-items">
+                      <label for="item">Item <span class="items-number">1</span></label>
+                      <input class="form-control" type="text" name="items[]" value="" id="item" /><br>
+                      <a href="#" class="remove-items">Remove</a>
+                  </p>-->
+                  <?= Html::button('Add More', ['class'=>'glyphicon glyphicon-plus btn btn-default btn-sm add-items']) ?>
           <div class="form-group">
               <?php echo Html::submitButton(Yii::t('frontend', 'Submit'), ['class' => 'btn submit-btn', 'name' => 'contacts']) ?>
           </div>
@@ -80,3 +87,29 @@ $this->title = Yii::t('frontend', 'Add New Contact');
         </div>
       </div>
     </div>
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    $('.contact-form .add-items').click(function(){
+        var n = $('.text-items').length + 1;
+        //alert(n);
+        var box_html = $('<div class="text-items"><label for="item' + n + '">Item <span class="items-number">' + n + '</span></label> <input type="text" class="form-control" name="other[]" value="" id="item' + n + '" /> <a href="#" class="remove-items">Remove</a></div>');
+        box_html.hide();
+        $('.contact-form div.text-items:last').after(box_html);
+        box_html.fadeIn('slow');
+        return false;
+    });
+
+    $('.contact-form').on('click', '.remove-items', function(){
+    //$(this).parent().css( 'background-color', '#FF6C6C' );
+    if($('.text-items').length > 1){
+        $(this).parent().fadeOut('slow', function() {
+            $(this).remove();
+            $('.items-number').each(function(index){
+                $(this).text( index + 1 );
+            });
+        });
+    }
+    return false;
+});
+});
+</script>

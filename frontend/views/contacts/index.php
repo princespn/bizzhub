@@ -55,10 +55,10 @@ $this->title = Yii::$app->name;
                     'format' => 'text'
                 ],
                 [
-                    'attribute' => 'agent_id',
+                    'attribute' => 'agent_name',
                     'filter' => false,
                     'format' => 'raw',
-                    'value' => 'agent_id',
+                    'value' => 'agent_name',
                 ],
                 /*[
                     'attribute' => 'created_date',

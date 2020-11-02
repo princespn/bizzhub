@@ -241,6 +241,12 @@ $logEntries[] = [
                             ],
                         ],*/
                         [
+                            'label' => Yii::t('backend', 'Documents'),
+                            'url' => ['/document/index'],
+                            'icon' => FAS::icon('thumbtack', ['class' => ['nav-icon']]),
+                            'active' => Yii::$app->controller->id === 'document',
+                        ],
+                        [
                             'label' => Yii::t('backend', 'Content'),
                             'options' => ['class' => 'nav-header'],
                         ],

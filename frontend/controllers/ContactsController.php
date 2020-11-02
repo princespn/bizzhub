@@ -106,37 +106,49 @@ class ContactsController extends Controller
             ],
         ]);*/
         //$model = $provider;
+        $user_id = Yii::$app->user->identity->id;
         $user_id = 2;
         $query = new Query();        
             $rows = $query->select("*")
             ->from('contact')
             ->where(['status' => 1])
-            //->andwhere(['FIND_IN_SET', 'agent_id', $user_id])
+            ->andWhere(new \yii\db\Expression('FIND_IN_SET(:agent_id,agent_id)'))
+            ->addParams([':agent_id' => $user_id])
+            //->andwhere(['FIND_IN_SET','agent_id', 2])
             ->all();
             $agent = $model->getuserByRole('agent');
             foreach($agent as $a_id){
                 $agent_id_arr[$a_id['id']]=$a_id['username'];
             }
-            /*foreach($rows as $data){
+            $contacts_data = $data_arr = [];
+            foreach($rows as $key => $data){
                 if($data['agent_id']){
                     $agentid = explode(",", $data['agent_id']);
-                    if(count($agentid) > 1){
-                        foreach($agentid as $aid){
-                            //echo $agent_id_arr[$aid];die;
-                            $data_arr['agent_name']=$agent_id_arr[$aid];
-                        }
-                    }else{
-                        die('ddd');
-                        $data_arr['agent_name']=$agent_id_arr[$data['agent_id']];
+                    $contacts_data['agent_name'] = [];
+                    foreach($agentid as $aid){
+                        //echo $agent_id_arr[$aid];die;
+                        $contacts_data['agent_name'][]=$agent_id_arr[$aid];
                     }
                 }
-                $data_arr = $data;
+                $contacts_data['agent_name'] = implode(',', $contacts_data['agent_name']);
+                $contacts_data['id'] = $data['id'];
+                $contacts_data['first_name'] = $data['first_name'];
+                $contacts_data['last_name'] = $data['last_name'];
+                $contacts_data['email'] = $data['email'];
+                $contacts_data['phone'] = $data['phone'];
+                $contacts_data['agent_id'] = $data['agent_id'];
+                $contacts_data['list'] = $data['list'];
+                $contacts_data['status'] = $data['status'];
+                $contacts_data['updated_date'] = $data['updated_date'];
+                $contacts_data['created_date'] = $data['created_date'];
+                //print_r($contacts_data);die;
+                $data_arr[] = $contacts_data;
             }
-            print_r($data_arr);die;*/
+            //print_r($data_arr);die;
         $provider = new ArrayDataProvider([
-            'allModels' => $rows,
+            'allModels' => $data_arr,
             'sort' => [
-                'attributes' => ['id'],
+                'attributes' => ['first_name','last_name'],
             ],
             'pagination' => [
                 'pageSize' => 10,
@@ -159,6 +171,7 @@ class ContactsController extends Controller
         $role = Yii::$app->authManager->getRoles();
         
         $model = new Contact();
+        //print_r(Yii::$app->request->post());die;
         if(!empty(Yii::$app->request->post())){            
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                 $model->attributes= Yii::$app->request->post();
@@ -204,6 +217,8 @@ class ContactsController extends Controller
         
         if(!empty(Yii::$app->request->post())){            
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                $model->attributes= Yii::$app->request->post();
+                //print_r($model);die;
                 $model->update();
                 return $this->redirect(['index']);
             }
