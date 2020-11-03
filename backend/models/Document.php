@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
+use yii\web\UploadedFile;
 
 /**
  * Account form
@@ -15,6 +16,23 @@ class Document extends Model
     public $file_name;
     public $file_path;
     public $category;
+    public $status;
+
+
+
+    public static function tableName()
+    {
+        return '{{document}}';
+    }
+
+
+    public static function statuses()
+    {
+        return [
+            self::STATUS_ACTIVE => Yii::t('common', 'Active'),
+            self::STATUS_INACTIVE => Yii::t('common', 'Inactive'),
+        ];
+    }
 
     /**
      * @inheritdoc

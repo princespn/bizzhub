@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php echo $form->field($model, 'status')->checkbox() ?>       
 
 <div class="form-group">
-    <?php echo Html::submitButton(Yii::t('backend', 'Save'), ['class' => 'btn btn-primary']) ?>
+    <?php echo Html::submitButton(Yii::t('backend', 'Update'), ['class' => 'btn btn-primary']) ?>
     
 </div>
 
