@@ -242,9 +242,25 @@ $logEntries[] = [
                         ],*/
                         [
                             'label' => Yii::t('backend', 'Documents'),
-                            'url' => ['/document/index'],
-                            'icon' => FAS::icon('thumbtack', ['class' => ['nav-icon']]),
-                            'active' => Yii::$app->controller->id === 'document',
+                            'url' => "#",
+                            'icon' => FAS::icon('file', ['class' => ['nav-icon']]),
+                            'options' => ['class' => 'nav-item has-treeview'],
+                            'active' => 'content' === Yii::$app->controller->id &&
+                                ('document' === Yii::$app->controller->id || 'category' === Yii::$app->controller->id),
+                                'items' => [
+                                [
+                                    'label' => Yii::t('backend', 'Document'),
+                                    'url' => ['/document/index'],
+                                    'icon' => FAR::icon('file-pdf', ['class' => ['nav-icon']]),
+                                    'active' => Yii::$app->controller->id === 'index',
+                                ],
+                                [
+                                    'label' => Yii::t('backend', 'Categories'),
+                                    'url' => ['/document/category'],
+                                    'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
+                                    'active' => Yii::$app->controller->id === 'category',
+                                ],
+                            ],
                         ],
                         [
                             'label' => Yii::t('backend', 'Content'),

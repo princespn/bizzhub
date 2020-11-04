@@ -40,23 +40,30 @@ class DocumentController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->file_path = UploadedFile::getInstance($model,'file_path');
             $storage = \Yii::getAlias('@storage');
-            $model->file_path->saveAs($storage.'/document/' . $model->file_path->baseName . '.' . $model->file_path->extension);
-            print_r($model->file_path);die;
-            //print_r($model->file_path);die;
-            $model->attributes = Yii::$app->request->post();
-            print_r($model->attributes);die;
+            $f_path = '/web/document/'.$model->file_path->baseName . '.' . $model->file_path->extension;
+            $model->file_path->saveAs($storage.$f_path);
+            if(empty($model->doc_name)){
+                $model->doc_name = $model->file_path->baseName;              
+            }
+            $model->file_path = $f_path;
+            $model->attributes = Yii::$app->request->post();  
             $rows = (new \yii\db\Query())
-                    ->select(['id', 'title'])
+                    ->select(['id', 'doc_name'])
                     ->from('document')
-                    ->where(['name' => $model->attributes['name']])
-                    ->One();            
+                    ->where(['doc_name' => $model->attributes['doc_name']])
+                    ->One();
             if(!empty($rows)){
-                Yii::$app->session->setFlash('error', "This document is already use.");
+                Yii::$app->session->setFlash('error', "This document is already added.");
+                return $this->redirect(['add']);
             }else{    
                 $model->save();
                 return $this->redirect(['index']);
                 Yii::$app->session->setFlash('success', "Document saved successfull.");
             }
+
+            $model->save();
+            return $this->redirect(['index']);
+            Yii::$app->session->setFlash('success', "Document saved successfull.");
         }           
         return $this->render('add', [
             'model'=>$model,
@@ -65,18 +72,75 @@ class DocumentController extends Controller
     }
 
 
-    public function actionIndex()
+    public function actionUpdate($id)
     {
         $model = new Document();
+        $model->attributes = $model->getDataById($id);
         $category = (new \yii\db\Query())
                     ->select(['id', 'title'])
                     ->from('document_category')
                     ->where(['status' => 1])
                     ->All();
-        return $this->render('index', [
+        $cat_list=[];            
+        foreach($category as $cat){
+            $cat_list[$cat['id']]=$cat['title'];
+        }            
+        if ($model->load(Yii::$app->request->post())) {
+            $model->file_path = UploadedFile::getInstance($model,'file_path');
+            $storage = \Yii::getAlias('@storage');
+            $f_path = '/web/document/'.$model->file_path->baseName . '.' . $model->file_path->extension;
+            $model->file_path->saveAs($storage.$f_path);
+            if(empty($model->doc_name)){
+                $model->doc_name = $model->file_path->baseName;              
+            }
+            $model->file_path = $f_path;
+            $model->attributes = Yii::$app->request->post(); 
+            
+
+            $model->save();
+            return $this->redirect(['index']);
+            Yii::$app->session->setFlash('success', "Document saved successfull.");
+        }           
+        return $this->render('add', [
             'model'=>$model,
-            'category'=>$category,
+            'category'=>$cat_list,
         ]);
+    }
+
+    public function actionDelete($id)
+    {
+        $model = new Document();        
+        if(!empty($id)){
+            $model->deleteById($id);           
+            return $this->redirect(['index']);            
+        }
+    }
+
+    public function actionIndex()
+    {
+        $model = new Document();
+        $query = new Query();        
+        $rows = $query->select("*")
+        ->from('document')
+        //->where(['status' => 1])
+        ->all();
+            
+        $provider = new ArrayDataProvider([
+            'allModels' => $rows,
+            'sort' => [
+                'attributes' => ['title'],
+            ],
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+
+        $models = $provider->getModels();
+
+        return $this->render('index',[
+                'dataProvider' => $provider,
+                'model' => $models,
+            ]);
     }
 
     public function actionAddCategory()

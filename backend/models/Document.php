@@ -13,7 +13,9 @@ use yii\web\UploadedFile;
  */
 class Document extends Model
 {
-    public $file_name;
+    const STATUS_NOT_ACTIVE = 0;
+    const STATUS_ACTIVE = 1;
+    public $doc_name;
     public $file_path;
     public $category;
     public $status;
@@ -28,9 +30,9 @@ class Document extends Model
 
     public static function statuses()
     {
-        return [
+        return [            
             self::STATUS_ACTIVE => Yii::t('common', 'Active'),
-            self::STATUS_INACTIVE => Yii::t('common', 'Inactive'),
+            self::STATUS_NOT_ACTIVE => Yii::t('common', 'Not Active')
         ];
     }
 
@@ -42,12 +44,9 @@ class Document extends Model
         return [
             ['file_path', 'file',
             'extensions' => ['pdf'], 
-            'wrongExtension' => 'Only PDF files are allowed for {attribute}.',
-            'wrongMimeType' => 'Only PDF files are allowed for {attribute}.',
-            'skipOnEmpty'=>false,
-            'mimeTypes'=>['application/pdf']],
+        ],
             ['category', 'required'],
-            [[ "file_name", "file_path", "category"], "safe"]
+            [[ "doc_name", "file_path", "category","status"], "safe"]
         ];
     }
 
@@ -57,7 +56,51 @@ class Document extends Model
     public function attributeLabels()
     {
         return [
-            'file_name' => Yii::t('backend', 'File Name'),
+            'doc_name' => Yii::t('backend', 'Document Name'),
         ];
+    }
+
+    public function save()
+    {
+        if ($this->validate()) {
+            $model = new Document();
+            $table = self::tableName();
+            Yii::$app->db->createCommand()
+            ->insert($table,
+                [
+                    'doc_name'=>$this->doc_name,
+                    'file_path'=>$this->file_path,
+                    'category'=>$this->category,
+                    'status'=>$this->status,
+                    'created_at'=>time(),
+                ]
+            )
+            ->execute();
+        }
+        return null;
+    }
+
+
+    public function getDataById($id)
+    {
+        //die('dddd');
+        $data = [];
+        $table = $this->tableName();
+        $data = (new \yii\db\Query())
+            ->select(['*'])
+            ->from($table)
+            ->where(['id' => $id])
+            ->one();
+        return $data;
+    }
+
+    public function deleteById($id)
+    {
+        $table = $this->tableName();
+        Yii::$app->db->createCommand()
+            ->delete($table, ['id' => $id])
+            ->execute();
+
+        return ;
     }
 }
