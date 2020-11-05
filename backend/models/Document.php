@@ -44,7 +44,8 @@ class Document extends Model
         return [
             ['file_path', 'file',
             'extensions' => ['pdf'], 
-        ],
+            ],
+            [['file_path'],'required','on'=>['add']],
             ['category', 'required'],
             [[ "doc_name", "file_path", "category","status"], "safe"]
         ];
@@ -76,6 +77,21 @@ class Document extends Model
                 ]
             )
             ->execute();
+        }
+        return null;
+    }
+
+    public function update($updateData)
+    {
+        $id = $_GET['id'];
+        //print_r($updateData);die;
+        $model = new DocumentCategory();
+        $table = self::tableName();    
+        if ($this->validate()) { 
+            Yii::$app->db->createCommand()
+             ->update($table, $updateData,['id' => $id])
+             ->execute();   
+            return !$model->hasErrors();
         }
         return null;
     }

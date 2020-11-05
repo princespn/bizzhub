@@ -245,20 +245,20 @@ $logEntries[] = [
                             'url' => "#",
                             'icon' => FAS::icon('file', ['class' => ['nav-icon']]),
                             'options' => ['class' => 'nav-item has-treeview'],
-                            'active' => 'content' === Yii::$app->controller->id &&
-                                ('document' === Yii::$app->controller->id || 'category' === Yii::$app->controller->id),
+                            'active' => 'document' === Yii::$app->controller->id &&
+                                ('index' === Yii::$app->controller->action->id || 'category' === Yii::$app->controller->action->id || 'add' === Yii::$app->controller->action->id || 'update' === Yii::$app->controller->action->id || 'add-category' === Yii::$app->controller->action->id || 'cat-update' === Yii::$app->controller->action->id),
                                 'items' => [
                                 [
                                     'label' => Yii::t('backend', 'Document'),
                                     'url' => ['/document/index'],
                                     'icon' => FAR::icon('file-pdf', ['class' => ['nav-icon']]),
-                                    'active' => Yii::$app->controller->id === 'index',
+                                    'active' => Yii::$app->controller->action->id === 'index' || 'add' === Yii::$app->controller->action->id || 'update' === Yii::$app->controller->action->id,
                                 ],
                                 [
                                     'label' => Yii::t('backend', 'Categories'),
                                     'url' => ['/document/category'],
                                     'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
-                                    'active' => Yii::$app->controller->id === 'category',
+                                    'active' => Yii::$app->controller->action->id === 'category' || 'add-category' === Yii::$app->controller->action->id || 'cat-update' === Yii::$app->controller->action->id,
                                 ],
                             ],
                         ],

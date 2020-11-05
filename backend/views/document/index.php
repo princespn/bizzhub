@@ -6,7 +6,6 @@ use yii\helpers\Html;
 use kartik\file\FileInput;
 use yii\helpers\ArrayHelper;
 use backend\models\Document;
-use common\models\User;
 use yii\grid\GridView;
 use rmrevin\yii\fontawesome\FAS;
 
@@ -45,6 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'doc_name',
                 'file_path',
+                'category_name',
                 [
                     'class' => EnumColumn::class,
                     'attribute' => 'status',
@@ -63,10 +63,10 @@ $this->params['breadcrumbs'][] = $this->title;
                  'template' => '{edit} {delete}',
                  'header'=>'Actions',
                     'buttons' => [
-                        /*'edit' => function ($url, $model) {
+                        'edit' => function ($url, $model) {
                             return Html::a ( '<i class="fa fa-edit" aria-hidden="true"></i>', ['document/update','id'=>$model['id']], ['title' => Yii::t('app', 'document-edit'),
                             ]);
-                        },*/
+                        },
                         'delete' => function ($url, $model) {
                             return Html::a('<i class="fa fa-trash"></i>', ['document/delete','id'=>$model['id']], [
                                     'title' => Yii::t('app', 'document-delete'),

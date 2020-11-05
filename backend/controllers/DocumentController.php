@@ -28,6 +28,7 @@ class DocumentController extends Controller
     public function actionAdd()
     {
         $model = new Document();
+        $model->scenario = "add";
         $category = (new \yii\db\Query())
                     ->select(['id', 'title'])
                     ->from('document_category')
@@ -68,6 +69,7 @@ class DocumentController extends Controller
         return $this->render('add', [
             'model'=>$model,
             'category'=>$cat_list,
+            'id'=>0
         ]);
     }
 
@@ -76,6 +78,8 @@ class DocumentController extends Controller
     {
         $model = new Document();
         $model->attributes = $model->getDataById($id);
+        //print_r($model->attributes);die;
+        $old_file_path = $model->attributes['file_path'];
         $category = (new \yii\db\Query())
                     ->select(['id', 'title'])
                     ->from('document_category')
@@ -87,23 +91,36 @@ class DocumentController extends Controller
         }            
         if ($model->load(Yii::$app->request->post())) {
             $model->file_path = UploadedFile::getInstance($model,'file_path');
-            $storage = \Yii::getAlias('@storage');
-            $f_path = '/web/document/'.$model->file_path->baseName . '.' . $model->file_path->extension;
-            $model->file_path->saveAs($storage.$f_path);
-            if(empty($model->doc_name)){
-                $model->doc_name = $model->file_path->baseName;              
+            if(!empty($model->file_path)){
+                //die('ddd');                
+                $storage = \Yii::getAlias('@storage');
+                $f_path = '/web/document/'.$model->file_path->baseName . '.' . $model->file_path->extension;
+                $model->file_path->saveAs($storage.$f_path);
+                if(empty($model->doc_name)){
+                    $model->doc_name = $model->file_path->baseName;              
+                }
+                $model->file_path = $f_path;
             }
-            $model->file_path = $f_path;
+            if(empty($model->file_path)){
+                $model->file_path = $old_file_path;
+            }
             $model->attributes = Yii::$app->request->post(); 
-            
-
-            $model->save();
+            //print_r($model->attributes);die;
+            foreach($model->attributes as $key => $data){
+                if(!empty($data)){
+                    $updateData[$key] = $data;
+                }
+            }
+            $updateData['updated_at']=time();
+            //print_r($updateData);die;
+            $model->update($updateData);
             return $this->redirect(['index']);
             Yii::$app->session->setFlash('success', "Document saved successfull.");
         }           
         return $this->render('add', [
             'model'=>$model,
             'category'=>$cat_list,
+            'id'=>$id
         ]);
     }
 
@@ -124,11 +141,23 @@ class DocumentController extends Controller
         ->from('document')
         //->where(['status' => 1])
         ->all();
-            
+        $category = (new \yii\db\Query())
+                    ->select(['id', 'title'])
+                    ->from('document_category')
+                    ->where(['status' => 1])
+                    ->All();
+        foreach($category as $c_id){
+            $category_id_arr[$c_id['id']]=$c_id['title'];
+        } 
+        foreach($rows as $key => $data){
+            $documentData[$key] = $data;
+            $documentData[$key]['category_name'] = $category_id_arr[$data['category']];
+        }            
+        $cat_list=[];  
         $provider = new ArrayDataProvider([
-            'allModels' => $rows,
+            'allModels' => $documentData,
             'sort' => [
-                'attributes' => ['title'],
+                'attributes' => ['doc_name','category_name'],
             ],
             'pagination' => [
                 'pageSize' => 10,
