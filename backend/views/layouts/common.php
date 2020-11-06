@@ -107,7 +107,7 @@ $logEntries[] = [
                 ],
                 '<li class="nav-item dropdown user-menu">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        '.Html::img(Yii::$app->user->identity->userProfile->getAvatar('/img/anonymous.png'), ['class' => ['img-circle', 'elevation-2', 'bg-white', 'user-image'], 'alt' => 'User image']).'
+                        '.Html::img(Yii::$app->user->identity->userProfile->getAvatar('/img/anonymous.png'), ['class' => ['img-circle', 'elevation-2', 'bg-white', 'user-image'], 'alt' => 'User imagesss']).'
                         '.Html::tag('span', Yii::$app->user->identity->publicIdentity, ['class' => ['d-none', 'd-md-inline']]).'
                     </a>
                     <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
@@ -142,7 +142,7 @@ $logEntries[] = [
                         'data' => ['widget' => 'control-sidebar', 'slide' => 'true'],
                         'role' => 'button'
                     ],
-                    'visible' => Yii::$app->user->can('administrator'),
+                    'visible' => Yii::$app->user->can('admin'),
                 ],
             ]
         ]); ?>
@@ -469,7 +469,7 @@ $logEntries[] = [
     </footer>
     <!-- /footer -->
 
-    <?php if (Yii::$app->user->can('administrator')) : ?>
+    <?php if (Yii::$app->user->can('admin')) : ?>
     <!-- control sidebar -->
     <div class="control-sidebar control-sidebar-dark overflow-auto">
         <div class="control-sidebar-content p-3">

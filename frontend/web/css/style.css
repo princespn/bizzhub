@@ -241,3 +241,31 @@ margin: 10px 0 0 auto;
     color: #494949;
     font-size: 16px;
 }
+.document-section {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.document-list {
+    display: inline-block;
+    width: 100%;
+    border: solid 1px #ddd;
+    padding: 20px 0;
+}
+.document-list ul {
+    padding: 0;
+    margin: 0;
+}
+.document-list li {
+    display: inline-block;
+    width: 20%;
+    float: left;
+    text-align: center;
+}
+.document-list li a img {
+    max-height: 80px;
+}
+.document-list li h4 {
+    font-size: 18px;
+    margin: 15px 0 0;
+}

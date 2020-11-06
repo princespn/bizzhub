@@ -46,7 +46,7 @@ class DocumentController extends Controller
             if(empty($model->doc_name)){
                 $model->doc_name = $model->file_path->baseName;              
             }
-            $model->file_path = $f_path;
+            $model->file_path = $model->file_path->name;
             $model->attributes = Yii::$app->request->post();  
             $rows = (new \yii\db\Query())
                     ->select(['id', 'doc_name'])
@@ -99,7 +99,7 @@ class DocumentController extends Controller
                 if(empty($model->doc_name)){
                     $model->doc_name = $model->file_path->baseName;              
                 }
-                $model->file_path = $f_path;
+                $model->file_path = $model->file_path->name;
             }
             if(empty($model->file_path)){
                 $model->file_path = $old_file_path;
