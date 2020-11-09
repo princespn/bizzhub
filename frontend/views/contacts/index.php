@@ -9,6 +9,8 @@ use yii\grid\GridView;
 //use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\Pjax;
+use yii\bootstrap4\Modal;
+use yii\bootstrap4\ActiveForm;
 
 $this->title = Yii::$app->name;
 ?>
@@ -25,6 +27,7 @@ $this->title = Yii::$app->name;
                 'class' => 'slide', // enables slide effect
             ],
         ]) */?>
+        <?= Html::button('Import Contacts', ['id' => 'modal-btn', 'class' => 'btn sub-btn pull-left add-btn']) ?>
         <?= Html::a('Add', ['/contacts/add'], ['class'=>'btn sub-btn pull-right add-btn']) ?>
         <?php
         Pjax::begin(['id'=>'contats_id']); 
@@ -102,3 +105,28 @@ $this->title = Yii::$app->name;
       </div>
     </div>
 </div>
+<?php 
+        Modal::begin([
+            'headerOptions' => ['id' => 'modalHeader','title'=>'ddd'],
+            'toggleButton' => false,
+            'id' => 'modal-opened',
+            'size' => 'modal-lg'
+        ]); ?>
+        <?php $form = ActiveForm::begin(['id' => 'contact-form','class'=>'contact-form']); ?>
+              
+                <?= $form->field($models, 'csv_file')->fileInput() ?>             
+          <div class="form-group">
+              <?php echo Html::submitButton(Yii::t('frontend', 'Submit'), ['class' => 'btn submit-btn', 'name' => 'contacts']) ?>
+          </div>
+          <?php ActiveForm::end(); ?>
+        
+        <?php
+
+        Modal::end();
+        ?>
+
+<script type="text/javascript">
+    $('#modal-btn').on('click', function (event) {
+    $('#modal-opened').modal('show');
+        });
+</script>

@@ -34,6 +34,7 @@ class Contact extends Model
     public $updated_date;
     public $created_date;
     public $other;
+    public $csv_file;
 
 
 
@@ -91,7 +92,8 @@ class Contact extends Model
             'email' => Yii::t('common', 'Email'),
             'phone' => Yii::t('common', 'Phone'),
             'agent_id' => Yii::t('common', 'Agent'),
-            'list' => Yii::t('common', 'List')
+            'list' => Yii::t('common', 'List'),
+            'csv_file' => Yii::t('common', 'CSV File')
         ];
     }
 

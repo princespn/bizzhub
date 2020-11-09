@@ -20,6 +20,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\db\ActiveRecord;
 use yii\db\BaseActiveRecord;
+use yii\web\UploadedFile;
 //use yii\db\ActiveQuery;
 
 
@@ -87,25 +88,81 @@ class ContactsController extends Controller
     public function actionIndex()
     {
         $model = new Contact();
-        /*$count = Yii::$app->db->createCommand('
-                SELECT COUNT(*) FROM contact WHERE status=:status
-            ', [':status' => 1])->queryScalar();
-        $provider = new SqlDataProvider([
-            'sql' => 'SELECT * FROM contact WHERE status=:status',
-            'params' => [':status' => 1],
-            'totalCount' => $count,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-            'sort' => [
-                'attributes' => [
-                    'first_name',
-                    'last_name',
-                    'email',
-                ],
-            ],
-        ]);*/
-        //$model = $provider;
+        $agent = $model->getuserByRole('agent');
+        foreach($agent as $a_id){
+            $agent_id_arr[$a_id['id']]=strtolower($a_id['username']);
+        }
+        //print_r($agent_id_arr);die;
+        if(!empty(Yii::$app->request->post())){
+             $model->csv_file = UploadedFile::getInstance($model, 'csv_file');
+             if ( $model->csv_file )
+                {
+                    $storage = \Yii::getAlias('@storage');            
+                    $time = time();
+                    $model->csv_file->saveAs($storage.'/web/csv/' .$time. '.' . $model->csv_file->extension);
+                    $model->csv_file = $storage.'/web/csv/' .$time. '.' . $model->csv_file->extension;
+
+                     $handle = fopen($model->csv_file, "r");
+                     //print_r($handle);die;
+                      $cnt = 0;
+                     while (($fileop = fgetcsv($handle, 1000, ",")) !== false) 
+                     {
+                        if ($cnt!=0){
+                            //print_r(urldecode($fileop));die;
+                            $first_name = $fileop[0];
+                            $last_name = $fileop[1];
+                            $pos = strpos($fileop[2], ',');
+                            if ($pos === false) {
+                                $agent_id_arr = explode(',', $fileop[2]);
+                                foreach ($agent_id_arr as $key => $a_id) {
+                                    $agent[] = array_search(strtolower($fileop[2]),$agent_id_arr);
+                                }
+                                print_r($agent);die('ffff');
+                            } else {
+                                die('dfff');
+                            }
+                            $agent = array_search(strtolower($fileop[2]),$agent_id_arr);
+                            $email = $fileop[3];
+                            $phone = $fileop[4];
+                            $list = $fileop[5];
+                            // print_r($fileop);exit();
+                            $rows = (new \yii\db\Query())
+                            ->select(['id', 'email','agent_id'])
+                            ->from('contact')
+                            ->where(['email' => $email])
+                            ->One();
+                            if ($rows['agent_id'] != $agent) {
+                                echo $agent;die;
+                                $agentids = $rows['agent_id'];
+                                Yii::$app->db->createCommand()
+                                 ->update('contact', ['agent_id' => $this->agent_id], ['id' => $rows['id']])
+                                 ->execute(); 
+                            }
+                            Yii::$app->db->createCommand()
+                            ->insert('contact',
+                                [
+                                    'first_name'=>$first_name,
+                                    'last_name'=>$last_name,
+                                    'email'=>$email,
+                                    'agent_id'=>$agent,
+                                    'phone'=>$phone,
+                                    'list'=>$list,
+                                    'created_date'=>time(),
+                                ]
+                            )
+                            ->execute(); 
+                        }
+                        $cnt++;
+                     }
+
+                     if ($cnt >= 1) 
+                     {
+                        echo "data upload successfully";
+                        $this->refresh();
+                     }
+
+                }
+        }
         $user_id = Yii::$app->user->identity->id;
         $user_id = 2;
         $query = new Query();        
@@ -115,11 +172,7 @@ class ContactsController extends Controller
             ->andWhere(new \yii\db\Expression('FIND_IN_SET(:agent_id,agent_id)'))
             ->addParams([':agent_id' => $user_id])
             //->andwhere(['FIND_IN_SET','agent_id', 2])
-            ->all();
-            $agent = $model->getuserByRole('agent');
-            foreach($agent as $a_id){
-                $agent_id_arr[$a_id['id']]=$a_id['username'];
-            }
+            ->all();            
             $contacts_data = $data_arr = [];
             foreach($rows as $key => $data){
                 if($data['agent_id']){
@@ -127,7 +180,7 @@ class ContactsController extends Controller
                     $contacts_data['agent_name'] = [];
                     foreach($agentid as $aid){
                         //echo $agent_id_arr[$aid];die;
-                        $contacts_data['agent_name'][]=$agent_id_arr[$aid];
+                        $contacts_data['agent_name'][]=ucfirst($agent_id_arr[$aid]);
                     }
                 }
                 $contacts_data['agent_name'] = implode(',', $contacts_data['agent_name']);
@@ -160,6 +213,7 @@ class ContactsController extends Controller
         return $this->render('index',[
                 'dataProvider' => $provider,
                 'model' => $models,
+                'models'=>$model
             ]);
     }
 
