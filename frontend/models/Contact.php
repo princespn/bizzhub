@@ -118,11 +118,6 @@ class Contact extends Model
     public function save()
     {
         $model = new Contact();
-        $rows = (new \yii\db\Query())
-            ->select(['id', 'email','agent_id'])
-            ->from('contact')
-            ->where(['email' => $this->email])
-            ->One();
         if(isset($this->agent_id)){
             $this->agent_id = implode(",", $this->agent_id);
         }
@@ -130,12 +125,7 @@ class Contact extends Model
             $this->other = json_encode($this->other);
         }
         //print_r($this);die;    
-        if ($this->validate()) {   
-            if(!empty($rows)){ 
-                Yii::$app->db->createCommand()
-                 ->update('contact', ['agent_id' => $this->agent_id], ['id' => $rows['id']])
-                 ->execute();    
-            }else{ 
+        if ($this->validate()) { 
                 Yii::$app->db->createCommand()
                     ->insert('contact',
                         [
@@ -145,11 +135,12 @@ class Contact extends Model
                             'agent_id'=>$this->agent_id,
                             'phone'=>$this->phone,
                             'list'=>$this->list,
+                            'created_date'=>time(),
                             'other'=>$this->other,
                         ]
                     )
                     ->execute();   
-            }
+            
             return !$model->hasErrors();
         }
         return null;

@@ -107,50 +107,64 @@ class ContactsController extends Controller
                       $cnt = 0;
                      while (($fileop = fgetcsv($handle, 1000, ",")) !== false) 
                      {
+                        $first_name = $last_name = $email = $phone = $list = $agent = "";
                         if ($cnt!=0){
                             //print_r(urldecode($fileop));die;
                             $first_name = $fileop[0];
                             $last_name = $fileop[1];
                             $pos = strpos($fileop[2], ',');
-                            if ($pos === false) {
-                                $agent_id_arr = explode(',', $fileop[2]);
-                                foreach ($agent_id_arr as $key => $a_id) {
-                                    $agent[] = array_search(strtolower($fileop[2]),$agent_id_arr);
+                            if ($pos!== false) {
+                                $agent_ids = explode(',', $fileop[2]);
+                                foreach ($agent_ids as $key => $a_name) {
+                                    $a_name = trim($a_name);
+                                    $agentA[] = array_search(strtolower($a_name),$agent_id_arr);
                                 }
-                                print_r($agent);die('ffff');
+                                $agents = implode(',', $agentA);
                             } else {
-                                die('dfff');
+                                //print_r($fileop[2]);die('ddfff');
+                                $agents = array_search(strtolower($fileop[2]),$agent_id_arr);
                             }
-                            $agent = array_search(strtolower($fileop[2]),$agent_id_arr);
                             $email = $fileop[3];
                             $phone = $fileop[4];
                             $list = $fileop[5];
-                            // print_r($fileop);exit();
                             $rows = (new \yii\db\Query())
                             ->select(['id', 'email','agent_id'])
                             ->from('contact')
                             ->where(['email' => $email])
                             ->One();
-                            if ($rows['agent_id'] != $agent) {
-                                echo $agent;die;
-                                $agentids = $rows['agent_id'];
+                            //echo $rows['agent_id'].' '.$agents;die;
+                            //print_r($rows);die('ddfff');
+                            if (!empty($rows)) {
+                                //die('sff');
+                                if($rows['agent_id'] != $agents){
+                                    $array1 = explode(',', $rows['agent_id']);
+                                    $array2 = explode(',', $agents);
+                                    $ag_id_arr = array_unique(array_merge($array1,$array2), SORT_REGULAR);
+                                    $ag_id = implode(',', $ag_id_arr);
+                                    ////print_r($ag_id);die;
+                                    //$agentids = $rows['agent_id'];
+                                    Yii::$app->db->createCommand()
+                                     ->update('contact', ['agent_id' => $ag_id], ['id' => $rows['id']])
+                                     ->execute();
+                                }else{
+                                    continue;
+                                } 
+                            }else{
+                                //echo $email;die;
                                 Yii::$app->db->createCommand()
-                                 ->update('contact', ['agent_id' => $this->agent_id], ['id' => $rows['id']])
-                                 ->execute(); 
+                                ->insert('contact',
+                                    [
+                                        'first_name'=>$first_name,
+                                        'last_name'=>$last_name,
+                                        'email'=>$email,
+                                        'agent_id'=>$agents,
+                                        'phone'=>$phone,
+                                        'list'=>$list,
+                                        'created_date'=>time(),
+                                    ]
+                                )
+                                ->execute(); 
                             }
-                            Yii::$app->db->createCommand()
-                            ->insert('contact',
-                                [
-                                    'first_name'=>$first_name,
-                                    'last_name'=>$last_name,
-                                    'email'=>$email,
-                                    'agent_id'=>$agent,
-                                    'phone'=>$phone,
-                                    'list'=>$list,
-                                    'created_date'=>time(),
-                                ]
-                            )
-                            ->execute(); 
                         }
                         $cnt++;
                      }
@@ -164,7 +178,7 @@ class ContactsController extends Controller
                 }
         }
         $user_id = Yii::$app->user->identity->id;
-        $user_id = 2;
+        //$user_id = 2;
         $query = new Query();        
             $rows = $query->select("*")
             ->from('contact')
@@ -235,11 +249,27 @@ class ContactsController extends Controller
                     ->where(['email' => $model->attributes['email']])
                     ->One();
                 if(!empty($rows)){
-                    Yii::$app->session->setFlash('error', "This email id is already use.");
+                    //print_r($model->attributes);die;
+                    $agents = implode(',', $model->attributes['agent_id']);
+                    if($rows['agent_id'] != $agents){
+                        $array1 = explode(',', $rows['agent_id']);
+                        $array2 = explode(',', $agents);
+                        $ag_id_arr = array_unique(array_merge($array1,$array2), SORT_REGULAR);
+                        $ag_id = implode(',', $ag_id_arr);
+                        //$agentids = $rows['agent_id'];
+                        Yii::$app->db->createCommand()
+                         ->update('contact', ['agent_id' => $ag_id], ['id' => $rows['id']])
+                         ->execute();
+                        
+                        Yii::$app->session->setFlash('success', "Contact saved successfull.");
+                        return $this->redirect(['index']);
+                    }else{
+                        Yii::$app->session->setFlash('error', "This email id is already use.");
+                    }                    
                 }else{    
-                    $model->save();
-                    return $this->redirect(['index']);
+                    $model->save();                    
                     Yii::$app->session->setFlash('success', "Contact saved successfull.");
+                    return $this->redirect(['index']);
                 }
             }
         }
@@ -256,23 +286,14 @@ class ContactsController extends Controller
     public function actionEdit($id)
     {
         $model = new Contact();
-        //$myModel = Contact::find(10);
         $agent_array = $model->getuserByRole('agent');
         foreach($agent_array as $a_user){
             $agent_arr[$a_user['id']]=$a_user['username'];
         }
-        //$modelData = $model->getDataById($id);
-        //print_r($modelData);die;
-        $model->attributes = $model->getDataById($id);
-
-
-        //$model = $model->findByPk($id);
-        //$model->setModel($model);
-        
+        $model->attributes = $model->getDataById($id);        
         if(!empty(Yii::$app->request->post())){            
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                 $model->attributes= Yii::$app->request->post();
-                //print_r($model);die;
                 $model->update();
                 return $this->redirect(['index']);
             }
