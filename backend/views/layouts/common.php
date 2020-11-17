@@ -264,8 +264,8 @@ $logEntries[] = [
                         ],
                         [
                             'label' => Yii::t('backend', 'Training'),
-                            'icon' => FAS::icon('users', ['class' => ['nav-icon']]),
-                            'url' => ['/training/add'],
+                            'icon' => FAS::icon('chalkboard', ['class' => ['nav-icon']]),
+                            'url' => ['/training/index'],
                             'active' => Yii::$app->controller->id === 'training',
                             //'visible' => Yii::$app->user->can('administrator'),
                             'visible' => Yii::$app->user->can('admin'),

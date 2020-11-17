@@ -26,7 +26,7 @@ $this->beginContent('@frontend/views/layouts/_clear.php')
             ['label' => Yii::t('frontend', 'Home'), 'url' => ['/home']],
             ['label' => Yii::t('frontend', 'Documents'), 'url' =>['/document']],
             ['label' => Yii::t('frontend', 'Resources'), 'url' => 'javascript:void(0)'],
-            ['label' => Yii::t('frontend', 'Training'), 'url' => 'javascript:void(0)'],
+            ['label' => Yii::t('frontend', 'Training'), 'url' => ['/training']],
             ['label' => Yii::t('frontend', 'Contacts'), 'url' => ['/contacts']],
             ['label' => Yii::t('frontend', 'Settings'), 'url' => 'javascript:void(0)'],
             ['label' => Yii::t('frontend', 'Signup'), 'url' => ['/user/sign-in/signup'], 'visible'=>Yii::$app->user->isGuest],

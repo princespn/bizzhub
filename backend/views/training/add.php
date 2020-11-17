@@ -11,6 +11,10 @@ use backend\models\Training;
  * @var $model common\models\Page
  */
 
+$this->title = Yii::t('backend', $id != 0 ? 'update' : 'add');
+$this->params['breadcrumbs'][] = ['label' => 'Training', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 
 <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]) ?>

@@ -269,3 +269,38 @@ margin: 10px 0 0 auto;
     font-size: 18px;
     margin: 15px 0 0;
 }
+
+.level-0 {
+    border: 1px solid #ccc;
+    margin-top: 40px;
+}
+.lele-boxxx {
+    background-color: #242056;
+}
+.lele-boxxx h4 {
+    font-size: 20px;
+    color: #fff;
+    padding: 13px 0px 13px 50px;
+}
+div.text-boxx {
+    font-size: 14px;
+    padding-top: 20px;
+    padding-left: 50px;
+    padding-right: 33px;
+        font-weight: 600;
+        padding-bottom: 10px;
+
+}
+.btn--boxxxx  {
+    background-color: #242056;
+    text-align: center;
+    color: #fff;
+    font-size: 15px;
+    padding: 5px 27px;
+    border-radius: 5px;
+    border: 1px solid #242056;
+}
+a.btn--boxxxx:hover {
+    color: #ccc;
+    text-decoration: none;
+}

@@ -84,7 +84,7 @@ class Training extends Model
     {
         $id = $_GET['id'];
         //print_r($updateData);die;
-        $model = new DocumentCategory();
+        $model = new Training();
         $table = self::tableName();    
         if ($this->validate()) { 
             Yii::$app->db->createCommand()

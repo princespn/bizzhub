@@ -53,57 +53,29 @@ class TrainingController extends Controller
 
     public function actionUpdate($id)
     {
-        $model = new Document();
-        $model->attributes = $model->getDataById($id);
-        //print_r($model->attributes);die;
-        $old_file_path = $model->attributes['file_path'];
-        $category = (new \yii\db\Query())
-                    ->select(['id', 'title'])
-                    ->from('document_category')
-                    ->where(['status' => 1])
-                    ->All();
-        $cat_list=[];            
-        foreach($category as $cat){
-            $cat_list[$cat['id']]=$cat['title'];
-        }            
+        $model = new Training();
+        $model->attributes = $model->getDataById($id);           
         if ($model->load(Yii::$app->request->post())) {
-            $model->file_path = UploadedFile::getInstance($model,'file_path');
-            if(!empty($model->file_path)){
-                //die('ddd');                
-                $storage = \Yii::getAlias('@storage');
-                $f_path = '/web/document/'.$model->file_path->baseName . '.' . $model->file_path->extension;
-                $model->file_path->saveAs($storage.$f_path);
-                if(empty($model->doc_name)){
-                    $model->doc_name = $model->file_path->baseName;              
-                }
-                $model->file_path = $model->file_path->name;
-            }
-            if(empty($model->file_path)){
-                $model->file_path = $old_file_path;
-            }
             $model->attributes = Yii::$app->request->post(); 
-            //print_r($model->attributes);die;
             foreach($model->attributes as $key => $data){
                 if(!empty($data)){
                     $updateData[$key] = $data;
                 }
             }
             $updateData['updated_at']=time();
-            //print_r($updateData);die;
             $model->update($updateData);
             return $this->redirect(['index']);
             Yii::$app->session->setFlash('success', "Document saved successfull.");
         }           
         return $this->render('add', [
             'model'=>$model,
-            'category'=>$cat_list,
             'id'=>$id
         ]);
     }
 
     public function actionDelete($id)
     {
-        $model = new Document();        
+        $model = new Training();        
         if(!empty($id)){
             $model->deleteById($id);           
             return $this->redirect(['index']);            
@@ -112,29 +84,17 @@ class TrainingController extends Controller
 
     public function actionIndex()
     {
-        $model = new Document();
+        $model = new Training();
         $query = new Query();        
         $rows = $query->select("*")
-        ->from('document')
+        ->from('training')
+        ->orderby('item_order')
         //->where(['status' => 1])
-        ->all();
-        $category = (new \yii\db\Query())
-                    ->select(['id', 'title'])
-                    ->from('document_category')
-                    ->where(['status' => 1])
-                    ->All();
-        foreach($category as $c_id){
-            $category_id_arr[$c_id['id']]=$c_id['title'];
-        } 
-        foreach($rows as $key => $data){
-            $documentData[$key] = $data;
-            $documentData[$key]['category_name'] = $category_id_arr[$data['category']];
-        }            
-        $cat_list=[];  
+        ->all(); 
         $provider = new ArrayDataProvider([
-            'allModels' => $documentData,
+            'allModels' => $rows,
             'sort' => [
-                'attributes' => ['doc_name','category_name'],
+                'attributes' => ['title'],
             ],
             'pagination' => [
                 'pageSize' => 10,
