@@ -304,3 +304,27 @@ a.btn--boxxxx:hover {
     color: #ccc;
     text-decoration: none;
 }
+.building-top-boxx { border: 1px solid #ccc;margin-top: 30px;}
+.building-left { background-color: #242056;}
+.building-left h4 {font-size: 20px;color: #fff; padding: 10px;padding-left: 41px;font-weight: 500;}
+.welcome-to {font-size: 14px;padding: 23px 22px;text-align: center;font-weight: 600;}
+.have-you {font-size: 14px;padding: 0px 65px 18px;text-align: center;font-weight: 600;}
+.form-boxx-top .form-inline .form-control {display: inline-block;width: auto;vertical-align: middle;width: 77%;            margin-right: 15px;border: 1px solid #000;} 
+.form-boxx-top {margin-left: 30px;margin-top: 10px;margin-bottom: 40px;}
+.form-boxx-top .btn-primary {color: #fff;background-color: #242056; border-color: #242056;}
+.form-boxx-top .btn-primary:hover {color: #a8a6a6;background-color: #242056;border-color: #242056;}
+.main-bboxx {padding: 10px 59px 30px;}
+.form-check label.form-check-label {font-weight: 600;font-size: 15px;}
+.radoi-boxx {margin-top: 15px; }
+.form-group textarea#exampleFormControlTextarea1 {height: 158px;border: 1px solid; margin-top: 30px;}
+.about-that {font-size: 15px;font-weight: 600;font-style: italic;width: 82%;}
+.building-top-boxx-1 {border: 1px solid #ccc;margin-top: 70px;}
+.nagle-apartments {padding-left: 30px;}
+.nagle-apartments h2 {font-size: 20px; color: #000;font-weight: 600;padding-bottom: 7px;}
+.nagle-apartments p {font-size: 14px;margin: 0px;color: #000;padding-bottom: 3px; font-weight: 600;}
+.purchase-1 li {display: block;font-size: 14px;margin-left: -25px;font-weight: 700;text-decoration: underline;padding-top: 7px;color: #000;}
+.purchase-box {padding: 0px 17px;}
+.purchase-1 {margin-top: 20px;padding-bottom: 20px;}
+input.form-control::placeholder {color: #000;font-weight: 500;}
+.submit-btm-on .btn-primary  {color: #fff;background-color: #242056; border-color: #242056;}
+.submit-btm-on .btn-primary:hover{color: #a8a6a6;background-color: #242056;border-color: #242056;}

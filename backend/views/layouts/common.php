@@ -271,6 +271,14 @@ $logEntries[] = [
                             'visible' => Yii::$app->user->can('admin'),
                         ],
                         [
+                            'label' => Yii::t('backend', 'Supports'),
+                            'icon' => FAS::icon('question-circle', ['class' => ['nav-icon']]),
+                            'url' => ['/supports/index'],
+                            'active' => Yii::$app->controller->id === 'supports',
+                            //'visible' => Yii::$app->user->can('administrator'),
+                            'visible' => Yii::$app->user->can('admin'),
+                        ],
+                        [
                             'label' => Yii::t('backend', 'Content'),
                             'options' => ['class' => 'nav-header'],
                         ],
