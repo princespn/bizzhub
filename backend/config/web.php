@@ -3,7 +3,7 @@ use \yii\web\Request;
 $baseUrl = str_replace('/backend/web', '/admin', (new Request)->getBaseUrl());
 //echo $baseUrl;die;
 $config = [
-    'homeUrl' => $baseUrl,
+    'homeUrl' => Yii::getAlias('@backendUrl'),
     'controllerNamespace' => 'backend\controllers',
     'defaultRoute' => 'timeline-event/index',
     'id' => 'bizzhub',
@@ -14,7 +14,7 @@ $config = [
         ],
         'request' => [
             'cookieValidationKey' => env('BACKEND_COOKIE_VALIDATION_KEY'),
-            'baseUrl' => $baseUrl,
+            'baseUrl' => env('BACKEND_BASE_URL'),
         ],
         'user' => [
             'class' => yii\web\User::class,
@@ -57,7 +57,7 @@ $config = [
             [
                 'controllers' => ['sign-in'],
                 'allow' => true,
-                'roles' => ['@'],
+                'roles' => ['?'],
                 'actions' => ['logout'],
             ],
             [

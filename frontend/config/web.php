@@ -3,7 +3,7 @@ use \yii\web\Request;
 $baseUrl = str_replace('/frontend/web', '', (new Request)->getBaseUrl());
 //echo $baseUrl;die;
 $config = [
-    'homeUrl' => $baseUrl,
+    'homeUrl' => Yii::getAlias('@frontendUrl'),
     'controllerNamespace' => 'frontend\controllers',
     'defaultRoute' => 'home/index',
     'bootstrap' => ['maintenance'],
@@ -54,7 +54,7 @@ $config = [
         ],
         'request' => [
             'cookieValidationKey' => env('FRONTEND_COOKIE_VALIDATION_KEY'),
-            'baseUrl' => $baseUrl,
+            //'baseUrl' => $baseUrl,
         ],
         'user' => [
             'class' => yii\web\User::class,
