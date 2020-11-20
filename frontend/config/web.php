@@ -1,6 +1,9 @@
 <?php
+use \yii\web\Request;
+$baseUrl = str_replace('/frontend/web', '', (new Request)->getBaseUrl());
+//echo $baseUrl;die;
 $config = [
-    'homeUrl' => Yii::getAlias('@frontendUrl'),
+    'homeUrl' => $baseUrl,
     'controllerNamespace' => 'frontend\controllers',
     'defaultRoute' => 'home/index',
     'bootstrap' => ['maintenance'],
@@ -50,7 +53,8 @@ $config = [
             }
         ],
         'request' => [
-            'cookieValidationKey' => env('FRONTEND_COOKIE_VALIDATION_KEY')
+            'cookieValidationKey' => env('FRONTEND_COOKIE_VALIDATION_KEY'),
+            'baseUrl' => $baseUrl,
         ],
         'user' => [
             'class' => yii\web\User::class,
@@ -59,6 +63,18 @@ $config = [
             'enableAutoLogin' => true,
             'as afterLogin' => common\behaviors\LoginTimestampBehavior::class
         ],
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'useFileTransport' => false,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.gmail.com',  
+                'username' => 'ENTER_EMAIL_ADDRESS_HERE',
+                'password' => 'ENTER_PASSWORD',
+                'port' => '587', 
+                'encryption' => 'tls', 
+            ],
+        ]
     ]
 ];
 

@@ -2,9 +2,9 @@
 /**
  * @var yii\web\View $this
  */
+//use yii;
+use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
-use yii\web\View;
-use yii\bootstrap4\Modal;
 
 $this->title = Yii::$app->name.' Resources';
 ?>
@@ -101,7 +101,16 @@ $this->title = Yii::$app->name.' Resources';
     <div class="building-left">
     <h4>Tech Support</h4>
   </div>
-   <div class=main-bboxx>
+   <div class=main-bboxx><?php 
+   $form = \yii\widgets\ActiveForm::begin([
+    'id' => 'support-form-id',
+    'class'=>'form-inline',
+    'action' => "",
+    'method'=>'post',
+    'enableAjaxValidation' => true,
+    'validationUrl' => 'validation-rul',
+    ]); ?>
+
   <div class="welcome-to" style="padding: 0px 0px; ">
    What do you need help with? Choose the best option and leave a
     detailed decription of the problem in the notes: 
@@ -116,8 +125,8 @@ $this->title = Yii::$app->name.' Resources';
     }?>
             <div class="col-md-4 p-0">
                 <div class="form-check">
-                    <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1" checked>
-                    <label class="form-check-label" for="radio1">HUB Issue</label>
+                    <input type="radio" class="form-check-input" id="radio1" name="type" value="<?=$value['type']?>" checked>
+                    <label class="form-check-label" for="radio1"><?=$value['type']?></label>
                 </div>
             </div><?php
     if($remainder == 2){ ?>
@@ -127,24 +136,52 @@ $this->title = Yii::$app->name.' Resources';
   } ?>  
 
     <div class="form-group">
-    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-  </div>
-  <div class="fform-btm-about">
-   <form class="form-inline" action="/action_page.php">
+        <?= Html::textarea('message', '', ['rows' => 6,'id'=>'exampleFormControlTextarea1', 'class'=>'form-control']); ?>
+        
+    </div>
     <div class="about-that">
       Sorry to hear about that.<br>
       `We’ll get back to you ASAP!
     </div>
-      <div class="submit-btm-on pull-right">
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </div>
-    </form>
+    <div class="fform-btm-about">    
+        <div class="submit-btm-on pull-right">        
+            <?= Html::Button('Submit',['class'=>'btn btn-primary','onclick'=>'supportEmailSend();']); ?>
+        </div>
+    </div>
+    <div class="clear"></div>
+  <?php $form->end(); ?>
   </div>
-
-  </div>
 </div>
 </div>
 
 
 
 </div>
+</div>
+
+<script type="text/javascript">
+
+function supportEmailSend()
+ {   
+   var data=$("#support-form-id").serialize();
+
+
+  $.ajax({
+    type: 'POST',
+    url: '<?=Yii::$app->urlManager->createAbsoluteUrl(['resources/supports']); ?>',
+    type: 'post',
+    data:data,
+    success:function(data){
+                //alert(data); 
+              },
+    error: function(data) { // if error occured
+         alert("Error occured.please try again");
+         alert(data);
+    },
+
+  dataType:'html'
+  });
+
+}
+
+</script>

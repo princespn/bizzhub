@@ -43,5 +43,19 @@ class Resources extends Model
             ->all();
         return $data;
     }
+
+    public function getSupportsDataById($type)
+    {
+        //var_dump($id);die;
+        $data = [];
+        $table = 'supports';
+        $data = (new \yii\db\Query())
+            ->select(['*'])
+            ->from($table)
+            ->where(['type'=>$type])
+            ->all();
+            //print_r($data);die;
+        return $data;
+    }
     
 }

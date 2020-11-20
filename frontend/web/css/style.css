@@ -317,7 +317,7 @@ a.btn--boxxxx:hover {
 .form-check label.form-check-label {font-weight: 600;font-size: 15px;}
 .radoi-boxx {margin-top: 15px; }
 .form-group textarea#exampleFormControlTextarea1 {height: 158px;border: 1px solid; margin-top: 30px;}
-.about-that {font-size: 15px;font-weight: 600;font-style: italic;width: 82%;}
+.about-that {font-size: 15px;font-weight: 600;font-style: italic;width: 70%; float: left;}
 .building-top-boxx-1 {border: 1px solid #ccc;margin-top: 70px;}
 .nagle-apartments {padding-left: 30px;}
 .nagle-apartments h2 {font-size: 20px; color: #000;font-weight: 600;padding-bottom: 7px;}
@@ -328,3 +328,4 @@ a.btn--boxxxx:hover {
 input.form-control::placeholder {color: #000;font-weight: 500;}
 .submit-btm-on .btn-primary  {color: #fff;background-color: #242056; border-color: #242056;}
 .submit-btm-on .btn-primary:hover{color: #a8a6a6;background-color: #242056;border-color: #242056;}
+.clear{clear: both;}

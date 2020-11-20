@@ -9,7 +9,8 @@ use yii\bootstrap4\NavBar;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$this->beginContent('@frontend/views/layouts/_clear.php')
+$this->beginContent('@frontend/views/layouts/_clear.php');
+//echo Yii::$app->homeUrl;die;
 ?>
 <header class="sticky">
   <div class="container-fluid">

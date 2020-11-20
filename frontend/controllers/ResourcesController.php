@@ -13,6 +13,8 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 
 /**
  * Site controller
@@ -41,7 +43,7 @@ class ResourcesController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [                   
                     [                    
-                        'actions' => ['index'],
+                        'actions' => ['index','supports'],
                         'allow' => true,
                         'roles' => ['agent'],
                     ],                   
@@ -84,5 +86,26 @@ class ResourcesController extends Controller
         return $this->render('index',[
             'supportsData'=>$supportsData,
         ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function actionSupports()
+    {
+        //die('ddd');
+        $model = new Resources();
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $supportsData = $model->getSupportsDataById($data['type']);
+            Yii::$app->mailer->compose()
+            ->setFrom('dharmraj.kumhar@gmail.com')
+            ->setTo('dharmraj.kumhar@gmail.com')
+            ->setSubject('Message subject')
+            ->setTextBody('Plain text content')
+            ->setHtmlBody('<b>HTML content</b>')
+            ->send();
+
+        }
     }
 }
