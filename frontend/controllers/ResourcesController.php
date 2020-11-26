@@ -95,9 +95,9 @@ class ResourcesController extends Controller
     {
         //die('ddd');
         $model = new Resources();
-        if (Yii::$app->request->isAjax) {
-            $data = Yii::$app->request->post();
-            $supportsData = $model->getSupportsDataById($data['type']);
+        //if (Yii::$app->request->isAjax) {
+        //    $data = Yii::$app->request->post();
+        //    $supportsData = $model->getSupportsDataById($data['type']);
             Yii::$app->mailer->compose()
             ->setFrom('dharmraj.kumhar@gmail.com')
             ->setTo('dharmraj.kumhar@gmail.com')
@@ -106,6 +106,6 @@ class ResourcesController extends Controller
             ->setHtmlBody('<b>HTML content</b>')
             ->send();
 
-        }
+        //}
     }
 }
