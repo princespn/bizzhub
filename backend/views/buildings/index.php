@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="card">
     <div class="card-header">
-        <?php echo Html::a(FAS::icon('user-plus').' '.Yii::t('backend', 'Add New Training', [
+        <?php echo Html::a(FAS::icon('user-plus').' '.Yii::t('backend', 'Add New Building', [
             'modelClass' => 'Training',
         ]), ['add'], ['class' => 'btn btn-success']) ?>
     </div>
@@ -40,11 +40,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'columns' => [
                 [
                     'header' => 'Order',
-                    'attribute' => 'item_order',
+                    'attribute' => 'id',
                     'options' => ['style' => 'width: 5%'],
                 ],
-                'title',
-                'external_link',
+                'legal_name',
+                'building_nickname',
+                'address',
+                'city',
+                'state',
                 [
                     'attribute' => 'created_at',
                     'format' => 'datetime',
@@ -58,14 +61,14 @@ $this->params['breadcrumbs'][] = $this->title;
                  'header'=>'Actions',
                     'buttons' => [
                         'edit' => function ($url, $model) {
-                            return Html::a ( '<i class="fa fa-edit" aria-hidden="true"></i>', ['training/update','id'=>$model['id']], ['title' => Yii::t('app', 'training-edit'),
+                            return Html::a ( '<i class="fa fa-edit" aria-hidden="true"></i>', ['buildings/update','id'=>$model['id']], ['title' => Yii::t('app', 'building-edit'),
                             ]);
                         },
                         'delete' => function ($url, $model) {
-                            return Html::a('<i class="fa fa-trash"></i>', ['training/delete','id'=>$model['id']], [
-                                    'title' => Yii::t('app', 'training-delete'),
+                            return Html::a('<i class="fa fa-trash"></i>', ['buildings/delete','id'=>$model['id']], [
+                                    'title' => Yii::t('app', 'building-delete'),
                                     'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
-                                        'training-method'  => 'post',
+                                        'buildings-method'  => 'post',
                             ]);
                         }
                     ],

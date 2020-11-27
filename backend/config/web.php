@@ -2,6 +2,7 @@
 use \yii\web\Request;
 $baseUrl = str_replace('/backend/web', '/admin', (new Request)->getBaseUrl());
 //echo $baseUrl;die;
+$params = require(__DIR__ . '/params.php');
 $config = [
     'homeUrl' => $baseUrl,
     'controllerNamespace' => 'backend\controllers',
@@ -89,6 +90,7 @@ $config = [
             ],
         ],
     ],
+    'params' => $params,
 ];
 
 if (YII_ENV_DEV) {
