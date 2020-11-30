@@ -37,7 +37,6 @@ class BuildingsController extends Controller
                 }
                 $model->purchase_application->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->purchase_application = $file_name;
-                //$model->attributes['purchase_application'] = $file_name;
             }
             $model->offering_plan = UploadedFile::getInstance($model,'offering_plan');
             if(!empty($model->offering_plan)){
@@ -47,7 +46,6 @@ class BuildingsController extends Controller
                 }
                 $model->offering_plan->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->offering_plan = $file_name;
-                //$model->attributes['offering_plan'] = $file_name;
             }
             $model->amendments = UploadedFile::getInstance($model,'amendments');
             if(!empty($model->amendments)){
@@ -57,7 +55,15 @@ class BuildingsController extends Controller
                 }
                 $model->amendments->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->amendments = $file_name;
-                //$model->attributes['amendments'] = $file_name;
+            }
+            $model->house_rules = UploadedFile::getInstance($model,'house_rules');
+            if(!empty($model->house_rules)){
+                $file_name = 'house_rules'.time().'.'. $model->house_rules->extension;
+                if(!is_dir(Yii::$app->params['building_file_path'])) {
+                    mkdir(Yii::$app->params['building_file_path'], 0777, true);
+                }
+                $model->house_rules->saveAs(Yii::$app->params['building_file_path'].$file_name);
+                $model->house_rules = $file_name;
             }
             $model->sublet_policy = UploadedFile::getInstance($model,'sublet_policy');
             if(!empty($model->sublet_policy)){
@@ -67,7 +73,6 @@ class BuildingsController extends Controller
                 }
                 $model->sublet_policy->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->sublet_policy = $file_name;
-                //$model->attributes['sublet_policy'] = $file_name;
             }
             $model->covid_19_policy = UploadedFile::getInstance($model,'covid_19_policy');
             if(!empty($model->covid_19_policy)){
@@ -77,7 +82,6 @@ class BuildingsController extends Controller
                 }
                 $model->covid_19_policy->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->covid_19_policy = $file_name;
-                //$model->attributes['covid_19_policy'] = $file_name;
             }
             $model->sublet_application = UploadedFile::getInstance($model,'sublet_application');
             if(!empty($model->sublet_application)){
@@ -87,7 +91,6 @@ class BuildingsController extends Controller
                 }
                 $model->sublet_application->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->sublet_application = $file_name;
-                //$model->attributes['sublet_application'] = $file_name;
             }
             $model->rental_application = UploadedFile::getInstance($model,'rental_application');
             if(!empty($model->rental_application)){
@@ -97,7 +100,6 @@ class BuildingsController extends Controller
                 }
                 $model->rental_application->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->rental_application = $file_name;
-                //$model->attributes['rental_application'] = $file_name;
             }
             $model->bulk_rate_offering = UploadedFile::getInstance($model,'bulk_rate_offering');
             if(!empty($model->bulk_rate_offering)){
@@ -107,7 +109,6 @@ class BuildingsController extends Controller
                 }
                 $model->bulk_rate_offering->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->bulk_rate_offering = $file_name;
-                //$model->attributes['bulk_rate_offering'] = $file_name;
             }
             $model->renovations = UploadedFile::getInstance($model,'renovations');
             if(!empty($model->renovations)){
@@ -117,7 +118,6 @@ class BuildingsController extends Controller
                 }
                 $model->renovations->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->renovations = $file_name;
-                //$model->attributes['renovations'] = $file_name;
             }
             $model->by_laws = UploadedFile::getInstance($model,'by_laws');
             if(!empty($model->by_laws)){
@@ -127,7 +127,6 @@ class BuildingsController extends Controller
                 }
                 $model->by_laws->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->by_laws = $file_name;
-                //$model->attributes['by_laws'] = $file_name;
             }
             $model->lease_agreement = UploadedFile::getInstance($model,'lease_agreement');
             if(!empty($model->lease_agreement)){
@@ -137,7 +136,6 @@ class BuildingsController extends Controller
                 }
                 $model->lease_agreement->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->lease_agreement = $file_name;
-                //$model->attributes['lease_agreement'] = $file_name;
             }
             $model->move_in_out = UploadedFile::getInstance($model,'move_in_out');
             if(!empty($model->move_in_out)){
@@ -147,7 +145,6 @@ class BuildingsController extends Controller
                 }
                 $model->move_in_out->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->move_in_out = $file_name;
-                //$model->attributes['move_in_out'] = $file_name;
             }
             $model->regulatory_agreement = UploadedFile::getInstance($model,'regulatory_agreement');
             if(!empty($model->regulatory_agreement)){
@@ -157,7 +154,6 @@ class BuildingsController extends Controller
                 }
                 $model->regulatory_agreement->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->regulatory_agreement = $file_name;
-                //$model->attributes['regulatory_agreement'] = $file_name;
             }
             $model->flip_tax_policy = UploadedFile::getInstance($model,'flip_tax_policy');
             if(!empty($model->flip_tax_policy)){
@@ -167,7 +163,6 @@ class BuildingsController extends Controller
                 }
                 $model->flip_tax_policy->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->flip_tax_policy = $file_name;
-                //$model->attributes['flip_tax_policy'] = $file_name;
             }
             $model->pet_policy = UploadedFile::getInstance($model,'pet_policy');
             if(!empty($model->pet_policy)){
@@ -177,7 +172,6 @@ class BuildingsController extends Controller
                 }
                 $model->pet_policy->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->pet_policy = $file_name;
-                //$model->attributes['pet_policy'] = $file_name;
             }
             $model->terrace_policy = UploadedFile::getInstance($model,'terrace_policy');
             if(!empty($model->terrace_policy)){
@@ -187,7 +181,6 @@ class BuildingsController extends Controller
                 }
                 $model->terrace_policy->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->terrace_policy = $file_name;
-                //$model->attributes['terrace_policy'] = $file_name;
             }
             $model->storage_policy = UploadedFile::getInstance($model,'storage_policy');
             if(!empty($model->storage_policy)){
@@ -197,7 +190,6 @@ class BuildingsController extends Controller
                 }
                 $model->storage_policy->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->storage_policy = $file_name;
-                //$model->attributes['storage_policy'] = $file_name;
             }
             $model->financials_2019 = UploadedFile::getInstance($model,'financials_2019');
             if(!empty($model->financials_2019)){
@@ -207,7 +199,6 @@ class BuildingsController extends Controller
                 }
                 $model->financials_2019->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->financials_2019 = $file_name;
-                //$model->attributes['financials_2019'] = $file_name;
             }
             $model->financials_2018 = UploadedFile::getInstance($model,'financials_2018');
             if(!empty($model->financials_2018)){
@@ -217,7 +208,6 @@ class BuildingsController extends Controller
                 }
                 $model->financials_2018->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->financials_2018 = $file_name;
-                //$model->attributes['financials_2018'] = $file_name;
             }
             $model->financials_2017 = UploadedFile::getInstance($model,'financials_2017');
             if(!empty($model->financials_2017)){
@@ -227,7 +217,6 @@ class BuildingsController extends Controller
                 }
                 $model->financials_2017->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->financials_2017 = $file_name;
-                //$model->attributes['financials_2017'] = $file_name;
             }
             $model->financials_2016 = UploadedFile::getInstance($model,'financials_2016');
             if(!empty($model->financials_2016)){
@@ -237,7 +226,6 @@ class BuildingsController extends Controller
                 }
                 $model->financials_2016->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->financials_2016 = $file_name;
-                //$model->attributes['financials_2016'] = $file_name;
             }
             $model->financials_2015 = UploadedFile::getInstance($model,'financials_2015');
             if(!empty($model->financials_2015)){
@@ -247,7 +235,6 @@ class BuildingsController extends Controller
                 }
                 $model->financials_2015->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->financials_2015 = $file_name;
-                //$model->attributes['financials_2015'] = $file_name;
             }
             $model->financials_2014 = UploadedFile::getInstance($model,'financials_2014');
             if(!empty($model->financials_2014)){
@@ -257,7 +244,6 @@ class BuildingsController extends Controller
                 }
                 $model->financials_2014->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->financials_2014 = $file_name;
-                //$model->attributes['financials_2014'] = $file_name;
             }
             $model->operating_budget = UploadedFile::getInstance($model,'operating_budget');
             if(!empty($model->operating_budget)){
@@ -267,7 +253,6 @@ class BuildingsController extends Controller
                 }
                 $model->operating_budget->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->operating_budget = $file_name;
-                //$model->attributes['operating_budget'] = $file_name;
             }
             $model->fitness_center_policy = UploadedFile::getInstance($model,'fitness_center_policy');
             if(!empty($model->fitness_center_policy)){
@@ -277,7 +262,6 @@ class BuildingsController extends Controller
                 }
                 $model->fitness_center_policy->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->fitness_center_policy = $file_name;
-                //$model->attributes['fitness_center_policy'] = $file_name;
             }
             $model->credit_report_form = UploadedFile::getInstance($model,'credit_report_form');
             if(!empty($model->credit_report_form)){
@@ -287,7 +271,6 @@ class BuildingsController extends Controller
                 }
                 $model->credit_report_form->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->credit_report_form = $file_name;
-                //$model->attributes['credit_report_form'] = $file_name;
             }
             $model->annual_meeting_notes = UploadedFile::getInstance($model,'annual_meeting_notes');
             if(!empty($model->annual_meeting_notes)){
@@ -297,7 +280,6 @@ class BuildingsController extends Controller
                 }
                 $model->annual_meeting_notes->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->annual_meeting_notes = $file_name;
-                //$model->attributes['annual_meeting_notes'] = $file_name;
             }
             $model->handbook = UploadedFile::getInstance($model,'handbook');
             if(!empty($model->handbook)){
@@ -307,7 +289,6 @@ class BuildingsController extends Controller
                 }
                 $model->handbook->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->handbook = $file_name;
-                //$model->attributes['handbook'] = $file_name;
             }
             $model->subscription_agreement = UploadedFile::getInstance($model,'subscription_agreement');
             if(!empty($model->subscription_agreement)){
@@ -317,7 +298,6 @@ class BuildingsController extends Controller
                 }
                 $model->subscription_agreement->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->subscription_agreement = $file_name;
-                //$model->attributes['subscription_agreement'] = $file_name;
             }
             $model->refinance_application = UploadedFile::getInstance($model,'refinance_application');
             if(!empty($model->refinance_application)){
@@ -327,7 +307,6 @@ class BuildingsController extends Controller
                 }
                 $model->refinance_application->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->refinance_application = $file_name;
-                //$model->attributes['refinance_application'] = $file_name;
             } 
             $model->save();
             return $this->redirect(['index']);
@@ -358,9 +337,11 @@ class BuildingsController extends Controller
         $by_laws = $model->attributes['by_laws'];   
         $lease_agreement = $model->attributes['lease_agreement'];   
         $move_in_out = $model->attributes['move_in_out'];   
-        $regulatory_agreement = $model->attributes['regulatory_agreement'];   
+        $regulatory_agreement = $model->attributes['regulatory_agreement'];
+        $flip_tax_policy = $model->attributes['flip_tax_policy'];
         $pet_policy = $model->attributes['pet_policy'];   
         $terrace_policy = $model->attributes['terrace_policy'];   
+        $storage_policy = $model->attributes['storage_policy'];   
         $financials_2019 = $model->attributes['financials_2019'];   
         $financials_2018 = $model->attributes['financials_2018'];   
         $financials_2017 = $model->attributes['financials_2017'];   
@@ -381,9 +362,10 @@ class BuildingsController extends Controller
                 if(!is_dir(Yii::$app->params['building_file_path'])) {
                     mkdir(Yii::$app->params['building_file_path'], 0777, true);
                 }
+                //echo Yii::$app->params['building_file_path'].$file_name;die;
                 $model->purchase_application->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->purchase_application = $file_name;
-                if(!empty($model->attributes['purchase_application']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['purchase_application'])) {
+                if(!empty($purchase_application) && file_exists(Yii::$app->params['building_file_path'].$purchase_application)) {
                     unlink(Yii::$app->params['building_file_path'].$purchase_application);
                 }
             }
@@ -395,7 +377,7 @@ class BuildingsController extends Controller
                 }
                 $model->offering_plan->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->offering_plan = $file_name;
-                if(!empty($model->attributes['offering_plan']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['offering_plan'])) {
+                if(!empty($offering_plan) && file_exists(Yii::$app->params['building_file_path'].$offering_plan)) {
                     unlink(Yii::$app->params['building_file_path'].$offering_plan);
                 }
             }
@@ -407,8 +389,20 @@ class BuildingsController extends Controller
                 }
                 $model->amendments->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->amendments = $file_name;
-                if(!empty($model->attributes['amendments']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['amendments'])) {
+                if(!empty($amendments) && file_exists(Yii::$app->params['building_file_path'].$amendments)) {
                     unlink(Yii::$app->params['building_file_path'].$amendments);
+                }
+            }
+            $model->house_rules = UploadedFile::getInstance($model,'house_rules');
+            if(!empty($model->house_rules)){
+                $file_name = 'house_rules'.time().'.'. $model->house_rules->extension;
+                if(!is_dir(Yii::$app->params['building_file_path'])) {
+                    mkdir(Yii::$app->params['building_file_path'], 0777, true);
+                }
+                $model->house_rules->saveAs(Yii::$app->params['building_file_path'].$file_name);
+                $model->house_rules = $file_name;
+                if(!empty($house_rules) && file_exists(Yii::$app->params['building_file_path'].$house_rules)) {
+                    unlink(Yii::$app->params['building_file_path'].$house_rules);
                 }
             }
             $model->sublet_policy = UploadedFile::getInstance($model,'sublet_policy');
@@ -419,7 +413,7 @@ class BuildingsController extends Controller
                 }
                 $model->sublet_policy->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->sublet_policy = $file_name;
-                if(!empty($model->attributes['sublet_policy']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['sublet_policy'])) {
+                if(!empty($sublet_policy) && file_exists(Yii::$app->params['building_file_path'].$sublet_policy)) {
                     unlink(Yii::$app->params['building_file_path'].$sublet_policy);
                 }
             }
@@ -431,7 +425,7 @@ class BuildingsController extends Controller
                 }
                 $model->covid_19_policy->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->covid_19_policy = $file_name;
-                if(!empty($model->attributes['covid_19_policy']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['covid_19_policy'])) {
+                if(!empty($covid_19_policy) && file_exists(Yii::$app->params['building_file_path'].$covid_19_policy)) {
                     unlink(Yii::$app->params['building_file_path'].$covid_19_policy);
                 }
             }
@@ -443,7 +437,7 @@ class BuildingsController extends Controller
                 }
                 $model->sublet_application->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->sublet_application = $file_name;
-                if(!empty($model->attributes['sublet_application']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['sublet_application'])) {
+                if(!empty($sublet_application) && file_exists(Yii::$app->params['building_file_path'].$sublet_application)) {
                     unlink(Yii::$app->params['building_file_path'].$sublet_application);
                 }
             }
@@ -455,7 +449,7 @@ class BuildingsController extends Controller
                 }
                 $model->rental_application->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->rental_application = $file_name;
-                if(!empty($model->attributes['rental_application']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['rental_application'])) {
+                if(!empty($rental_application) && file_exists(Yii::$app->params['building_file_path'].$rental_application)) {
                     unlink(Yii::$app->params['building_file_path'].$rental_application);
                 }
             }
@@ -467,7 +461,7 @@ class BuildingsController extends Controller
                 }
                 $model->bulk_rate_offering->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->bulk_rate_offering = $file_name;
-                if(!empty($model->attributes['bulk_rate_offering']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['bulk_rate_offering'])) {
+                if(!empty($bulk_rate_offering) && file_exists(Yii::$app->params['building_file_path'].$bulk_rate_offering)) {
                     unlink(Yii::$app->params['building_file_path'].$bulk_rate_offering);
                 }
             }
@@ -479,7 +473,7 @@ class BuildingsController extends Controller
                 }
                 $model->renovations->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->renovations = $file_name;
-                if(!empty($model->attributes['renovations']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['renovations'])) {
+                if(!empty($renovations) && file_exists(Yii::$app->params['building_file_path'].$renovations)) {
                     unlink(Yii::$app->params['building_file_path'].$renovations);
                 }
             }
@@ -491,7 +485,7 @@ class BuildingsController extends Controller
                 }
                 $model->by_laws->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->by_laws = $file_name;
-                if(!empty($model->attributes['by_laws']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['by_laws'])) {
+                if(!empty($by_laws) && file_exists(Yii::$app->params['building_file_path'].$by_laws)) {
                     unlink(Yii::$app->params['building_file_path'].$by_laws);
                 }
             }
@@ -503,7 +497,7 @@ class BuildingsController extends Controller
                 }
                 $model->lease_agreement->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->lease_agreement = $file_name;
-                if(!empty($model->attributes['lease_agreement']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['lease_agreement'])) {
+                if(!empty($lease_agreement) && file_exists(Yii::$app->params['building_file_path'].$lease_agreement)) {
                     unlink(Yii::$app->params['building_file_path'].$lease_agreement);
                 }
             }
@@ -515,7 +509,7 @@ class BuildingsController extends Controller
                 }
                 $model->move_in_out->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->move_in_out = $file_name;
-                if(!empty($model->attributes['move_in_out']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['move_in_out'])) {
+                if(!empty($move_in_out) && file_exists(Yii::$app->params['building_file_path'].$move_in_out)) {
                     unlink(Yii::$app->params['building_file_path'].$move_in_out);
                 }
             }
@@ -527,7 +521,7 @@ class BuildingsController extends Controller
                 }
                 $model->regulatory_agreement->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->regulatory_agreement = $file_name;
-                if(!empty($model->attributes['regulatory_agreement']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['regulatory_agreement'])) {
+                if(!empty($regulatory_agreement) && file_exists(Yii::$app->params['building_file_path'].$regulatory_agreement)) {
                     unlink(Yii::$app->params['building_file_path'].$regulatory_agreement);
                 }
             }
@@ -539,7 +533,7 @@ class BuildingsController extends Controller
                 }
                 $model->flip_tax_policy->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->flip_tax_policy = $file_name;
-                if(!empty($model->attributes['flip_tax_policy']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['flip_tax_policy'])) {
+                if(!empty($flip_tax_policy) && file_exists(Yii::$app->params['building_file_path'].$flip_tax_policy)) {
                     unlink(Yii::$app->params['building_file_path'].$flip_tax_policy);
                 }
             }
@@ -551,7 +545,7 @@ class BuildingsController extends Controller
                 }
                 $model->pet_policy->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->pet_policy = $file_name;
-                if(!empty($model->attributes['pet_policy']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['pet_policy'])) {
+                if(!empty($pet_policy) && file_exists(Yii::$app->params['building_file_path'].$pet_policy)) {
                     unlink(Yii::$app->params['building_file_path'].$pet_policy);
                 }
             }
@@ -563,7 +557,7 @@ class BuildingsController extends Controller
                 }
                 $model->terrace_policy->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->terrace_policy = $file_name;
-                if(!empty($model->attributes['terrace_policy']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['terrace_policy'])) {
+                if(!empty($terrace_policy) && file_exists(Yii::$app->params['building_file_path'].$terrace_policy)) {
                     unlink(Yii::$app->params['building_file_path'].$terrace_policy);
                 }
             }
@@ -575,7 +569,7 @@ class BuildingsController extends Controller
                 }
                 $model->storage_policy->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->storage_policy = $file_name;
-                if(!empty($model->attributes['storage_policy']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['storage_policy'])) {
+                if(!empty($storage_policy) && file_exists(Yii::$app->params['building_file_path'].$storage_policy)) {
                     unlink(Yii::$app->params['building_file_path'].$storage_policy);
                 }
             }
@@ -587,7 +581,7 @@ class BuildingsController extends Controller
                 }
                 $model->financials_2019->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->financials_2019 = $file_name;
-                if(!empty($model->attributes['financials_2019']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['financials_2019'])) {
+                if(!empty($financials_2019) && file_exists(Yii::$app->params['building_file_path'].$financials_2019)) {
                     unlink(Yii::$app->params['building_file_path'].$financials_2019);
                 }
             }
@@ -599,7 +593,7 @@ class BuildingsController extends Controller
                 }
                 $model->financials_2018->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->financials_2018 = $file_name;
-                if(!empty($model->attributes['financials_2018']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['financials_2018'])) {
+                if(!empty($financials_2018) && file_exists(Yii::$app->params['building_file_path'].$financials_2018)) {
                     unlink(Yii::$app->params['building_file_path'].$financials_2018);
                 }
             }
@@ -611,7 +605,7 @@ class BuildingsController extends Controller
                 }
                 $model->financials_2017->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->financials_2017 = $file_name;
-                if(!empty($model->attributes['financials_2017']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['financials_2017'])) {
+                if(!empty($financials_2017) && file_exists(Yii::$app->params['building_file_path'].$financials_2017)) {
                     unlink(Yii::$app->params['building_file_path'].$financials_2017);
                 }
             }
@@ -623,7 +617,7 @@ class BuildingsController extends Controller
                 }
                 $model->financials_2016->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->financials_2016 = $file_name;
-                if(!empty($model->attributes['financials_2016']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['financials_2016'])) {
+                if(!empty($financials_2016) && file_exists(Yii::$app->params['building_file_path'].$financials_2016)) {
                     unlink(Yii::$app->params['building_file_path'].$financials_2016);
                 }
             }
@@ -635,7 +629,7 @@ class BuildingsController extends Controller
                 }
                 $model->financials_2015->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->financials_2015 = $file_name;
-                if(!empty($model->attributes['financials_2015']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['financials_2015'])) {
+                if(!empty($financials_2015) && file_exists(Yii::$app->params['building_file_path'].$financials_2015)) {
                     unlink(Yii::$app->params['building_file_path'].$financials_2015);
                 }
             }
@@ -647,7 +641,7 @@ class BuildingsController extends Controller
                 }
                 $model->financials_2014->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->financials_2014 = $file_name;
-                if(!empty($model->attributes['financials_2014']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['financials_2014'])) {
+                if(!empty($financials_2014) && file_exists(Yii::$app->params['building_file_path'].$financials_2014)) {
                     unlink(Yii::$app->params['building_file_path'].$financials_2014);
                 }
             }
@@ -659,7 +653,7 @@ class BuildingsController extends Controller
                 }
                 $model->operating_budget->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->operating_budget = $file_name;
-                if(!empty($model->attributes['operating_budget']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['operating_budget'])) {
+                if(!empty($operating_budget) && file_exists(Yii::$app->params['building_file_path'].$operating_budget)) {
                     unlink(Yii::$app->params['building_file_path'].$operating_budget);
                 }
             }
@@ -671,7 +665,7 @@ class BuildingsController extends Controller
                 }
                 $model->fitness_center_policy->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->fitness_center_policy = $file_name;
-                if(!empty($model->attributes['fitness_center_policy']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['fitness_center_policy'])) {
+                if(!empty($fitness_center_policy) && file_exists(Yii::$app->params['building_file_path'].$fitness_center_policy)) {
                     unlink(Yii::$app->params['building_file_path'].$fitness_center_policy);
                 }
             }
@@ -683,7 +677,7 @@ class BuildingsController extends Controller
                 }
                 $model->credit_report_form->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->credit_report_form = $file_name;
-                if(!empty($model->attributes['credit_report_form']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['credit_report_form'])) {
+                if(!empty($credit_report_form) && file_exists(Yii::$app->params['building_file_path'].$credit_report_form)) {
                     unlink(Yii::$app->params['building_file_path'].$credit_report_form);
                 }
             }
@@ -695,7 +689,7 @@ class BuildingsController extends Controller
                 }
                 $model->annual_meeting_notes->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->annual_meeting_notes = $file_name;
-                if(!empty($model->attributes['annual_meeting_notes']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['annual_meeting_notes'])) {
+                if(!empty($annual_meeting_notes) && file_exists(Yii::$app->params['building_file_path'].$annual_meeting_notes)) {
                     unlink(Yii::$app->params['building_file_path'].$annual_meeting_notes);
                 }
             }
@@ -707,7 +701,7 @@ class BuildingsController extends Controller
                 }
                 $model->handbook->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->handbook = $file_name;
-                if(!empty($model->attributes['handbook']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['handbook'])) {
+                if(!empty($handbook) && file_exists(Yii::$app->params['building_file_path'].$handbook)) {
                     unlink(Yii::$app->params['building_file_path'].$handbook);
                 }
             }
@@ -719,11 +713,12 @@ class BuildingsController extends Controller
                 }
                 $model->subscription_agreement->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->subscription_agreement = $file_name;
-                if(!empty($model->attributes['subscription_agreement']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['subscription_agreement'])) {
+                if(!empty($subscription_agreement) && file_exists(Yii::$app->params['building_file_path'].$subscription_agreement)) {
                     unlink(Yii::$app->params['building_file_path'].$subscription_agreement);
                 }
             }
             $model->refinance_application = UploadedFile::getInstance($model,'refinance_application');
+
             if(!empty($model->refinance_application)){
                 $file_name = 'refinance_application'.time().'.'. $model->refinance_application->extension;
                 if(!is_dir(Yii::$app->params['building_file_path'])) {
@@ -731,7 +726,7 @@ class BuildingsController extends Controller
                 }
                 $model->refinance_application->saveAs(Yii::$app->params['building_file_path'].$file_name);
                 $model->refinance_application = $file_name;
-                if(!empty($model->attributes['refinance_application']) && file_exists(Yii::$app->params['building_file_path'].$model->attributes['refinance_application'])) {
+                if(!empty($refinance_application) && file_exists(Yii::$app->params['building_file_path'].$refinance_application)) {
                     unlink(Yii::$app->params['building_file_path'].$refinance_application);
                 }
             }
@@ -749,8 +744,103 @@ class BuildingsController extends Controller
 
     public function actionDelete($id)
     {
-        $model = new Document();        
+        $model = new buildings();        
         if(!empty($id)){
+            $buildingData = $model->getDataById($id);
+            //print_r($buildingData);die;
+            if(!empty($buildingData['purchase_application']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['purchase_application'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['purchase_application']);
+            }
+            if(!empty($buildingData['offering_plan']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['offering_plan'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['offering_plan']);
+            }
+            if(!empty($buildingData['amendments']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['amendments'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['amendments']);
+            }
+            if(!empty($buildingData['house_rules']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['house_rules'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['house_rules']);
+            }
+            if(!empty($buildingData['sublet_policy']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['sublet_policy'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['sublet_policy']);
+            }
+            if(!empty($buildingData['covid_19_policy']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['covid_19_policy'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['covid_19_policy']);
+            }
+            if(!empty($buildingData['sublet_application']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['sublet_application'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['sublet_application']);
+            }
+            if(!empty($buildingData['rental_application']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['rental_application'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['rental_application']);
+            }
+            if(!empty($buildingData['bulk_rate_offering']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['bulk_rate_offering'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['bulk_rate_offering']);
+            }
+            if(!empty($buildingData['renovations']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['renovations'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['renovations']);
+            }
+            if(!empty($buildingData['by_laws']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['by_laws'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['by_laws']);
+            }
+            if(!empty($buildingData['lease_agreement']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['lease_agreement'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['lease_agreement']);
+            }
+            if(!empty($buildingData['move_in_out']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['move_in_out'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['move_in_out']);
+            }
+            if(!empty($buildingData['regulatory_agreement']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['regulatory_agreement'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['regulatory_agreement']);
+            }
+            if(!empty($buildingData['flip_tax_policy']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['flip_tax_policy'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['flip_tax_policy']);
+            }
+            if(!empty($buildingData['pet_policy']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['pet_policy'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['pet_policy']);
+            }
+            if(!empty($buildingData['terrace_policy']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['terrace_policy'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['terrace_policy']);
+            }
+            if(!empty($buildingData['storage_policy']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['storage_policy'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['storage_policy']);
+            }
+            if(!empty($buildingData['financials_2019']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['financials_2019'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['financials_2019']);
+            }
+            if(!empty($buildingData['financials_2018']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['financials_2018'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['financials_2018']);
+            }
+            if(!empty($buildingData['financials_2017']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['financials_2017'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['financials_2017']);
+            }
+            if(!empty($buildingData['financials_2016']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['financials_2016'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['financials_2016']);
+            }
+            if(!empty($buildingData['financials_2015']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['financials_2015'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['financials_2015']);
+            }
+            if(!empty($buildingData['financials_2014']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['financials_2014'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['financials_2014']);
+            }
+            if(!empty($buildingData['operating_budget']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['operating_budget'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['operating_budget']);
+            }
+            if(!empty($buildingData['fitness_center_policy']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['fitness_center_policy'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['fitness_center_policy']);
+            }
+            if(!empty($buildingData['credit_report_form']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['credit_report_form'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['credit_report_form']);
+            }
+            if(!empty($buildingData['annual_meeting_notes']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['annual_meeting_notes'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['annual_meeting_notes']);
+            }
+            if(!empty($buildingData['handbook']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['handbook'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['handbook']);
+            }
+            if(!empty($buildingData['subscription_agreement']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['subscription_agreement'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['subscription_agreement']);
+            }
+            if(!empty($buildingData['refinance_application']) && file_exists(Yii::$app->params['building_file_path'].$buildingData['refinance_application'])) {
+                    unlink(Yii::$app->params['building_file_path'].$buildingData['refinance_application']);
+            }
             $model->deleteById($id);           
             return $this->redirect(['index']);            
         }

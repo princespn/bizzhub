@@ -61,6 +61,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 	<div class="form-group col-md-4">
                 	<?=$form->field($model, 'amendments')->fileInput();?>
                 	</div>
+                    <div class="form-group col-md-4">
+                    <?=$form->field($model, 'house_rules')->fileInput();?>
+                    </div>
                 	<div class="form-group col-md-4">
                 	<?=$form->field($model, 'sublet_policy')->fileInput();?>
                 	</div>
@@ -122,16 +125,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 	<?=$form->field($model, 'financials_2014')->fileInput();?>
                 	</div>
                 	<div class="form-group col-md-4">
-                	<?=$form->field($model, 'financials_2015')->fileInput();?>
-                	</div>
-                	<div class="form-group col-md-4">
                 	<?=$form->field($model, 'operating_budget')->fileInput();?>
                 	</div>
                 	<div class="form-group col-md-4">
                 	<?=$form->field($model, 'fitness_center_policy')->fileInput();?>
-                	</div>
-                	<div class="form-group col-md-4">
-                	<?=$form->field($model, 'credit_report_form')->fileInput();?>
                 	</div>
                 	<div class="form-group col-md-4">
                 	<?=$form->field($model, 'credit_report_form')->fileInput();?>
