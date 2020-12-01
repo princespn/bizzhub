@@ -5,6 +5,7 @@ use yii\helpers\Html;
 use kartik\file\FileInput;
 use yii\helpers\ArrayHelper;
 use backend\models\Buildings;
+use yii\helpers\Url;
 
 /**
  * @var $this  yii\web\View
@@ -53,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <div class="form-row">
                 	<div class="form-group col-md-4">
-                	<?=$form->field($model, 'purchase_application')->fileInput();?>
+                	<?=$form->field($model, 'purchase_application')->fileInput(['onchange'=>'uploadfile(this)']);?>
                 	</div>
                 	<div class="form-group col-md-4">
                 	<?=$form->field($model, 'offering_plan')->fileInput();?>
@@ -156,3 +157,29 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php ActiveForm::end() ?>
     </div>
 </div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    /*$('#buildings-purchase_application').on('change', function(event) {
+        var file = document.getElementById("buildings-purchase_application").files[0];
+        console.log(file);
+    });*/
+    function uploadfile(input){
+        var a = input.files[0]; 
+        var fd = new FormData($('#w0')[0]);
+        $.ajax({
+            url: '<?php echo Url::toRoute('buildings/ajax-file-upload'); ?>',
+            type: 'POST',
+            cache: false,
+            data: fd,
+            processData: false,
+            contentType: false,
+            success: function (data) { 
+                console.log(data);
+            },
+            error: function () {
+                alert("ERROR in upload");
+            }
+        });
+    }
+</script>

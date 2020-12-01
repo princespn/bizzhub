@@ -319,6 +319,29 @@ class BuildingsController extends Controller
     }
 
 
+    public function actionAjaxFileUpload()
+    {
+        $model = new Buildings();   
+        //print_r($_FILES);die('dddd');     
+        if(!empty(Yii::$app->request->post())){            
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                $model->purchase_application = UploadedFile::getInstance($model,'purchase_application');
+                if(!empty($model->purchase_application)){
+                    $file_name = 'purchase_application'.time().'.'. $model->purchase_application->extension;
+                    if(!is_dir(Yii::$app->params['building_file_path_temp'])) {
+                        mkdir(Yii::$app->params['building_file_path_temp'], 0777, true);
+                    }
+                    $model->purchase_application->saveAs(Yii::$app->params['building_file_path_temp'].$file_name);
+                    $field_name = 'purchase_application';
+                    //$model->refinance_application = $file_name;
+                } 
+                $return_array = ['field_name'=>$field_name,'file_name'=>$file_name];  
+            }
+        }        
+        return json_encode($return_array);
+    }
+
+
     public function actionUpdate($id)
     {
         $model = new Buildings();
@@ -872,6 +895,7 @@ class BuildingsController extends Controller
                 'model' => $models,
             ]);
     }
+
 
     public function actionAddCategory()
     {
