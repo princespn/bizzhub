@@ -267,7 +267,6 @@ $logEntries[] = [
                             'icon' => FAS::icon('chalkboard', ['class' => ['nav-icon']]),
                             'url' => ['/training/index'],
                             'active' => Yii::$app->controller->id === 'training',
-                            //'visible' => Yii::$app->user->can('administrator'),
                             'visible' => Yii::$app->user->can('admin'),
                         ],
                         [
@@ -275,7 +274,13 @@ $logEntries[] = [
                             'icon' => FAS::icon('question-circle', ['class' => ['nav-icon']]),
                             'url' => ['/supports/index'],
                             'active' => Yii::$app->controller->id === 'supports',
-                            //'visible' => Yii::$app->user->can('administrator'),
+                            'visible' => Yii::$app->user->can('admin'),
+                        ],
+                        [
+                            'label' => Yii::t('backend', 'Buildings'),
+                            'icon' => FAS::icon('building', ['class' => ['nav-icon']]),
+                            'url' => ['/buildings/index'],
+                            'active' => Yii::$app->controller->id === 'buildings',
                             'visible' => Yii::$app->user->can('admin'),
                         ],
                         [
