@@ -15,6 +15,8 @@ class Buildings extends Model
 {
     const STATUS_NOT_ACTIVE = 0;
     const STATUS_ACTIVE = 1;
+    const IMG_PLACEHOLDER = '@web/img/pdf.png';
+    const PDF_PLACEHOLDER = '@web/img/loading-image.gif';
     public $address;
     public $city;
     public $state;

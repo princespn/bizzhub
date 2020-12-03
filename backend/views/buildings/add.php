@@ -53,8 +53,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
 
                 <div class="form-row">
-                	<div class="form-group col-md-4">
-                	<?=$form->field($model, 'purchase_application')->fileInput(['onchange'=>'uploadfile(this)']);?>
+                	<div class="form-group col-md-4"><?php
+                    //if(empty($model->purchase_application)){
+                        echo $form->field($model, 'purchase_application')->fileInput(['onchange'=>'uploadfile(this)']);
+                    /*}else{
+                        echo Html::a(
+                            Yii::t('app', 'Remove Image'), 
+                            Url::toRoute(['buildings/delete-img']),
+                            ['class' => 'btn btn-danger']
+                        );
+                    }*/ ?>
+                	
                     <?= $form->field($model, 'hidden_purchase_application')->hiddenInput(['value'=>''])->label(false); ?>
                 	</div>
                 	<div class="form-group col-md-4">
@@ -187,31 +196,65 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <?php ActiveForm::end() ?>
     </div>
+    <div class="loading_img_div">
+        <?= Html::img('@web/img/loading-image.gif', ['id' => 'loading-image']) ?>
+    </div>
 </div>
-
+<style type="text/css">
+   .loading_img_div{
+    text-align: center;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.5);
+    z-index: 9999;
+   } 
+   #loading-image {
+    text-align: center;
+    margin: 25% auto 0;
+    width: 70px;
+}
+</style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-    /*$('#buildings-purchase_application').on('change', function(event) {
-        var file = document.getElementById("buildings-purchase_application").files[0];
-        console.log(file);
-    });*/
     function uploadfile(input){
-        var a = input.files[0]; 
-        var fd = new FormData($('#w0')[0]);
-        $.ajax({
-            url: '<?php echo Url::toRoute('buildings/ajax-file-upload'); ?>',
-            type: 'POST',
-            cache: false,
-            data: fd,
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                var json_obj = $.parseJSON(data);
-                document.getElementById("buildings-hidden_"+json_obj['field_name']).value = json_obj['file_name'];
-            },
-            error: function () {
-                alert("ERROR in upload");
-            }
-        });
+        //var a = input.files[0]; 
+        //var fd = new FormData($('#w0')[0]);
+        //console.log(input.name);
+        var fd = new FormData();
+        var files = $('#'+input.id)[0].files;
+        var input2 = $("#"+input.id);
+        var imgname = files[0]['name'];
+        var ext =  imgname.substr( (imgname.lastIndexOf('.') +1) );
+        if(ext=='jpg' || ext=='jpeg' || ext=='png' || ext=='gif' || ext=='PNG' || ext=='JPG' || ext=='JPEG' || ext=='pdf')
+        {
+            fd.append('file',files[0]);
+            fd.append('id',input.id);
+            $.ajax({
+                url: '<?php echo Url::toRoute('buildings/ajax-file-upload'); ?>',
+                type: 'POST',
+                cache: false,
+                data: fd,
+                processData: false,
+                contentType: false,
+                beforeSend: function() {
+                  $(".loading_img_div").show();
+                },
+                success: function (data) {
+                    var json_obj = $.parseJSON(data);
+                    document.getElementById("buildings-hidden_"+json_obj['field_name']).value = json_obj['file_name'];
+                    $(".loading_img_div").hide();
+                },
+                error: function () {
+                    alert("ERROR in upload");
+                }
+            });
+        }else{
+            input = input2.val('').clone(true);
+            alert('Sorry Only you can uplaod JPEG|JPG|PNG|GIF|PDF file type ');
+        }
     }
 </script>
