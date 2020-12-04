@@ -43,7 +43,7 @@ class ResourcesController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [                   
                     [                    
-                        'actions' => ['index','supports'],
+                        'actions' => ['index','supports','ajaxsearch'],
                         'allow' => true,
                         'roles' => ['agent'],
                     ],                   
@@ -107,5 +107,27 @@ class ResourcesController extends Controller
             ->send();
 
         //}
+    }
+
+    public function actionAjaxsearch()
+    {
+        $model = new Resources();
+        $searchData = $document = "";   
+        if(!empty($_POST)){
+            $data = $model->buildingSearch($_POST['searchtext']);
+            if(!empty($data)){
+                $document .='<ul>';
+                foreach ($data as $key => $value) {
+                    $searchData.= '<p>'.$value['address'].'</p>';
+                    if(!empty($value['purchase_application'])){
+                        $document .='<li><a href="#">'.$value['purchase_application'].'</a></li>';
+                    }
+                }
+                $document .="</ul>";
+            }
+           
+        }
+        //echo $document;die;
+        return $searchData;
     }
 }

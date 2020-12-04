@@ -57,5 +57,23 @@ class Resources extends Model
             //print_r($data);die;
         return $data;
     }
+
+    public function buildingSearch($text)
+    {
+        $data = [];
+        $table = 'buildings';
+        $condition = ['OR',            
+            ['like','address',$text] ,     //Condition2(C2)
+            ['like','legal_name',$text] ,     //Condition2(C2)
+        ];
+        $data = (new \yii\db\Query())
+            ->select('*')
+            ->from($table)
+            ->where(['status'=>1])
+            ->andwhere($condition)
+            ->all();
+            //print_r($data);die;
+        return $data;
+    }
     
 }

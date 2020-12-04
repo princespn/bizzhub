@@ -3,38 +3,72 @@
  * @var yii\web\View $this
  */
 //use yii;
-use yii\bootstrap\ActiveForm;
+//use yii\bootstrap\ActiveForm;
+use yii\bootstrap4\ActiveForm;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 $this->title = Yii::$app->name.' Resources';
 ?>
 
 
 <div class="container">
-    <div class="row">
-    <div class="col-md-6">
   <div class="row">
-    <div class="col-md-12">
-        <div class="building-top-boxx">
-        <div class="building-left">
-            <h4>Building Database</h4>
-        </div>
-        <div class="welcome-to">
-            Welcome to the most exhaustive collection of documents for buildings
-            in Upper Manhattan! Search below or CLICK HERE for the full database.
-        </div>
-        <div class="have-you">
-            Have you recieved building documents not in the database?
-            Email them to your Client Success Manager and they’ll add it!
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="building-top-boxx">
+            <div class="building-left">
+              <h4>Building Database</h4>
             </div>
-        <div class="form-boxx-top">
-   <form class="form-inline" action="/action_page.php">
-      <input type="name" class="form-control" id="pwd" placeholder="Enter Street Address or Building Name" name="nav-item">
-      
-      <button type="submit" class="btn btn-primary">Search</button>
-    </form></div>
-    </div>
-  </div>
+            <div class="welcome-to">
+                Welcome to the most exhaustive collection of documents for buildings
+                in Upper Manhattan! Search below or CLICK HERE for the full database.
+            </div>
+            <div class="have-you">
+              Have you recieved building documents not in the database?
+              Email them to your Client Success Manager and they’ll add it!
+            </div>
+            <div class="form-boxx-top"><?php 
+              $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data','class'=>'form-inline','id'=>'searchbuildings']]) ?>
+                <?= Html::textInput('searchtext', "", ['class' => 'form-control','placeholder'=>'Enter Street Address or Building Name']) ?> 
+                <?= Html::Button('Search',['class'=>'btn btn-primary','onclick'=>'searchData();']); ?><?php 
+              ActiveForm::end() ?>
+            </div>
+            <div class="nagle-apartments">
+              <h2>Nagle Apartments Corp “Nabors”</h2>
+              <p>14 Bogardus Place New York, NY 10040</p>
+              <p>31 Nagle Avenue New York, NY 10040 </p>
+              <p>37 Nagle Avenue New York, NY 10040 </p>
+            </div>
+            <div class="row purchase-box">
+              <div class="col-md-4 pr-0">
+              <ul class="purchase-1">
+                <li>Purchase Application</li>
+                <li>Offering Plan</li>
+                <li>Amendments</li>
+                <li>Sublet Policy</li>
+              </ul>
+            </div>
+            <div class="col-md-4 ">
+              <ul class="purchase-1">
+                <li>Financials 2016</li>
+                <li>Offering Plan</li>
+                <li>Financials 2020</li>
+                <li>Meeting Notes</li>
+              </ul>
+            </div>
+            <div class="col-md-4 pr-0">
+              <ul class="purchase-1">
+                <li>Lease Agreement</li>
+                <li>Renovations </li>
+                <li>Sublet Policy</li>
+                <li>Sublet Policy</li>
+              </ul>
+            </div>
+            </div>
+          </div>
+        </div>
 
   <div class="col-md-12">
   <div class="building-top-boxx-1">
@@ -158,8 +192,40 @@ $this->title = Yii::$app->name.' Resources';
 
 </div>
 </div>
-
+<style type="text/css">
+  .nagle-apartments{
+    display: none;
+  }
+  /*.purchase-box{
+    display: none;
+  }*/
+</style>
 <script type="text/javascript">
+
+function searchData(){
+  //var myData = $("#searchbuildings").getFormData();
+  var myData = new FormData($('#searchbuildings')[0])
+  //console.log(myData);
+  $.ajax({
+      url: '<?php echo Url::toRoute('resources/ajaxsearch'); ?>',
+      type: 'POST',
+      cache: false,
+      data: myData,
+      processData: false,
+      contentType: false,
+      beforeSend: function() {
+        //$(".loading_img_div").show();
+      },
+      success: function (data) {
+        $(".nagle-apartments").show();
+        $(".nagle-apartments").html(data);
+          //$(".loading_img_div").hide();
+      },
+      error: function () {
+          alert("ERROR in upload");
+      }
+  });
+}
 
 function supportEmailSend()
  {   
