@@ -1,5 +1,4 @@
 <?php
-
 namespace frontend\models;
 use Yii;
 use yii\base\Model;
@@ -12,16 +11,9 @@ use yii\db\Query;
 use yii\base\Exception;
 use yii\helpers\Url;
 
-
-
-
-
-//use common\models\Contact;
+//use common\models\Resources;
 //use yii\db\Expression;
 
-/**
- * ArticleSearch represents the model behind the search form about `common\models\Article`.
- */
 class Resources extends Model
 {
 
@@ -34,7 +26,6 @@ class Resources extends Model
 
     public function getSupportsData()
     {
-        //die('dddd');
         $data = [];
         $table = 'supports';
         $data = (new \yii\db\Query())
@@ -46,7 +37,6 @@ class Resources extends Model
 
     public function getSupportsDataById($type)
     {
-        //var_dump($id);die;
         $data = [];
         $table = 'supports';
         $data = (new \yii\db\Query())
@@ -54,7 +44,6 @@ class Resources extends Model
             ->from($table)
             ->where(['type'=>$type])
             ->all();
-            //print_r($data);die;
         return $data;
     }
 
@@ -63,8 +52,8 @@ class Resources extends Model
         $data = [];
         $table = 'buildings';
         $condition = ['OR',            
-            ['like','address',$text] ,     //Condition2(C2)
-            ['like','legal_name',$text] ,     //Condition2(C2)
+            ['like','address',$text] ,
+            ['like','legal_name',$text] , 
         ];
         $data = (new \yii\db\Query())
             ->select('*')
@@ -72,7 +61,6 @@ class Resources extends Model
             ->where(['status'=>1])
             ->andwhere($condition)
             ->all();
-            //print_r($data);die;
         return $data;
     }
     

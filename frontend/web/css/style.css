@@ -323,7 +323,7 @@ a.btn--boxxxx:hover {
 .nagle-apartments h2 {font-size: 20px; color: #000;font-weight: 600;padding-bottom: 7px;}
 .nagle-apartments p {font-size: 14px;margin: 0px;color: #000;padding-bottom: 3px; font-weight: 600;}
 .purchase-1 li {display: block;font-size: 14px;margin-left: -25px;font-weight: 700;text-decoration: underline;padding-top: 7px;color: #000;}
-.purchase-box {padding: 0px 17px;}
+.purchase-box {padding: 10px 17px;}
 .purchase-1 {margin-top: 20px;padding-bottom: 20px;}
 input.form-control::placeholder {color: #000;font-weight: 500;}
 .submit-btm-on .btn-primary  {color: #fff;background-color: #242056; border-color: #242056;}
