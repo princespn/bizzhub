@@ -112,7 +112,8 @@ class ResourcesController extends Controller
     public function actionAjaxsearch()
     {
         $model = new Resources();
-        $address = $document = "";   
+        $address = $document = "";  
+        $returnArray = []; 
         if(!empty($_POST)){
             $data = $model->buildingSearch($_POST['searchtext']);
             if(!empty($data)){
