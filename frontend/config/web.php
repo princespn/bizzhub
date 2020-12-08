@@ -62,7 +62,18 @@ $config = [
             'loginUrl' => ['/user/sign-in/login'],
             'enableAutoLogin' => true,
             'as afterLogin' => common\behaviors\LoginTimestampBehavior::class
-        ],        
+        ], 
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.gmail.com',
+                'username' => 'developer.wdp@gmail.com',
+                'password' => 'pfyfgkzzrjtsvzpp',
+                'port' => '587',
+                'encryption' => 'tls',
+            ],
+        ],       
     ]
 ];
 

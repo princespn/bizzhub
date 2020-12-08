@@ -43,7 +43,7 @@ class Resources extends Model
             ->select(['*'])
             ->from($table)
             ->where(['type'=>$type])
-            ->all();
+            ->one();
         return $data;
     }
 

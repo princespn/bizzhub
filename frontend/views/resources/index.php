@@ -85,8 +85,6 @@ $this->title = Yii::$app->name.' Resources';
                 <?= Html::textarea('message', '', ['rows' => 6,'id'=>'exampleFormControlTextarea1', 'class'=>'form-control']); ?>              
             </div>
             <div class="about-that">
-              Sorry to hear about that.<br>
-              `We’ll get back to you ASAP!
             </div>
             <div class="fform-btm-about">    
                 <div class="submit-btm-on pull-right">        
@@ -196,16 +194,18 @@ function searchData(){
 function supportEmailSend()
  {   
    var data=$("#support-form-id").serialize();
-
-
   $.ajax({
     type: 'POST',
     url: '<?=Yii::$app->urlManager->createAbsoluteUrl(['resources/supports']); ?>',
     type: 'post',
     data:data,
     success:function(data){
-                //alert(data); 
-              },
+      if(data == "success"){
+        $(".about-that").html("Sorry to hear about that.<br>\
+              `We’ll get back to you ASAP!");
+        $('#exampleFormControlTextarea1').val("");        
+      }      
+    },
     error: function(data) { // if error occured
          alert("Error occured.please try again");
          alert(data);

@@ -93,20 +93,28 @@ class ResourcesController extends Controller
      */
     public function actionSupports()
     {
-        //die('ddd');
         $model = new Resources();
-        //if (Yii::$app->request->isAjax) {
-        //    $data = Yii::$app->request->post();
-        //    $supportsData = $model->getSupportsDataById($data['type']);
-            Yii::$app->mailer->compose()
-            ->setFrom('dharmraj.kumhar@gmail.com')
-            ->setTo('dharmraj.kumhar@gmail.com')
-            ->setSubject('Message subject')
-            ->setTextBody('Plain text content')
-            ->setHtmlBody('<b>HTML content</b>')
+    $return = "fail";    
+    if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $supportsData = $model->getSupportsDataById($data['type']);
+            //print_r($supportsData);die;
+            $success=Yii::$app->mailer->compose()
+            //->setFrom('dharmraj.kumhar@gmail.com')
+            ->setTo($supportsData['email'])
+            ->setSubject($supportsData['type'])
+            ->setTextBody($data['message'])
+            ->setHtmlBody('<b>'.$data['message'].'</b>')
             ->send();
+            if(!empty($success)){
+                $return = "success";
+            }else{
+                $return = "fail";
+            }
+            
 
-        //}
+        }
+        return $return;
     }
 
     public function actionAjaxsearch()
