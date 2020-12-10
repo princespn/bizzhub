@@ -1,4 +1,5 @@
 <?php
+use yii\helpers\Url;
 /**
  * @var yii\web\View $this
  */
@@ -27,9 +28,8 @@ $this->title = Yii::$app->name;
                 foreach($document as $doc_data){?>
                     <li><?php
                     if($cat_data['id'] == $doc_data['category']){
-                        echo Html::a(Html::img('@web/img/pdf.png',['class'=>'']), env('STORAGE_HOST_INFO').'document/'.$doc_data['file_path'], ['class'=>'']); ?>
+                        echo Html::a(Html::img('@web/img/pdf.png',['class'=>'']), Url::to(['file/download','n'=>$doc_data['file_path'],'p'=>'document','a'=>'index']), ['class'=>'']); ?>
                         <h4><?=$doc_data['doc_name']?></h4></li><?php
-                        
                     }
                 }
                  ?>

@@ -329,3 +329,34 @@ input.form-control::placeholder {color: #000;font-weight: 500;}
 .submit-btm-on .btn-primary  {color: #fff;background-color: #242056; border-color: #242056;}
 .submit-btm-on .btn-primary:hover{color: #a8a6a6;background-color: #242056;border-color: #242056;}
 .clear{clear: both;}
+
+
+
+/*.............profile...........*/
+
+.user-profile-form {
+    margin: 40px 0;
+}
+.upload-kit .upload-kit-item.image > img {
+    border-radius: 100px !important;
+    max-width: 150px !important;
+    max-height: 150px !important;
+}
+.upload-kit .upload-kit-input, .upload-kit .upload-kit-item{
+    border-radius: 100px !important;
+}
+.user-profile-form .form-control{
+    border: 1px solid #343031;
+}
+.user-profile-form .update-btn {
+    background: #3a3667 !important;
+    color: #fff !important;
+    padding: 5px 30px !important;
+}
+.user-profile-form .list-head {
+    margin: 30px auto 0px;
+}
+.profile-detail, .acc-sec {
+    box-shadow: 0 0px 5px #c3c3c3;
+    padding: 20px 20px;
+}

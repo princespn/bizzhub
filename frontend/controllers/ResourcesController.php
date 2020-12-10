@@ -137,97 +137,97 @@ class ResourcesController extends Controller
                     $address.= '<p id="build_'.$key.'" onclick="showDoc(this.id)" class="'.$activeClass.'">'.$value['address'].'</p>';
                     $document .='<ul id="doc_'.$key.'" class="'.$ulClass.'">';
                     if(!empty($value['purchase_application'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['purchase_application'].'">'.'Purchase Application'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['purchase_application'].'&p=buildings&a=index>'.'Purchase Application'.'</a></li>';
                     } 
                     if(!empty($value['offering_plan'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['offering_plan'].'">'.'Offering Plan'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['offering_plan'].'&p=buildings&a=index>'.'Offering Plan'.'</a></li>';
                     } 
                     if(!empty($value['amendments'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['amendments'].'">'.'Amendments'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['amendments'].'&p=buildings&a=index>'.'Amendments'.'</a></li>';
                     }
                     if(!empty($value['house_rules'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['house_rules'].'">'.'House Rules'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['house_rules'].'&p=buildings&a=index>'.'House Rules'.'</a></li>';
                     }  
                     if(!empty($value['sublet_policy'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['sublet_policy'].'">'.'Sublet Policy'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['sublet_policy'].'&p=buildings&a=index>'.'Sublet Policy'.'</a></li>';
                     } 
                     if(!empty($value['covid_19_policy'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['covid_19_policy'].'">'.'COVID-19 Policy'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['covid_19_policy'].'&p=buildings&a=index>'.'COVID-19 Policy'.'</a></li>';
                     } 
                     if(!empty($value['sublet_application'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['sublet_application'].'">'.'Sublet Application'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['sublet_application'].'&p=buildings&a=index>'.'Sublet Application'.'</a></li>';
                     } 
                     if(!empty($value['rental_application'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['rental_application'].'">'.'Rental Application'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['rental_application'].'&p=buildings&a=index>'.'Rental Application'.'</a></li>';
                     }   
                     if(!empty($value['bulk_rate_offering'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['bulk_rate_offering'].'">'.'Bulk Rate Offering'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['bulk_rate_offering'].'&p=buildings&a=index>'.'Bulk Rate Offering'.'</a></li>';
                     } 
                     if(!empty($value['renovations'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['renovations'].'">'.'Renovations'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['renovations'].'&p=buildings&a=index>'.'Renovations'.'</a></li>';
                     } 
                     if(!empty($value['by_laws'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['by_laws'].'">'.'By-Laws'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['by_laws'].'&p=buildings&a=index>'.'By-Laws'.'</a></li>';
                     }
                     if(!empty($value['lease_agreement'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['lease_agreement'].'">'.'Lease Agreement'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['lease_agreement'].'&p=buildings&a=index>'.'Lease Agreement'.'</a></li>';
                     }
                     if(!empty($value['move_in_out'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['move_in_out'].'">'.'Move In/Out'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['move_in_out'].'&p=buildings&a=index>'.'Move In/Out'.'</a></li>';
                     } 
                     if(!empty($value['regulatory_agreement'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['regulatory_agreement'].'">'.'Regulatory Agreement'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['regulatory_agreement'].'&p=buildings&a=index>'.'Regulatory Agreement'.'</a></li>';
                     } 
                     if(!empty($value['flip_tax_policy'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['flip_tax_policy'].'">'.'Flip Tax Policy'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['flip_tax_policy'].'&p=buildings&a=index>'.'Flip Tax Policy'.'</a></li>';
                     }
                     if(!empty($value['pet_policy'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['pet_policy'].'">'.'Pet Policy'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['pet_policy'].'&p=buildings&a=index>'.'Pet Policy'.'</a></li>';
                     }
                     if(!empty($value['terrace_policy'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['terrace_policy'].'">'.'Terrace Policy'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['terrace_policy'].'&p=buildings&a=index>'.'Terrace Policy'.'</a></li>';
                     } 
                     if(!empty($value['storage_policy'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['storage_policy'].'">'.'Storage Policy'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['storage_policy'].'&p=buildings&a=index>'.'Storage Policy'.'</a></li>';
                     }
                     if(!empty($value['financials_2019'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['financials_2019'].'">'.'Financials 2019'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['financials_2019'].'&p=buildings&a=index>'.'Financials 2019'.'</a></li>';
                     }
                     if(!empty($value['financials_2018'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['financials_2018'].'">'.'Financials 2018'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['financials_2018'].'&p=buildings&a=index>'.'Financials 2018'.'</a></li>';
                     }
                     if(!empty($value['financials_2017'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['financials_2017'].'">'.'Financials 2017'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['financials_2017'].'&p=buildings&a=index>'.'Financials 2017'.'</a></li>';
                     }
                     if(!empty($value['financials_2016'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['financials_2016'].'">'.'Financials 2016'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['financials_2016'].'&p=buildings&a=index>'.'Financials 2016'.'</a></li>';
                     } 
                     if(!empty($value['financials_2015'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['financials_2015'].'">'.'Financials 2015'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['financials_2015'].'&p=buildings&a=index>'.'Financials 2015'.'</a></li>';
                     } 
                     if(!empty($value['financials_2014'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['financials_2014'].'">'.'Financials 2014'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['financials_2014'].'&p=buildings&a=index>'.'Financials 2014'.'</a></li>';
                     }
                     if(!empty($value['operating_budget'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['operating_budget'].'">'.'Operating Budget'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['operating_budget'].'&p=buildings&a=index>'.'Operating Budget'.'</a></li>';
                     } 
                     if(!empty($value['fitness_center_policy'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['fitness_center_policy'].'">'.'Fitness Center Policy'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['fitness_center_policy'].'&p=buildings&a=index>'.'Fitness Center Policy'.'</a></li>';
                     } 
                     if(!empty($value['credit_report_form'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['credit_report_form'].'">'.'Credit Report Form'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['credit_report_form'].'&p=buildings&a=index>'.'Credit Report Form'.'</a></li>';
                     } 
                     if(!empty($value['annual_meeting_notes'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['annual_meeting_notes'].'">'.'Annual Meeting Notes'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['annual_meeting_notes'].'&p=buildings&a=index>'.'Annual Meeting Notes'.'</a></li>';
                     } 
                     if(!empty($value['handbook'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['handbook'].'">'.'Handbook'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['handbook'].'&p=buildings&a=index>'.'Handbook'.'</a></li>';
                     }
                     if(!empty($value['subscription_agreement'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['subscription_agreement'].'">'.'Subscription Agreement'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['subscription_agreement'].'&p=buildings&a=index>'.'Subscription Agreement'.'</a></li>';
                     } 
                     if(!empty($value['refinance_application'])){
-                        $document .='<li><a href="'.env('STORAGE_HOST_INFO').'buildings/'.$value['refinance_application'].'">'.'Refinance Application'.'</a></li>';
+                        $document .='<li><a href=file/download?n='.$value['refinance_application'].'&p=buildings&a=index>'.'Refinance Application'.'</a></li>';
                     }  
                     $document .="</ul>";
                     $liCount++;
