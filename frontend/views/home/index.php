@@ -629,7 +629,7 @@ $this->title = Yii::$app->name;
         $(".loading_img_div").show();
       },
       success: function (data) {
-        alert(1);
+        //alert(1);
         $(".show_message").show();
         $(".show_message").html(data);
         $(".loading_img_div").hide();
