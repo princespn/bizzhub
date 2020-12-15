@@ -14,6 +14,8 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use frontend\models\Contact;
+
 
 /**
  * Site controller
@@ -42,7 +44,7 @@ class HomeController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [                   
                     [                    
-                        'actions' => ['index'],
+                        'actions' => ['index','ajax-add-contact'],
                         'allow' => true,
                         'roles' => ['agent'],
                     ],                   
@@ -78,7 +80,73 @@ class HomeController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $contact = new Contact();
+        //$config = new \PHRETS\Configuration;
+        return $this->render('index',[
+            'contact' => $contact
+        ]);
+    }
+
+
+    public function actionAjaxAddContact()
+    {
+        $model = new Contact();
+        $return = "fail";  
+    $user_id = Yii::$app->user->getId();
+    $role = Yii::$app->db
+        ->createCommand("Select `item_name` from rbac_auth_assignment where user_id='2'")
+        ->queryScalar();
+    $contactAuthArr = Yii::$app->params['ContactAuthUserRole']; 
+    $error = 'you have some error';     
+    if (in_array($role, $contactAuthArr)){     
+        if (Yii::$app->request->isAjax) {
+                $data = Yii::$app->request->post(); 
+                $rows = (new \yii\db\Query())
+                        ->select(['id', 'email','agent_id'])
+                        ->from('contact')
+                        ->where(['email' => $data['Contact']['email']])
+                        ->One();                                     
+                if(!empty($rows)){
+                    $agents = $user_id;
+                    if($rows['agent_id'] != $agents){
+                        $array1 = explode(',', $rows['agent_id']);
+                        $array2 = explode(',', $agents);
+                        $ag_id_arr = array_unique(array_merge($array1,$array2), SORT_REGULAR);
+                        $ag_id = implode(',', $ag_id_arr);
+                        //$agentids = $rows['agent_id'];
+                        Yii::$app->db->createCommand()
+                         ->update('contact', ['agent_id' => $ag_id], ['id' => $rows['id']])
+                         ->execute();
+                         $success = 'Contact saved successfull.';                      
+                    }else{
+                        $error = 'This email id is already use.';
+                    }                    
+                }else{ 
+                    Yii::$app->db->createCommand()
+                    ->insert('contact',
+                        [
+                            'first_name'=>$data['Contact']['first_name'],
+                            'last_name'=>$data['Contact']['last_name'],
+                            'email'=>$data['Contact']['email'],
+                            'agent_id'=>$user_id,
+                            'created_date'=>time()
+                        ]
+                    )
+                    ->execute();    
+                    $success = 'Contact saved successfull.';
+                } 
+            }else{
+                $error = 'Form data is blank';
+            }
+        }else{
+           $error = 'You are not authorize'; 
+        }
+        if(!empty($success)){
+             $return = $success;
+        }else{
+            $return = $error;
+       }
+       return json_encode($return);        
     }
 
     /**

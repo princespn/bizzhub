@@ -92,7 +92,6 @@ class ContactsController extends Controller
         foreach($agent as $a_id){
             $agent_id_arr[$a_id['id']]=strtolower($a_id['username']);
         }
-        //print_r($agent_id_arr);die;
         if(!empty(Yii::$app->request->post())){
              $model->csv_file = UploadedFile::getInstance($model, 'csv_file');
              if ( $model->csv_file )
@@ -103,13 +102,11 @@ class ContactsController extends Controller
                     $model->csv_file = $storage.'/web/csv/' .$time. '.' . $model->csv_file->extension;
 
                      $handle = fopen($model->csv_file, "r");
-                     //print_r($handle);die;
                       $cnt = 0;
                      while (($fileop = fgetcsv($handle, 1000, ",")) !== false) 
                      {
                         $first_name = $last_name = $email = $phone = $list = $agent = "";
                         if ($cnt!=0){
-                            //print_r(urldecode($fileop));die;
                             $first_name = $fileop[0];
                             $last_name = $fileop[1];
                             $pos = strpos($fileop[2], ',');
@@ -121,7 +118,6 @@ class ContactsController extends Controller
                                 }
                                 $agents = implode(',', $agentA);
                             } else {
-                                //print_r($fileop[2]);die('ddfff');
                                 $agents = array_search(strtolower($fileop[2]),$agent_id_arr);
                             }
                             $email = $fileop[3];
@@ -132,17 +128,12 @@ class ContactsController extends Controller
                             ->from('contact')
                             ->where(['email' => $email])
                             ->One();
-                            //echo $rows['agent_id'].' '.$agents;die;
-                            //print_r($rows);die('ddfff');
                             if (!empty($rows)) {
-                                //die('sff');
                                 if($rows['agent_id'] != $agents){
                                     $array1 = explode(',', $rows['agent_id']);
                                     $array2 = explode(',', $agents);
                                     $ag_id_arr = array_unique(array_merge($array1,$array2), SORT_REGULAR);
                                     $ag_id = implode(',', $ag_id_arr);
-                                    ////print_r($ag_id);die;
-                                    //$agentids = $rows['agent_id'];
                                     Yii::$app->db->createCommand()
                                      ->update('contact', ['agent_id' => $ag_id], ['id' => $rows['id']])
                                      ->execute();
@@ -150,7 +141,6 @@ class ContactsController extends Controller
                                     continue;
                                 } 
                             }else{
-                                //echo $email;die;
                                 Yii::$app->db->createCommand()
                                 ->insert('contact',
                                     [
@@ -178,7 +168,6 @@ class ContactsController extends Controller
                 }
         }
         $user_id = Yii::$app->user->identity->id;
-        //$user_id = 2;
         $query = new Query();        
             $rows = $query->select("*")
             ->from('contact')
@@ -193,7 +182,6 @@ class ContactsController extends Controller
                     $agentid = explode(",", $data['agent_id']);
                     $contacts_data['agent_name'] = [];
                     foreach($agentid as $aid){
-                        //echo $agent_id_arr[$aid];die;
                         $contacts_data['agent_name'][]=ucfirst($agent_id_arr[$aid]);
                     }
                 }
@@ -208,10 +196,8 @@ class ContactsController extends Controller
                 $contacts_data['status'] = $data['status'];
                 $contacts_data['updated_date'] = $data['updated_date'];
                 $contacts_data['created_date'] = $data['created_date'];
-                //print_r($contacts_data);die;
                 $data_arr[] = $contacts_data;
             }
-            //print_r($data_arr);die;
         $provider = new ArrayDataProvider([
             'allModels' => $data_arr,
             'sort' => [
@@ -239,7 +225,6 @@ class ContactsController extends Controller
         $role = Yii::$app->authManager->getRoles();
         
         $model = new Contact();
-        //print_r(Yii::$app->request->post());die;
         if(!empty(Yii::$app->request->post())){            
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                 $model->attributes= Yii::$app->request->post();
@@ -249,7 +234,6 @@ class ContactsController extends Controller
                     ->where(['email' => $model->attributes['email']])
                     ->One();
                 if(!empty($rows)){
-                    //print_r($model->attributes);die;
                     $agents = implode(',', $model->attributes['agent_id']);
                     if($rows['agent_id'] != $agents){
                         $array1 = explode(',', $rows['agent_id']);

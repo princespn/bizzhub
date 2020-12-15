@@ -3,6 +3,8 @@
  * @var yii\web\View $this
  */
 use yii\helpers\Html;
+use yii\bootstrap4\ActiveForm;
+use yii\helpers\Url;
 
 $this->title = Yii::$app->name;
 ?>
@@ -370,18 +372,18 @@ $this->title = Yii::$app->name;
                           <div class="list-head">
                             <h2>Add a New Contact</h2>
                           </div>
-                          <form class="contact-form">
+                          <?php $form = ActiveForm::begin(['id' => 'contact-form', 'class'=>'contact-form']); ?>
                             <div class="form-row">
                               <div class="form-group col-md-6">
-                                <input type="text" class="form-control" placeholder="First Name">
+                                <?=$form->field($contact, 'first_name',)->textInput(['class'=>'form-control','placeholder' =>'First Name'])->label(false) ?>
                               </div>
                               <div class="form-group col-md-6">
-                                <input type="text" class="form-control" placeholder="Last Name">
+                                <?=$form->field($contact, 'last_name',)->textInput(['class'=>'form-control','placeholder' =>'Last Name'])->label(false) ?>
                               </div>
                             </div>
                             <div class="form-row">
                             <div class="form-group col-md-12">
-                                <input type="text" class="form-control" placeholder="Email">
+                              <?=$form->field($contact, 'email',)->textInput(['class'=>'form-control','placeholder' =>'Email'])->label(false) ?>
                             </div>
                             </div>
                             <div class="form-row">
@@ -394,9 +396,13 @@ $this->title = Yii::$app->name;
                                 </div>
                               </div>
                               <div class="form-group col-md-6">
-                                <button type="submit" class="btn sub-btn pull-right">Submit</button>
+                                <?= Html::Button('Submit',['class'=>'btn sub-btn pull-right','onclick'=>'addContact();']); ?>     
                               </div>
-                          </form>
+                          <?php ActiveForm::end(); ?>
+                          <div class="show_message"></div>
+                          <div class="loading_img_div">
+                              <?= Html::img('@web/img/loading-image.gif', ['id' => 'loading-image']) ?>
+                          </div>
                         </div>
                           <div class="alert-box">
                               <div class="list-head">
@@ -593,3 +599,44 @@ $this->title = Yii::$app->name;
 
     </div>
 </div>
+<style type="text/css">
+  .loading_img_div{
+    text-align: center;
+    display: none;
+   } 
+  .show_message{
+    display: none;
+  } 
+  form#contact-form {
+    margin-top: 15px;
+}
+.loading_img_div img {
+    max-width: 5%; margin-bottom: 10px;
+}
+</style>
+<script type="text/javascript">
+  function addContact(){
+  var myData = new FormData($('#contact-form')[0])
+  $.ajax({
+      url: '<?php echo Url::toRoute('home/ajax-add-contact'); ?>',
+      type: 'POST',
+      cache: false,
+      data: myData,
+      processData: false,
+      contentType: false,
+      dataType: "json",
+      beforeSend: function() {
+        $(".loading_img_div").show();
+      },
+      success: function (data) {
+        alert(1);
+        $(".show_message").show();
+        $(".show_message").html(data);
+        $(".loading_img_div").hide();
+      },
+      error: function () {
+          alert("ERROR in upload");
+      }
+  });
+}
+</script>
