@@ -57,7 +57,8 @@
     "yii2mod/yii2-swagger": "^1.1",
     "rmrevin/yii2-fontawesome": "^3.4",
     "kartik-v/yii2-widgets": "^3.4",
-    "kartik-v/yii2-grid": "dev-master"
+    "kartik-v/yii2-grid": "dev-master",
+	"troydavisson/phrets": "2.*"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "^2.0.0",
