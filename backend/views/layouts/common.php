@@ -90,7 +90,7 @@ $logEntries[] = [
             'options' => ['class' => ['navbar-nav', 'ml-auto']],
             'encodeLabels' => false,
             'items' => [
-                [
+                /*[
                     // timeline events
                     'label' => FAR::icon('bell').' <span class="badge badge-success navbar-badge">'.TimelineEvent::find()->today()->count().'</span>',
                     'url'  => ['/timeline-event/index']
@@ -104,7 +104,7 @@ $logEntries[] = [
                         'class' => ['dropdown-menu', 'dropdown-menu-lg', 'dropdown-menu-right'],
                     ],
                     'items' => $logEntries,
-                ],
+                ],*/
                 '<li class="nav-item dropdown user-menu">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         '.Html::img(Yii::$app->user->identity->userProfile->getAvatar('/img/anonymous.png'), ['class' => ['img-circle', 'elevation-2', 'bg-white', 'user-image'], 'alt' => 'User imagesss']).'
@@ -134,7 +134,7 @@ $logEntries[] = [
                     </ul>
                 </li>
                 ',
-                [
+                /*[
                     // control sidebar button
                     'label' => FAS::icon('th-large'),
                     'url'  => '#',
@@ -143,7 +143,7 @@ $logEntries[] = [
                         'role' => 'button'
                     ],
                     'visible' => Yii::$app->user->can('admin'),
-                ],
+                ],*/
             ]
         ]); ?>
         <!-- /right navbar links -->
@@ -315,7 +315,7 @@ $logEntries[] = [
                                 ],
                             ],
                         ],
-                        [
+                        /*[
                             'label' => Yii::t('backend', 'Widgets'),
                             'url' => '#',
                             'icon' => FAS::icon('puzzle-piece', ['class' => ['nav-icon']]),
@@ -341,7 +341,7 @@ $logEntries[] = [
                                     'active' => in_array(Yii::$app->controller->id, ['carousel', 'carousel-item']),
                                 ],
                             ],
-                        ],
+                        ],*/
                         [
                             'label' => Yii::t('backend', 'Translation'),
                             'options' => ['class' => 'nav-header'],
