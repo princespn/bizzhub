@@ -45,26 +45,28 @@ function redirect($url, $statusCode = 302)
  * @param mixed $default
  * @return mixed
  */
-function env($key, $default = null)
-{
+if (! function_exists('env')) {
+    function env($key, $default = null)
+    {
 
-    $value = getenv($key) ?? $_ENV[$key] ?? $_SERVER[$key];
+        $value = getenv($key) ?? $_ENV[$key] ?? $_SERVER[$key];
 
-    if ($value === false) {
-        return $default;
+        if ($value === false) {
+            return $default;
+        }
+
+        switch (strtolower($value)) {
+            case 'true':
+            case '(true)':
+                return true;
+
+            case 'false':
+            case '(false)':
+                return false;
+        }
+
+        return $value;
     }
-
-    switch (strtolower($value)) {
-        case 'true':
-        case '(true)':
-            return true;
-
-        case 'false':
-        case '(false)':
-            return false;
-    }
-
-    return $value;
 }
 
 /**

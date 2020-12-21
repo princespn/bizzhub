@@ -7,7 +7,9 @@ require_once(__DIR__ . '/helpers.php');
 /**
  * Load application environment from .env file
  */
-$dotenv = new \Dotenv\Dotenv(dirname(__DIR__));
+//$dotenv = new \Dotenv\Dotenv(dirname(__DIR__));
+//$dotenv->load();
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/..');
 $dotenv->load();
 
 /**

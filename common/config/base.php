@@ -56,6 +56,15 @@ $config = [
             ]
         ],
 
+        /*'db' => [
+            'class' => yii\db\Connection::class,
+            'dsn' => 'mysql:host=localhost;port=3306;dbname=agent_hub',
+            'username' => 'root',
+            'password' => '',
+            'tablePrefix' => env('DB_TABLE_PREFIX'),
+            'charset' => env('DB_CHARSET', 'utf8'),
+            'enableSchemaCache' => YII_ENV_PROD,
+        ],*/
         'db' => [
             'class' => yii\db\Connection::class,
             'dsn' => env('DB_DSN'),

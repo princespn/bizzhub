@@ -45,7 +45,7 @@ class HomeController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [                   
                     [                    
-                        'actions' => ['index','ajax-add-contact','getxml-data'],
+                        'actions' => ['index','ajax-add-contact','getxml-data','get-retsxml'],
                         'allow' => true,
                         'roles' => ['agent'],
                     ],                   
@@ -153,6 +153,41 @@ class HomeController extends Controller
             $return = $error;
        }
        return json_encode($return);        
+    }
+
+    public function actionGetRetsxml()
+    {
+        $rets_login_url = 'http://rets.perchwell.com:6103/login';
+        $rets_username = 'bizzarro';
+        $rets_password = 'y4w-u62-q3j-675';
+        $rets_user_agent_password = '';
+
+        date_default_timezone_set('America/New_York');
+
+        //require_once("vendor/autoload.php");
+        $config = new \PHRETS\Configuration;
+        $config->setLoginUrl('http://rets.perchwell.com:6103/login')
+                ->setUsername('bizzarro')
+                ->setPassword('y4w-u62-q3j-675')
+                ->setRetsVersion('1.7.2');
+
+        $config->setUserAgent('PHRETS/2.0');
+        $config->setHttpAuthenticationMethod('basic');
+        $rets = new \PHRETS\Session($config);
+        $connect = $rets->Login();
+
+        $results = $rets->Search('Listing', 'Listing', "(BrokerageID=2528),(StatusCode=100),(SaleOrRental=S)", [
+                'QueryType' => 'DMQL2',
+                'Count' => 1,
+                'Format' => 'COMPACT-DECODED',
+                'Limit' => 99999,
+                'StandardNames' => 1
+            ]);
+        $results->toArray();
+        print_r($results);die;
+        /*foreach ($results as $r) {
+            var_dump($r);
+        })*/
     }
 
     public function actionGetxmlData()

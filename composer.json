@@ -44,7 +44,6 @@
     "trntv/cheatsheet": "^0.1@dev",
     "trntv/yii2-command-bus": "^3.0",
     "intervention/image": "^2.1",
-    "vlucas/phpdotenv": "^2.0",
     "almasaeed2010/adminlte": "^3.0",
     "npm-asset/font-awesome": "^5.0",
     "npm-asset/html5shiv": "^3.0",
@@ -58,7 +57,11 @@
     "rmrevin/yii2-fontawesome": "^3.4",
     "kartik-v/yii2-widgets": "^3.4",
     "kartik-v/yii2-grid": "dev-master",
-	"troydavisson/phrets": "2.*"
+    "tpmanc/yii2-imagick": "*",
+    "egulias/email-validator": "^2.1",
+    "troydavisson/phrets": "2.*",
+    "phpoption/phpoption": "^1.7",
+    "vlucas/phpdotenv": "^5.2"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "^2.0.0",
@@ -77,7 +80,8 @@
   },
   "config": {
     "process-timeout": 1800,
-    "optimize-autoloader": true
+    "optimize-autoloader": true,
+    "platform-check": false
   },
   "repositories": [
     {
