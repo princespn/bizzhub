@@ -26,100 +26,22 @@ $this->title = Yii::$app->name;
                       <div class="list-head">
                           <h2>Exclusive Listings</h2>
                       </div>
-                      <div class="exc-table">
-                          <table class="table">
-                              <h3 class="table-head">Studio</h3>
-                                <thead>
-                                  <tr>
-                                    <th scope="col">$235K</th>
-                                    <th scope="col" colspan="2">269 Bennett Avenue 8E</th>
-                                    <th scope="col">Hudon Heights</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr>
-                                    <td scope="row">
-                                      <ul class="icon-img">
-                                          <li><?php echo Html::img('@web/img/icon1.png'); ?>
-                                              <?php echo Html::img('@web/img/icon2.png'); ?></li>
-                                          <li><?php echo Html::img('@web/img/icon3.png'); ?>
-                                              <?php echo Html::img('@web/img/icon4.png'); ?></li>
-                                      </ul>
-                                    </td>
-                                    <td>
-                                      <ul class="room-type">
-                                          <li>Type: Co-op</li>
-                                          <li>Agent: Matthew</li>
-                                          <li>Status: Listed</li>
-                                      </ul>
-                                    </td>
-                                    <td>
-                                      <ul class="room-type">
-                                          <li>Vacant: Yes</li>
-                                          <li>Keys: Yes</li>
-                                          <li>Pets: Yes</li>
-                                      </ul>
-                                    </td>
-                                    <td>
-                                      <ul class="room-type">
-                                          <li>Maintenance: $982</li>
-                                          <li>AssessmentNo</li>
-                                          <li>Financing:80%</li>
-                                      </ul>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              <thead>
-                                  <tr>
-                                    <th scope="col">$235K</th>
-                                    <th scope="col" colspan="2">269 Bennett Avenue 8E</th>
-                                    <th scope="col">Hudon Heights</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  <tr>
-                                    <td scope="row">
-                                      <ul class="icon-img">
-                                          <li><?=Html::img('@web/img/icon1.png'); ?>
-                                              <?=Html::img('@web/img/icon2.png'); ?></li>
-                                          <li><?=Html::img('@web/img/icon3.png'); ?>
-                                              <?=Html::img('@web/img/icon4.png'); ?></li>
-                                      </ul>
-                                    </td>
-                                    <td>
-                                      <ul class="room-type">
-                                          <li>Type: Co-op</li>
-                                          <li>Agent: Matthew</li>
-                                          <li>Status: Listed</li>
-                                      </ul>
-                                    </td>
-                                    <td>
-                                      <ul class="room-type">
-                                          <li>Vacant: Yes</li>
-                                          <li>Keys: Yes</li>
-                                          <li>Pets: Yes</li>
-                                      </ul>
-                                    </td>
-                                    <td>
-                                      <ul class="room-type">
-                                          <li>Maintenance: $982</li>
-                                          <li>AssessmentNo</li>
-                                          <li>Financing:80%</li>
-                                      </ul>
-                                    </td>
-                                  </tr>
-                              </tbody>
-                          </table><?php
+                      <div class="exc-table"><?php
                           foreach ($retsData as $key => $retsdata) {
+                            //print_r($retsdata);die;
                             if($key == 'badroom1'){ ?>
                             <table class="table">
                               <h3 class="table-head">One Bedrooms</h3><?php
-                              foreach($retsdata as $rData){ ?>
+                              foreach($retsdata as $rData){
+                                if(!empty($rData->OriginalPrice)){
+                                  $kprice = $rData->OriginalPrice / 1000;
+                                }
+                               ?>
                                 <thead>
                                   <tr>
-                                    <th scope="col">$<?=$rData['original_price']?>K</th>
-                                    <th scope="col" colspan="2"><?=$rData['address']?></th>
-                                    <th scope="col"><?=$rData['place_name']?></th>
+                                    <th scope="col">$<?=$kprice?>K</th>
+                                    <th scope="col" colspan="2"><?=$rData->AddressWithUnit?></th>
+                                    <th scope="col"><?=$rData->PlaceName?></th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -134,160 +56,150 @@ $this->title = Yii::$app->name;
                                     </td>
                                     <td>
                                       <ul class="room-type">
-                                          <li>Type: <?=$rData['property_type']?></li>
-                                          <li>Agent: Matthew</li>
-                                          <li>Status: <?=$rData['approval_status']?></li>
+                                          <li>Type: <?=$rData->PropertyType?></li>
+                                          <?php
+                                          if(!empty($rData->Agent1Image)){
+                                            $imgArr = explode('/', $rData->Agent1Image);
+                                            $img_name = end($imgArr);
+                                            $name_arr = explode('.', $img_name);
+                                            $a_name = $name_arr[0];
+                                          }
+                                          ?>
+                                          
+                                          <li>Agent:<?=$a_name?></li>
+                                          <li>Status: <?=$rData->ApprovalStatus?></li>
                                       </ul>
                                     </td>
                                     <td>
                                       <ul class="room-type">
                                           <li>Vacant: Yes</li>
                                           <li>Keys: Yes</li>
-                                          <li>Pets: <?php echo ($rData['building_pets'] > 0)?'Yes':'No' ?></li>
+                                          <li>Pets: <?php echo ($rData->BuildingPets > 0)?'Yes':'No' ?></li>
                                       </ul>
                                     </td>
                                     <td>
                                       <ul class="room-type">
                                           <li>Maintenance: $982</li>
                                           <li>AssessmentNo</li>
-                                          <li>Financing:<?=round($rData['maximum_financing_percent'])?>%</li>
+                                          <li>Financing:<?=round($rData->MaximumFinancingPercent)?>%</li>
                                       </ul>
                                     </td>
                                   </tr>
                               </tbody><?php
                               }?> 
                           </table><?php
-                            }                            
-                          }?>       
-                          
-
-                          <table class="table">
-                              <h3 class="table-head">Two Bedrooms</h3>
-                            <thead>
-                              <tr>
-                                <th scope="col">$235K</th>
-                                <th scope="col" colspan="2">269 Bennett Avenue 8E</th>
-                                <th scope="col">Hudon Heights</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td scope="row">
-                                  <ul class="icon-img">
-                                      <li><?=Html::img('@web/img/icon1.png'); ?>
-                                          <?=Html::img('@web/img/icon2.png'); ?></li>
-                                      <li><?=Html::img('@web/img/icon3.png'); ?>
-                                          <?=Html::img('@web/img/icon4.png'); ?></li>
-                                  </ul>
-                                </td>
-                                <td>
-                                  <ul class="room-type">
-                                      <li>Type: Co-op</li>
-                                      <li>Agent: Matthew</li>
-                                      <li>Status: Listed</li>
-                                  </ul>
-                                </td>
-                                <td>
-                                  <ul class="room-type">
-                                      <li>Vacant: Yes</li>
-                                      <li>Keys: Yes</li>
-                                      <li>Pets: Yes</li>
-                                  </ul>
-                                </td>
-                                <td>
-                                  <ul class="room-type">
-                                      <li>Maintenance: $982</li>
-                                      <li>AssessmentNo</li>
-                                      <li>Financing:80%</li>
-                                  </ul>
-                                </td>
-                              </tr>
-                          </tbody>
-                              <thead>
-                              <tr>
-                                <th scope="col">$235K</th>
-                                <th scope="col" colspan="2">269 Bennett Avenue 8E</th>
-                                <th scope="col">Hudon Heights</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td scope="row">
-                                  <ul class="icon-img">
-                                      <li><?=Html::img('@web/img/icon1.png'); ?>
-                                          <?=Html::img('@web/img/icon2.png'); ?></li>
-                                      <li><?=Html::img('@web/img/icon3.png'); ?>
-                                          <?=Html::img('@web/img/icon4.png'); ?></li>
-                                  </ul>
-                                </td>
-                                <td>
-                                  <ul class="room-type">
-                                      <li>Type: Co-op</li>
-                                      <li>Agent: Matthew</li>
-                                      <li>Status: Listed</li>
-                                  </ul>
-                                </td>
-                                <td>
-                                  <ul class="room-type">
-                                      <li>Vacant: Yes</li>
-                                      <li>Keys: Yes</li>
-                                      <li>Pets: Yes</li>
-                                  </ul>
-                                </td>
-                                <td>
-                                  <ul class="room-type">
-                                      <li>Maintenance: $982</li>
-                                      <li>AssessmentNo</li>
-                                      <li>Financing:80%</li>
-                                  </ul>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-
+                            }elseif($key == 'badroom2'){ ?>
                             <table class="table">
-                                <h3 class="table-head">Townhouses</h3>
-                              <thead>
-                                <tr>
-                                  <th scope="col">$235K</th>
-                                  <th scope="col" colspan="2">269 Bennett Avenue 8E</th>
-                                  <th scope="col">Hudon Heights</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td scope="row">
-                                    <ul class="icon-img">
-                                        <li><?=Html::img('@web/img/icon1.png'); ?>
-                                            <?=Html::img('@web/img/icon2.png'); ?></li>
-                                        <li><?=Html::img('@web/img/icon3.png'); ?>
-                                            <?=Html::img('@web/img/icon4.png'); ?></li>
-                                    </ul>
-                                  </td>
-                                  <td>
-                                    <ul class="room-type">
-                                        <li>Type: Co-op</li>
-                                        <li>Agent: Matthew</li>
-                                        <li>Status: Listed</li>
-                                    </ul>
-                                  </td>
-                                  <td>
-                                    <ul class="room-type">
-                                        <li>Vacant: Yes</li>
-                                        <li>Keys: Yes</li>
-                                        <li>Pets: Yes</li>
-                                    </ul>
-                                  </td>
-                                  <td>
-                                    <ul class="room-type">
-                                        <li>Maintenance: $982</li>
-                                        <li>AssessmentNo</li>
-                                        <li>Financing:80%</li>
-                                    </ul>
-                                  </td>
-                                </tr>
-                            </tbody>
-                            </table>
+                              <h3 class="table-head">Two Bedrooms</h3><?php
+                              foreach($retsdata as $rData){ ?>
+                                <thead>
+                                  <tr>
+                                    <th scope="col">$<?=$rData->OriginalPrice?>K</th>
+                                    <th scope="col" colspan="2"><?=$rData->AddressWithUnit?></th>
+                                    <th scope="col"><?=$rData->PlaceName?></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td scope="row">
+                                      <ul class="icon-img">
+                                          <li><?=Html::img('@web/img/icon1.png'); ?>
+                                              <?=Html::img('@web/img/icon2.png'); ?></li>
+                                          <li><?=Html::img('@web/img/icon3.png'); ?>
+                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Type: <?=$rData->PropertyType?></li>
+                                          <?php
+                                          if(!empty($rData->Agent1Image)){
+                                            $imgArr = explode('/', $rData->Agent1Image);
+                                            $img_name = end($imgArr);
+                                            $name_arr = explode('.', $img_name);
+                                            $a_name = $name_arr[0];
+                                          }
+                                          ?>
+                                          
+                                          <li>Agent:<?=$a_name?></li>
+                                          <li>Status: <?=$rData->ApprovalStatus?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Vacant: Yes</li>
+                                          <li>Keys: Yes</li>
+                                          <li>Pets: <?php echo ($rData->BuildingPets > 0)?'Yes':'No' ?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Maintenance: $982</li>
+                                          <li>AssessmentNo</li>
+                                          <li>Financing:<?=round($rData->MaximumFinancingPercent)?>%</li>
+                                      </ul>
+                                    </td>
+                                  </tr>
+                              </tbody><?php
+                              }?> 
+                          </table><?php
+                            }elseif($key == 'badroom3'){ ?>
+                            <table class="table">
+                              <h3 class="table-head">Three Bedrooms</h3><?php
+                              foreach($retsdata as $rData){ ?>
+                                <thead>
+                                  <tr>
+                                    <th scope="col">$<?=$rData->OriginalPrice?>K</th>
+                                    <th scope="col" colspan="2"><?=$rData->AddressWithUnit?></th>
+                                    <th scope="col"><?=$rData->PlaceName?></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td scope="row">
+                                      <ul class="icon-img">
+                                          <li><?=Html::img('@web/img/icon1.png'); ?>
+                                              <?=Html::img('@web/img/icon2.png'); ?></li>
+                                          <li><?=Html::img('@web/img/icon3.png'); ?>
+                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Type: <?=$rData->PropertyType?></li>
+                                          <?php
+                                          if(!empty($rData->Agent1Image)){
+                                            $imgArr = explode('/', $rData->Agent1Image);
+                                            $img_name = end($imgArr);
+                                            $name_arr = explode('.', $img_name);
+                                            $a_name = $name_arr[0];
+                                          }
+                                          ?>
+                                          
+                                          <li>Agent:<?=$a_name?></li>
+                                          <li>Status: <?=$rData->ApprovalStatus?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Vacant: Yes</li>
+                                          <li>Keys: Yes</li>
+                                          <li>Pets: <?php echo ($rData->BuildingPets > 0)?'Yes':'No' ?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Maintenance: $982</li>
+                                          <li>AssessmentNo</li>
+                                          <li>Financing:<?=round($rData->MaximumFinancingPercent)?>%</li>
+                                      </ul>
+                                    </td>
+                                  </tr>
+                              </tbody><?php
+                              }?> 
+                          </table><?php
+                            }                              
+                          }?> 
                       </div>
                     </div>
                 </div>

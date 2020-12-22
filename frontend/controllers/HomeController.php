@@ -45,7 +45,7 @@ class HomeController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [                   
                     [                    
-                        'actions' => ['index','ajax-add-contact','getxml-data','get-retsxml'],
+                        'actions' => ['index','ajax-add-contact','get-retsdata','get-retsfiledata'],
                         'allow' => true,
                         'roles' => ['agent'],
                     ],                   
@@ -84,12 +84,26 @@ class HomeController extends Controller
         $contact = new Contact();
         $home = new Home();
         $retsData = $home->getRetsData();
-        //print_r( $retsData);die;
-        //date_default_timezone_set('America/New_York');
-        //$config = new \PHRETS\Configuration;+
+        $path = Yii::$app->params['rets_path'];
+        $fullpath = $path.'rets.json';
+        if (file_exists($fullpath)) {
+            $jsonData = file_get_contents($fullpath);
+            $data = json_decode($jsonData);
+        }
+        foreach($data as $key => $value) {
+           if($value->NumBedrooms == 1){
+                $propertyData['badroom1'][]=$value;
+           }elseif($value->NumBedrooms == 2){
+                $propertyData['badroom2'][]=$value;
+           }elseif($value->NumBedrooms == 3){
+                $propertyData['badroom3'][]=$value;
+           } 
+        }
+        //print_r($propertyData);die;
+        //print_r($retsData);die;
         return $this->render('index',[
             'contact' => $contact,
-            'retsData'=> $retsData
+            'retsData'=> $propertyData
         ]);
     }
 
@@ -155,7 +169,7 @@ class HomeController extends Controller
        return json_encode($return);        
     }
 
-    public function actionGetRetsxml()
+    public function actionGetRetsdata()
     {
         $rets_login_url = 'http://rets.perchwell.com:6103/login';
         $rets_username = 'bizzarro';
@@ -163,8 +177,6 @@ class HomeController extends Controller
         $rets_user_agent_password = '';
 
         date_default_timezone_set('America/New_York');
-
-        //require_once("vendor/autoload.php");
         $config = new \PHRETS\Configuration;
         $config->setLoginUrl('http://rets.perchwell.com:6103/login')
                 ->setUsername('bizzarro')
@@ -183,20 +195,24 @@ class HomeController extends Controller
                 'Limit' => 99999,
                 'StandardNames' => 1
             ]);
-        $results->toArray();
-        print_r($results);die;
-        /*foreach ($results as $r) {
-            var_dump($r);
-        })*/
+        $data = $results->toJSON();
+        $path = Yii::$app->params['rets_path'];
+        $fullpath = $path.'rets.json';
+        $fp = fopen($fullpath, 'w+');
+        fwrite($fp, $data);
+        fclose($fp);
+
     }
 
-    public function actionGetxmlData()
+    public function actionGetRetsfiledata()
     {
-        $path = Yii::$app->params['rets_xml_path'];
-        $fullpath = $path.'rets_cache.xml';
+        $path = Yii::$app->params['rets_path'];
+        $fullpath = $path.'rets.json';
         if (file_exists($fullpath)) {
-            $xmlData = simplexml_load_file($fullpath);
-            foreach($xmlData as $propertyData) {
+            $jsonData = file_get_contents($fullpath);
+            $dataArr = json_decode($jsonData);
+            print_r($dataArr);die;
+            foreach($dataArr as $propertyData) {
                 $saveData['address'] = !empty($propertyData->Address)?$propertyData->Address:'';
                 $saveData['address_display'] = !empty($propertyData->AddressDisplay)?$propertyData->AddressDisplay:'';
                 $saveData['address_with_unit'] = !empty($propertyData->AddressWithUnit)?$propertyData->AddressWithUnit:'';
@@ -287,7 +303,7 @@ class HomeController extends Controller
             }        
             
         } else {
-            exit('Failed to open test.xml.');
+            exit('Failed to open rets.json.');
         }
     }
    

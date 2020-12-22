@@ -46,14 +46,14 @@ class Home extends Model
             //->groupBy(['num_bedrooms'])
             ->All();
         foreach($data as $key => $value) {
-               if($value['num_bedrooms'] == 1){
-                    $propertyData['badroom1'][]=$value;
-               }elseif($value['num_bedrooms'] == 2){
-                    $propertyData['badroom2'][]=$value;
-               }elseif($value['num_bedrooms'] == 3){
-                    $propertyData['badroom3'][]=$value;
-               } 
-            }
+           if($value['num_bedrooms'] == 1){
+                $propertyData['badroom1'][]=$value;
+           }elseif($value['num_bedrooms'] == 2){
+                $propertyData['badroom2'][]=$value;
+           }elseif($value['num_bedrooms'] == 3){
+                $propertyData['badroom3'][]=$value;
+           } 
+        }
            // print_r($propertyData);die;    
         return $propertyData;
     }
