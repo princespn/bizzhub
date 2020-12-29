@@ -84,7 +84,7 @@ class HomeController extends Controller
         $contact = new Contact();
         $home = new Home();
         $retsData = $home->getRetsData();
-        $path = Yii::$app->params['rets_path'];
+        /*$path = Yii::$app->params['rets_path'];
         $fullpath = $path.'rets.json';
         if (file_exists($fullpath)) {
             $jsonData = file_get_contents($fullpath);
@@ -98,12 +98,12 @@ class HomeController extends Controller
            }elseif($value->NumBedrooms == 3){
                 $propertyData['badroom3'][]=$value;
            } 
-        }
+        }*/
         //print_r($propertyData);die;
         //print_r($retsData);die;
         return $this->render('index',[
             'contact' => $contact,
-            'retsData'=> $propertyData
+            'retsData'=> $retsData
         ]);
     }
 
@@ -211,12 +211,13 @@ class HomeController extends Controller
         if (file_exists($fullpath)) {
             $jsonData = file_get_contents($fullpath);
             $dataArr = json_decode($jsonData);
-            print_r($dataArr);die;
+            //print_r($dataArr);die;
             foreach($dataArr as $propertyData) {
                 $saveData['address'] = !empty($propertyData->Address)?$propertyData->Address:'';
                 $saveData['address_display'] = !empty($propertyData->AddressDisplay)?$propertyData->AddressDisplay:'';
                 $saveData['address_with_unit'] = !empty($propertyData->AddressWithUnit)?$propertyData->AddressWithUnit:'';
                 $saveData['agent1_id'] = !empty($propertyData->Agent1Id)?$propertyData->Agent1Id:'';
+                $saveData['agent1_image'] = !empty($propertyData->Agent1Image)?$propertyData->Agent1Image:'';
                 $saveData['approval_status'] = !empty($propertyData->ApprovalStatus)?$propertyData->ApprovalStatus:'';
                 $saveData['brokerage_id'] = !empty($propertyData->BrokerageID)?$propertyData->BrokerageID:'';
                 $saveData['brokerage_name'] = !empty($propertyData->BrokerageName)?$propertyData->BrokerageName:'';
@@ -297,9 +298,23 @@ class HomeController extends Controller
                 $saveData['place_name'] = !empty($propertyData->PlaceName)?$propertyData->PlaceName:'';
                 $saveData['created_at'] = !empty($propertyData->CreatedAt)?strtotime($propertyData->CreatedAt):'';
                 $rets_property_tbl = 'rets_property';
-                $p = Yii::$app->db->createCommand()
+                $existdata_id = (new \yii\db\Query())
+                        ->select(['id'])
+                        ->from($rets_property_tbl)
+                        ->where(['address_with_unit' => $saveData['address_with_unit']])
+                        ->Scalar();
+                //print_r($existdata_id);die;  
+                //echo $existdata_id.'<br>';     
+                if(!empty($existdata_id)){
+                    Yii::$app->db->createCommand()
+                     ->update($rets_property_tbl, $saveData,['id' => $existdata_id])
+                     ->execute();  
+                }else{
+                    //die('sssfff');
+                    Yii::$app->db->createCommand()
                         ->insert($rets_property_tbl,$saveData)
                         ->execute(); 
+                }
             }        
             
         } else {

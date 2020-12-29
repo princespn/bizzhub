@@ -127,7 +127,7 @@ ul.room-type li {
     margin-left: 25px;
 }
 .alert-listing, .finance-table {
-    height: 250px;
+    height: 200px;
     overflow-y: scroll;
 }
 .finacnce-box{
@@ -154,7 +154,7 @@ a.btn.pre-btn img {
     text-align: center;
 }
 
-.leaderboard-box .table th{color: #242056; font-size: 16px; font-weight: 500;
+.leaderboard-box .table th{color: #242056; font-size: 15px; font-weight: 500;
     vertical-align: middle; border:0;  padding: .5rem; text-align: center;}
 
 .table-fin .form-inline .form-control{border: 1px solid #231f20; width: 100%; 
@@ -359,4 +359,14 @@ input.form-control::placeholder {color: #000;font-weight: 500;}
 .profile-detail, .acc-sec {
     box-shadow: 0 0px 5px #c3c3c3;
     padding: 20px 20px;
+}
+
+
+.exc-table {
+    overflow-y: scroll;
+    height: 1050px;
+}
+.leader-table {
+    height: 200px;
+    overflow-y: scroll;
 }

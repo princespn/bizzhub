@@ -54,7 +54,8 @@ class Home extends Model
                 $propertyData['badroom3'][]=$value;
            } 
         }
-           // print_r($propertyData);die;    
+        ksort($propertyData);
+            //print_r($propertyData);die;    
         return $propertyData;
     }
 

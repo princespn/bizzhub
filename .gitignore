@@ -1,8 +1,5 @@
-#documents
-docs/
 .svn/
-
-
+docs/
 
 # Env
 /.env

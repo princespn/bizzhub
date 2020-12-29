@@ -284,6 +284,13 @@ $logEntries[] = [
                             'visible' => Yii::$app->user->can('admin'),
                         ],
                         [
+                            'label' => Yii::t('backend', 'Rets Property'),
+                            'icon' => FAS::icon('building', ['class' => ['nav-icon']]),
+                            'url' => ['/rets/index'],
+                            'active' => Yii::$app->controller->id === 'rets',
+                            'visible' => Yii::$app->user->can('admin'),
+                        ],
+                        [
                             'label' => Yii::t('backend', 'Content'),
                             'options' => ['class' => 'nav-header'],
                         ],

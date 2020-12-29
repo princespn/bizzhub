@@ -27,21 +27,22 @@ $this->title = Yii::$app->name;
                           <h2>Exclusive Listings</h2>
                       </div>
                       <div class="exc-table"><?php
+                      $a_name = '';
                           foreach ($retsData as $key => $retsdata) {
                             //print_r($retsdata);die;
                             if($key == 'badroom1'){ ?>
                             <table class="table">
                               <h3 class="table-head">One Bedrooms</h3><?php
                               foreach($retsdata as $rData){
-                                if(!empty($rData->OriginalPrice)){
-                                  $kprice = $rData->OriginalPrice / 1000;
+                                if(!empty($rData['original_price'])){
+                                  $kprice = $rData['original_price'] / 1000;
                                 }
                                ?>
                                 <thead>
                                   <tr>
                                     <th scope="col">$<?=$kprice?>K</th>
-                                    <th scope="col" colspan="2"><?=$rData->AddressWithUnit?></th>
-                                    <th scope="col"><?=$rData->PlaceName?></th>
+                                    <th scope="col" colspan="2"><?=$rData['address_with_unit']?></th>
+                                    <th scope="col"><?=$rData['place_name']?></th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -56,10 +57,10 @@ $this->title = Yii::$app->name;
                                     </td>
                                     <td>
                                       <ul class="room-type">
-                                          <li>Type: <?=$rData->PropertyType?></li>
+                                          <li>Type: <?=$rData['property_type']?></li>
                                           <?php
-                                          if(!empty($rData->Agent1Image)){
-                                            $imgArr = explode('/', $rData->Agent1Image);
+                                          if(!empty($rData['agent1_image'])){
+                                            $imgArr = explode('/', $rData['agent1_image']);
                                             $img_name = end($imgArr);
                                             $name_arr = explode('.', $img_name);
                                             $a_name = $name_arr[0];
@@ -67,21 +68,21 @@ $this->title = Yii::$app->name;
                                           ?>
                                           
                                           <li>Agent:<?=$a_name?></li>
-                                          <li>Status: <?=$rData->ApprovalStatus?></li>
+                                          <li>Status: <?=$rData['approval_status']?></li>
                                       </ul>
                                     </td>
                                     <td>
                                       <ul class="room-type">
-                                          <li>Vacant: Yes</li>
-                                          <li>Keys: Yes</li>
-                                          <li>Pets: <?php echo ($rData->BuildingPets > 0)?'Yes':'No' ?></li>
+                                          <li>Vacant: <?=$rData['vacant']?></li>
+                                          <li>Keys: <?=$rData['rets_keys']?></li>
+                                          <li>Pets: <?php echo ($rData['building_pets'] > 0)?'Yes':'No' ?></li>
                                       </ul>
                                     </td>
                                     <td>
                                       <ul class="room-type">
                                           <li>Maintenance: $982</li>
-                                          <li>AssessmentNo</li>
-                                          <li>Financing:<?=round($rData->MaximumFinancingPercent)?>%</li>
+                                          <li>AssessmentNo: <?=$rData['assessment_no']?></li>
+                                          <li>Financing:<?=round($rData['maximum_financing_percent'])?>%</li>
                                       </ul>
                                     </td>
                                   </tr>
@@ -91,12 +92,17 @@ $this->title = Yii::$app->name;
                             }elseif($key == 'badroom2'){ ?>
                             <table class="table">
                               <h3 class="table-head">Two Bedrooms</h3><?php
-                              foreach($retsdata as $rData){ ?>
+                              foreach($retsdata as $rData){ 
+                                if(!empty($rData['original_price'])){
+                                  $kprice = $rData['original_price'] / 1000;
+                                }
+
+                                ?>
                                 <thead>
                                   <tr>
-                                    <th scope="col">$<?=$rData->OriginalPrice?>K</th>
-                                    <th scope="col" colspan="2"><?=$rData->AddressWithUnit?></th>
-                                    <th scope="col"><?=$rData->PlaceName?></th>
+                                    <th scope="col">$<?=$kprice?>K</th>
+                                    <th scope="col" colspan="2"><?=$rData['address_with_unit']?></th>
+                                    <th scope="col"><?=$rData['place_name']?></th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -111,10 +117,10 @@ $this->title = Yii::$app->name;
                                     </td>
                                     <td>
                                       <ul class="room-type">
-                                          <li>Type: <?=$rData->PropertyType?></li>
+                                          <li>Type: <?=$rData['property_type']?></li>
                                           <?php
-                                          if(!empty($rData->Agent1Image)){
-                                            $imgArr = explode('/', $rData->Agent1Image);
+                                          if(!empty($rData['agent1_image'])){
+                                            $imgArr = explode('/', $rData['agent1_image']);
                                             $img_name = end($imgArr);
                                             $name_arr = explode('.', $img_name);
                                             $a_name = $name_arr[0];
@@ -122,21 +128,21 @@ $this->title = Yii::$app->name;
                                           ?>
                                           
                                           <li>Agent:<?=$a_name?></li>
-                                          <li>Status: <?=$rData->ApprovalStatus?></li>
+                                          <li>Status: <?=$rData['approval_status']?></li>
                                       </ul>
                                     </td>
                                     <td>
                                       <ul class="room-type">
-                                          <li>Vacant: Yes</li>
-                                          <li>Keys: Yes</li>
-                                          <li>Pets: <?php echo ($rData->BuildingPets > 0)?'Yes':'No' ?></li>
+                                          <li>Vacant: <?=$rData['vacant']?></li>
+                                          <li>Keys: <?=$rData['rets_keys']?></li>
+                                          <li>Pets: <?php echo ($rData['building_pets'] > 0)?'Yes':'No' ?></li>
                                       </ul>
                                     </td>
                                     <td>
                                       <ul class="room-type">
                                           <li>Maintenance: $982</li>
-                                          <li>AssessmentNo</li>
-                                          <li>Financing:<?=round($rData->MaximumFinancingPercent)?>%</li>
+                                          <li>AssessmentNo: <?=$rData['assessment_no']?></li>
+                                          <li>Financing:<?=round($rData['maximum_financing_percent'])?>%</li>
                                       </ul>
                                     </td>
                                   </tr>
@@ -146,12 +152,15 @@ $this->title = Yii::$app->name;
                             }elseif($key == 'badroom3'){ ?>
                             <table class="table">
                               <h3 class="table-head">Three Bedrooms</h3><?php
-                              foreach($retsdata as $rData){ ?>
+                              foreach($retsdata as $rData){ 
+                                if(!empty($rData['original_price'])){
+                                  $kprice = $rData['original_price'] / 1000;
+                                }  ?>
                                 <thead>
                                   <tr>
-                                    <th scope="col">$<?=$rData->OriginalPrice?>K</th>
-                                    <th scope="col" colspan="2"><?=$rData->AddressWithUnit?></th>
-                                    <th scope="col"><?=$rData->PlaceName?></th>
+                                    <th scope="col">$<?=$kprice?>K</th>
+                                    <th scope="col" colspan="2"><?=$rData['address_with_unit']?></th>
+                                    <th scope="col"><?=$rData['place_name']?></th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -166,10 +175,10 @@ $this->title = Yii::$app->name;
                                     </td>
                                     <td>
                                       <ul class="room-type">
-                                          <li>Type: <?=$rData->PropertyType?></li>
+                                          <li>Type: <?=$rData['property_type']?></li>
                                           <?php
-                                          if(!empty($rData->Agent1Image)){
-                                            $imgArr = explode('/', $rData->Agent1Image);
+                                          if(!empty($rData['agent1_image'])){
+                                            $imgArr = explode('/', $rData['agent1_image']);
                                             $img_name = end($imgArr);
                                             $name_arr = explode('.', $img_name);
                                             $a_name = $name_arr[0];
@@ -177,21 +186,21 @@ $this->title = Yii::$app->name;
                                           ?>
                                           
                                           <li>Agent:<?=$a_name?></li>
-                                          <li>Status: <?=$rData->ApprovalStatus?></li>
+                                          <li>Status: <?=$rData['approval_status']?></li>
                                       </ul>
                                     </td>
                                     <td>
                                       <ul class="room-type">
-                                          <li>Vacant: Yes</li>
-                                          <li>Keys: Yes</li>
-                                          <li>Pets: <?php echo ($rData->BuildingPets > 0)?'Yes':'No' ?></li>
+                                          <li>Vacant: <?=$rData['vacant']?></li>
+                                          <li>Keys: <?=$rData['rets_keys']?></li>
+                                          <li>Pets: <?php echo ($rData['building_pets'] > 0)?'Yes':'No' ?></li>
                                       </ul>
                                     </td>
                                     <td>
                                       <ul class="room-type">
                                           <li>Maintenance: $982</li>
-                                          <li>AssessmentNo</li>
-                                          <li>Financing:<?=round($rData->MaximumFinancingPercent)?>%</li>
+                                          <li>AssessmentNo: <?=$rData['assessment_no']?></li>
+                                          <li>Financing:<?=round($rData['maximum_financing_percent'])?>%</li>
                                       </ul>
                                     </td>
                                   </tr>
@@ -330,7 +339,7 @@ $this->title = Yii::$app->name;
                             <div class="list-head">
                                 <h2>Leaderboard</h2>
                             </div>
-                            <div class="table-fin">
+                            <div class="table-fin leader-table">
                                 <table class="table">
                                   <thead>
                                     <tr>
