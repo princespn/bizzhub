@@ -1,17 +1,14 @@
-Options -Indexes
-
-<IfModule mod_rewrite.c> 
-  RewriteEngine on
-  
-  RewriteCond %{REQUEST_URI} !^public
-  RewriteRule ^(.*)$ frontend/web/$1 [L] 
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+		Options -Indexes
+        Options -MultiViews
+    </IfModule>
+	
+	# follow symbolic links
+	Options FollowSymlinks
+	
+	RewriteEngine On
+	
+	RewriteCond %{REQUEST_URI} !^public
+	RewriteRule ^(.*)$ frontend/web/$1 [L] 
 </IfModule>
-
-# Deny accessing below extensions
-<Files ~ "(.json|.lock|.git)">
-Order allow,deny
-Deny from all
-</Files>
-
-# Deny accessing dot files
-RewriteRule (^\.|/\.) - [F]
