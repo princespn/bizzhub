@@ -69,10 +69,10 @@ $config = [
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.gmail.com',
-                'username' => 'developer.wdp@gmail.com',
-                'password' => 'pfyfgkzzrjtsvzpp',
+                'username' => 'developers.wdp@gmail.com',
+                'password' => 'yenvydepevgsorol',
                 'port' => '587',
-                'encryption' => 'tls',
+                'encryption' => 'tls',                
             ],
         ],       
     ],

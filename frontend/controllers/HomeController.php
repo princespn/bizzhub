@@ -296,6 +296,7 @@ class HomeController extends Controller
                 $saveData['rebny_id'] = !empty($propertyData->RebnyID)?$propertyData->RebnyID:'';
                 $saveData['published'] = !empty($propertyData->Published)?$propertyData->Published:'';
                 $saveData['place_name'] = !empty($propertyData->PlaceName)?$propertyData->PlaceName:'';
+                $saveData['video_url'] = !empty($propertyData->VideoURL)?$propertyData->VideoURL:'';
                 $saveData['created_at'] = !empty($propertyData->CreatedAt)?strtotime($propertyData->CreatedAt):'';
                 $rets_property_tbl = 'rets_property';
                 $existdata_id = (new \yii\db\Query())

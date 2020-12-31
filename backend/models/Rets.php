@@ -100,6 +100,10 @@ class Rets extends Model
     public $vacant;
     public $rets_keys;
     public $assessment_no;
+    public $video_url;
+    public $external_link1;
+    public $external_link2;
+    public $description;
     public $created_at;
 
 
@@ -125,7 +129,7 @@ class Rets extends Model
     {
         return [
             //[['address','city','state','zip'], 'required'],            ,
-            [['address','address_display','address_with_unit','agent1_id','approval_status','brokerage_id','brokerage_name','brokerage_url','brokerage_website','building_bike_storage','building_class','building_doorman','building_elevator','building_garage','building_gym','building_id','building_laundry','building_name','building_pets','building_pool','building_prewar','buildingr_rooftop','building_storage','city','coexclusive','commission_amount','courtyard','expiration_date','flip_fax_description','floor_number','garden','has_fireplace','has_outdoor_space','hoa_fee','home_offices','id_x_display','latitude','list_date','listing_price','listing_price_per_sqft','listing_url','live_in_super','longitude','marketing_description','marketing_description_truncated','maximum_financing_percent','neighborhood','new_development','num_baths','num_bedrooms','num_half_baths','num_rooms','num_building_units','num_building_stories','original_price','property_type','property_type_code','real_estate_tax','sale_or_rental','sponsored','state','status_code','status_last_changed','unit_balcony','unit_garden','unit_laundry','unit_number ','updated_at','virtual_tour_url','vow_address_display','vow_automated_valuation_display','vow_consumer_comment','vow_entire_listing_display','year_built','zip','dishwasher','den','foyer','rebny_id','published','place_name','created_at','vacant','rets_keys','assessment_no'], "safe"],
+            [['address','address_display','address_with_unit','agent1_id','approval_status','brokerage_id','brokerage_name','brokerage_url','brokerage_website','building_bike_storage','building_class','building_doorman','building_elevator','building_garage','building_gym','building_id','building_laundry','building_name','building_pets','building_pool','building_prewar','buildingr_rooftop','building_storage','city','coexclusive','commission_amount','courtyard','expiration_date','flip_fax_description','floor_number','garden','has_fireplace','has_outdoor_space','hoa_fee','home_offices','id_x_display','latitude','list_date','listing_price','listing_price_per_sqft','listing_url','live_in_super','longitude','marketing_description','marketing_description_truncated','maximum_financing_percent','neighborhood','new_development','num_baths','num_bedrooms','num_half_baths','num_rooms','num_building_units','num_building_stories','original_price','property_type','property_type_code','real_estate_tax','sale_or_rental','sponsored','state','status_code','status_last_changed','unit_balcony','unit_garden','unit_laundry','unit_number ','updated_at','virtual_tour_url','vow_address_display','vow_automated_valuation_display','vow_consumer_comment','vow_entire_listing_display','year_built','zip','dishwasher','den','foyer','rebny_id','published','place_name','created_at','vacant','rets_keys','assessment_no','video_url','external_link1','external_link2','description'], "safe"],
         ];
     }
 

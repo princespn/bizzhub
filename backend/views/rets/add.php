@@ -30,6 +30,24 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?=$form->field($model, 'address_with_unit');?>
                     </div>
                 </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <?php echo $form->field($model, 'description')->widget(
+                \yii\imperavi\Widget::class,
+                [
+                    'plugins' => ['fullscreen', 'fontcolor', 'video'],
+                    'options' => [
+                        'minHeight' => 400,
+                        'maxHeight' => 400,
+                        'buttonSource' => true,
+                        'convertDivs' => false,
+                        'removeEmptyTags' => true,
+                        'imageUpload' => Yii::$app->urlManager->createUrl(['/file/storage/upload-imperavi']),
+                    ],
+                ]
+            ) ?>
+                    </div>
+                </div>
 
                 <div class="form-row">
                 	<div class="form-group col-md-3">
@@ -98,6 +116,17 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="form-group col-md-3">
                     <?=$form->field($model, 'agent1_id');?>
                     </div>
+                    <div class="form-group col-md-3">
+                    <?=$form->field($model, 'video_url');?>
+                    </div>
+                </div>
+                <div class="form-row">                    
+                    <div class="form-group col-md-6">
+                    <?=$form->field($model, 'external_link1');?>
+                    </div>
+                    <div class="form-group col-md-6">
+                    <?=$form->field($model, 'external_link2');?>
+                    </div>                    
                 </div>
             </div>      
 
