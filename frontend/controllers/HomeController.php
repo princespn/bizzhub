@@ -84,23 +84,6 @@ class HomeController extends Controller
         $contact = new Contact();
         $home = new Home();
         $retsData = $home->getRetsData();
-        /*$path = Yii::$app->params['rets_path'];
-        $fullpath = $path.'rets.json';
-        if (file_exists($fullpath)) {
-            $jsonData = file_get_contents($fullpath);
-            $data = json_decode($jsonData);
-        }
-        foreach($data as $key => $value) {
-           if($value->NumBedrooms == 1){
-                $propertyData['badroom1'][]=$value;
-           }elseif($value->NumBedrooms == 2){
-                $propertyData['badroom2'][]=$value;
-           }elseif($value->NumBedrooms == 3){
-                $propertyData['badroom3'][]=$value;
-           } 
-        }*/
-        //print_r($propertyData);die;
-        //print_r($retsData);die;
         return $this->render('index',[
             'contact' => $contact,
             'retsData'=> $retsData
@@ -188,7 +171,8 @@ class HomeController extends Controller
         $rets = new \PHRETS\Session($config);
         $connect = $rets->Login();
 
-        $results = $rets->Search('Listing', 'Listing', "(BrokerageID=2528),(StatusCode=100),(SaleOrRental=S)", [
+        //$results = $rets->Search('Listing', 'Listing', "(BrokerageID=2528),(StatusCode=100),(SaleOrRental=S)", [
+        $results = $rets->Search('Listing', 'Listing', "(BrokerageID=2528),(StatusCode=100)", [
                 'QueryType' => 'DMQL2',
                 'Count' => 1,
                 'Format' => 'COMPACT-DECODED',

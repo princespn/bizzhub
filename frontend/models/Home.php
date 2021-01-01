@@ -38,6 +38,7 @@ class Home extends Model
     public function getRetsData()
     {
         $data = [];
+        $dataArray = [];
         $table = $this->tableName();
         $data = (new \yii\db\Query())
             ->select(['*'])
@@ -47,23 +48,41 @@ class Home extends Model
             ->All();
         //print_r($data);die;    
         foreach($data as $key => $value) {
-           if($value['property_type'] == 'townhouse'){
-                $propertyData['townhouse'][]=$value;
-           }elseif($value['num_bedrooms'] == 0){
-                $propertyData['badroom0'][]=$value;
-           }elseif($value['num_bedrooms'] == 1){
-                $propertyData['badroom1'][]=$value;
-           }elseif($value['num_bedrooms'] == 2){
-                $propertyData['badroom2'][]=$value;
-           }elseif($value['num_bedrooms'] == 3){
-                $propertyData['badroom3'][]=$value;
-           }else{
-                $propertyData['badroom4'][]=$value;
-           } 
+          if($value['sale_or_rental'] == 'R'){
+             if($value['property_type'] == 'townhouse'){
+                  $rpropertyData['townhouse'][]=$value;
+             }elseif($value['num_bedrooms'] == 0){
+                  $rpropertyData['badroom0'][]=$value;
+             }elseif($value['num_bedrooms'] == 1){
+                  $rpropertyData['badroom1'][]=$value;
+             }elseif($value['num_bedrooms'] == 2){
+                  $rpropertyData['badroom2'][]=$value;
+             }elseif($value['num_bedrooms'] == 3){
+                  $rpropertyData['badroom3'][]=$value;
+             }else{
+                  $rpropertyData['badroom4'][]=$value;
+             }
+          }elseif($value['sale_or_rental'] == 'S'){
+            if($value['property_type'] == 'townhouse'){
+                  $spropertyData['townhouse'][]=$value;
+             }elseif($value['num_bedrooms'] == 0){
+                  $spropertyData['badroom0'][]=$value;
+             }elseif($value['num_bedrooms'] == 1){
+                  $spropertyData['badroom1'][]=$value;
+             }elseif($value['num_bedrooms'] == 2){
+                  $spropertyData['badroom2'][]=$value;
+             }elseif($value['num_bedrooms'] == 3){
+                  $spropertyData['badroom3'][]=$value;
+             }else{
+                  $spropertyData['badroom4'][]=$value;
+             }
+          } 
         }
-        ksort($propertyData);
+        ksort($rpropertyData);
+        ksort($spropertyData);
+        $dataArray = array('rpropertyData'=>$rpropertyData, 'spropertyData'=>$spropertyData);
             //print_r($propertyData);die;    
-        return $propertyData;
+        return $dataArray;
     }
 
     

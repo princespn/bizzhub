@@ -22,13 +22,15 @@ $this->title = Yii::$app->name;
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
+                  <?php /*  Sale Listing Start */ ?><?php
+                  if(!empty($retsData['spropertyData'])){ ?>
                     <div class="exclusive-list">
                       <div class="list-head">
-                          <h2>Exclusive Listings</h2>
+                          <h2>Exclusive Sale Listings</h2>
                       </div>
                       <div class="exc-table"><?php
                       $a_name = '';
-                          foreach ($retsData as $key => $retsdata) {
+                          foreach ($retsData['spropertyData'] as $key => $retsdata) {
                             //print_r($retsdata);die;
                             if($key == 'badroom0'){ ?>
                             <table class="table">
@@ -385,7 +387,378 @@ $this->title = Yii::$app->name;
                             }                              
                           }?> 
                       </div>
-                    </div>
+                    </div><?php
+                  } ?>
+                    <?php /*  Sale Listing End */ ?>
+
+                    <?php /*  Rental Listing Start */ ?><?php
+                  if(!empty($retsData['rpropertyData'])){ ?>
+                    <div class="exclusive-list">
+                      <div class="list-head">
+                          <h2>Exclusive Rental Listings</h2>
+                      </div>
+                      <div class="exc-table"><?php
+                      $a_name = '';
+                          foreach ($retsData['rpropertyData'] as $key => $retsdata) {
+                            //print_r($retsdata);die;
+                            if($key == 'badroom0'){ ?>
+                            <table class="table">
+                              <h3 class="table-head">Studios</h3><?php
+                              foreach($retsdata as $rData){
+                                if(!empty($rData['original_price'])){
+                                  $kprice = $rData['original_price'] / 1000;
+                                }
+                               ?>
+                                <thead>
+                                  <tr>
+                                    <th scope="col">$<?=$kprice?>K</th>
+                                    <th scope="col" colspan="2"><?=$rData['address_with_unit']?></th>
+                                    <th scope="col"><?=$rData['place_name']?></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td scope="row">
+                                      <ul class="icon-img">
+                                          <li><?=Html::img('@web/img/icon1.png'); ?>
+                                              <?=Html::img('@web/img/icon2.png'); ?></li>
+                                          <li><?=Html::img('@web/img/icon3.png'); ?>
+                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Type: <?=$rData['property_type']?></li>
+                                          <?php
+                                          if(!empty($rData['agent1_image'])){
+                                            $imgArr = explode('/', $rData['agent1_image']);
+                                            $img_name = end($imgArr);
+                                            $name_arr = explode('.', $img_name);
+                                            $a_name = $name_arr[0];
+                                          }
+                                          ?>
+                                          
+                                          <li>Agent:<?=$a_name?></li>
+                                          <li>Status: <?=$rData['approval_status']?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Vacant: <?=$rData['vacant']?></li>
+                                          <li>Keys: <?=$rData['rets_keys']?></li>
+                                          <li>Pets: <?php echo ($rData['building_pets'] > 0)?'Yes':'No' ?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Maintenance: $982</li>
+                                          <li>AssessmentNo: <?=$rData['assessment_no']?></li>
+                                          <li>Financing:<?=round($rData['maximum_financing_percent'])?>%</li>
+                                      </ul>
+                                    </td>
+                                  </tr>
+                              </tbody><?php
+                              }?> 
+                          </table><?php
+                            }elseif($key == 'badroom1'){ ?>
+                            <table class="table">
+                              <h3 class="table-head">One Bedrooms</h3><?php
+                              foreach($retsdata as $rData){
+                                if(!empty($rData['original_price'])){
+                                  $kprice = $rData['original_price'] / 1000;
+                                }
+                               ?>
+                                <thead>
+                                  <tr>
+                                    <th scope="col">$<?=$kprice?>K</th>
+                                    <th scope="col" colspan="2"><?=$rData['address_with_unit']?></th>
+                                    <th scope="col"><?=$rData['place_name']?></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td scope="row">
+                                      <ul class="icon-img">
+                                          <li><?=Html::img('@web/img/icon1.png'); ?>
+                                              <?=Html::img('@web/img/icon2.png'); ?></li>
+                                          <li><?=Html::img('@web/img/icon3.png'); ?>
+                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Type: <?=$rData['property_type']?></li>
+                                          <?php
+                                          if(!empty($rData['agent1_image'])){
+                                            $imgArr = explode('/', $rData['agent1_image']);
+                                            $img_name = end($imgArr);
+                                            $name_arr = explode('.', $img_name);
+                                            $a_name = $name_arr[0];
+                                          }
+                                          ?>
+                                          
+                                          <li>Agent:<?=$a_name?></li>
+                                          <li>Status: <?=$rData['approval_status']?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Vacant: <?=$rData['vacant']?></li>
+                                          <li>Keys: <?=$rData['rets_keys']?></li>
+                                          <li>Pets: <?php echo ($rData['building_pets'] > 0)?'Yes':'No' ?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Maintenance: $982</li>
+                                          <li>AssessmentNo: <?=$rData['assessment_no']?></li>
+                                          <li>Financing:<?=round($rData['maximum_financing_percent'])?>%</li>
+                                      </ul>
+                                    </td>
+                                  </tr>
+                              </tbody><?php
+                              }?> 
+                          </table><?php
+                            }elseif($key == 'badroom2'){ ?>
+                            <table class="table">
+                              <h3 class="table-head">Two Bedrooms</h3><?php
+                              foreach($retsdata as $rData){ 
+                                if(!empty($rData['original_price'])){
+                                  $kprice = $rData['original_price'] / 1000;
+                                }
+
+                                ?>
+                                <thead>
+                                  <tr>
+                                    <th scope="col">$<?=$kprice?>K</th>
+                                    <th scope="col" colspan="2"><?=$rData['address_with_unit']?></th>
+                                    <th scope="col"><?=$rData['place_name']?></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td scope="row">
+                                      <ul class="icon-img">
+                                          <li><?=Html::img('@web/img/icon1.png'); ?>
+                                              <?=Html::img('@web/img/icon2.png'); ?></li>
+                                          <li><?=Html::img('@web/img/icon3.png'); ?>
+                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Type: <?=$rData['property_type']?></li>
+                                          <?php
+                                          if(!empty($rData['agent1_image'])){
+                                            $imgArr = explode('/', $rData['agent1_image']);
+                                            $img_name = end($imgArr);
+                                            $name_arr = explode('.', $img_name);
+                                            $a_name = $name_arr[0];
+                                          }
+                                          ?>
+                                          
+                                          <li>Agent:<?=$a_name?></li>
+                                          <li>Status: <?=$rData['approval_status']?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Vacant: <?=$rData['vacant']?></li>
+                                          <li>Keys: <?=$rData['rets_keys']?></li>
+                                          <li>Pets: <?php echo ($rData['building_pets'] > 0)?'Yes':'No' ?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Maintenance: $982</li>
+                                          <li>AssessmentNo: <?=$rData['assessment_no']?></li>
+                                          <li>Financing:<?=round($rData['maximum_financing_percent'])?>%</li>
+                                      </ul>
+                                    </td>
+                                  </tr>
+                              </tbody><?php
+                              }?> 
+                          </table><?php
+                            }elseif($key == 'badroom3'){ ?>
+                            <table class="table">
+                              <h3 class="table-head">Three Bedrooms</h3><?php
+                              foreach($retsdata as $rData){ 
+                                if(!empty($rData['original_price'])){
+                                  $kprice = $rData['original_price'] / 1000;
+                                }  ?>
+                                <thead>
+                                  <tr>
+                                    <th scope="col">$<?=$kprice?>K</th>
+                                    <th scope="col" colspan="2"><?=$rData['address_with_unit']?></th>
+                                    <th scope="col"><?=$rData['place_name']?></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td scope="row">
+                                      <ul class="icon-img">
+                                          <li><?=Html::img('@web/img/icon1.png'); ?>
+                                              <?=Html::img('@web/img/icon2.png'); ?></li>
+                                          <li><?=Html::img('@web/img/icon3.png'); ?>
+                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Type: <?=$rData['property_type']?></li>
+                                          <?php
+                                          if(!empty($rData['agent1_image'])){
+                                            $imgArr = explode('/', $rData['agent1_image']);
+                                            $img_name = end($imgArr);
+                                            $name_arr = explode('.', $img_name);
+                                            $a_name = $name_arr[0];
+                                          }
+                                          ?>
+                                          
+                                          <li>Agent:<?=$a_name?></li>
+                                          <li>Status: <?=$rData['approval_status']?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Vacant: <?=$rData['vacant']?></li>
+                                          <li>Keys: <?=$rData['rets_keys']?></li>
+                                          <li>Pets: <?php echo ($rData['building_pets'] > 0)?'Yes':'No' ?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Maintenance: $982</li>
+                                          <li>AssessmentNo: <?=$rData['assessment_no']?></li>
+                                          <li>Financing:<?=round($rData['maximum_financing_percent'])?>%</li>
+                                      </ul>
+                                    </td>
+                                  </tr>
+                              </tbody><?php
+                              }?> 
+                          </table><?php
+                          }elseif($key == 'badroom4'){ ?>
+                            <table class="table">
+                              <h3 class="table-head">Four or more Bedrooms</h3><?php
+                              foreach($retsdata as $rData){ 
+                                if(!empty($rData['original_price'])){
+                                  $kprice = $rData['original_price'] / 1000;
+                                }  ?>
+                                <thead>
+                                  <tr>
+                                    <th scope="col">$<?=$kprice?>K</th>
+                                    <th scope="col" colspan="2"><?=$rData['address_with_unit']?></th>
+                                    <th scope="col"><?=$rData['place_name']?></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td scope="row">
+                                      <ul class="icon-img">
+                                          <li><?=Html::img('@web/img/icon1.png'); ?>
+                                              <?=Html::img('@web/img/icon2.png'); ?></li>
+                                          <li><?=Html::img('@web/img/icon3.png'); ?>
+                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Type: <?=$rData['property_type']?></li>
+                                          <?php
+                                          if(!empty($rData['agent1_image'])){
+                                            $imgArr = explode('/', $rData['agent1_image']);
+                                            $img_name = end($imgArr);
+                                            $name_arr = explode('.', $img_name);
+                                            $a_name = $name_arr[0];
+                                          }
+                                          ?>
+                                          
+                                          <li>Agent:<?=$a_name?></li>
+                                          <li>Status: <?=$rData['approval_status']?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Vacant: <?=$rData['vacant']?></li>
+                                          <li>Keys: <?=$rData['rets_keys']?></li>
+                                          <li>Pets: <?php echo ($rData['building_pets'] > 0)?'Yes':'No' ?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Maintenance: $982</li>
+                                          <li>AssessmentNo: <?=$rData['assessment_no']?></li>
+                                          <li>Financing:<?=round($rData['maximum_financing_percent'])?>%</li>
+                                      </ul>
+                                    </td>
+                                  </tr>
+                              </tbody><?php
+                              }?> 
+                          </table><?php
+                            }elseif($key == 'townhouse'){ ?>
+                            <table class="table">
+                              <h3 class="table-head">Townhouse</h3><?php
+                              foreach($retsdata as $rData){ 
+                                if(!empty($rData['original_price'])){
+                                  $kprice = $rData['original_price'] / 1000;
+                                }  ?>
+                                <thead>
+                                  <tr>
+                                    <th scope="col">$<?=$kprice?>K</th>
+                                    <th scope="col" colspan="2"><?=$rData['address_with_unit']?></th>
+                                    <th scope="col"><?=$rData['place_name']?></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td scope="row">
+                                      <ul class="icon-img">
+                                          <li><?=Html::img('@web/img/icon1.png'); ?>
+                                              <?=Html::img('@web/img/icon2.png'); ?></li>
+                                          <li><?=Html::img('@web/img/icon3.png'); ?>
+                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Type: <?=$rData['property_type']?></li>
+                                          <?php
+                                          if(!empty($rData['agent1_image'])){
+                                            $imgArr = explode('/', $rData['agent1_image']);
+                                            $img_name = end($imgArr);
+                                            $name_arr = explode('.', $img_name);
+                                            $a_name = $name_arr[0];
+                                          }
+                                          ?>
+                                          
+                                          <li>Agent:<?=$a_name?></li>
+                                          <li>Status: <?=$rData['approval_status']?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Vacant: <?=$rData['vacant']?></li>
+                                          <li>Keys: <?=$rData['rets_keys']?></li>
+                                          <li>Pets: <?php echo ($rData['building_pets'] > 0)?'Yes':'No' ?></li>
+                                      </ul>
+                                    </td>
+                                    <td>
+                                      <ul class="room-type">
+                                          <li>Maintenance: $982</li>
+                                          <li>AssessmentNo: <?=$rData['assessment_no']?></li>
+                                          <li>Financing:<?=round($rData['maximum_financing_percent'])?>%</li>
+                                      </ul>
+                                    </td>
+                                  </tr>
+                              </tbody><?php
+                              }?> 
+                          </table><?php
+                            }                              
+                          }?> 
+                      </div>
+                    </div><?php
+                  } ?>
+                     <?php /*  Rental Listing End */ ?>
                 </div>
                 <div class="col-md-6">
                     <div class="exclusive-list">
@@ -620,6 +993,11 @@ $this->title = Yii::$app->name;
 
     </div>
 </div>
+<?php
+$height = '1050px';
+if(!empty($retsData['spropertyData']) && !empty($retsData['rpropertyData'])){
+ $height = '500px';
+}?>
 <style type="text/css">
   .loading_img_div{
     text-align: center;
@@ -633,6 +1011,9 @@ $this->title = Yii::$app->name;
 }
 .loading_img_div img {
     max-width: 5%; margin-bottom: 10px;
+}
+.exc-table {
+    height: <?=$height?>;
 }
 </style>
 <script type="text/javascript">

@@ -364,7 +364,6 @@ input.form-control::placeholder {color: #000;font-weight: 500;}
 
 .exc-table {
     overflow-y: scroll;
-    height: 1050px;
 }
 .leader-table {
     height: 200px;
