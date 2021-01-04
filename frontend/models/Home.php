@@ -37,7 +37,7 @@ class Home extends Model
 
     public function getRetsData()
     {
-        $data = [];
+        $data = $rpropertyData = $spropertyData = [];
         $dataArray = [];
         $table = $this->tableName();
         $data = (new \yii\db\Query())

@@ -268,6 +268,18 @@ class Rets extends Model
             if(!empty($this->agent1_id)){
                 $updateData['agent1_id']=$this->agent1_id;
             }
+            if(!empty($this->video_url)){
+                $updateData['video_url']=$this->video_url;
+            }
+            if(!empty($this->external_link1)){
+                $updateData['external_link1']=$this->external_link1;
+            }
+            if(!empty($this->external_link2)){
+                $updateData['external_link2']=$this->external_link2;
+            }
+            if(!empty($this->description)){
+                $updateData['description']=$this->description;
+            }
             //print_r($updateData);die;
             //$updateData['updated_at'] = time();
             $table = self::tableName();

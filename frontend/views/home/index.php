@@ -5,7 +5,7 @@
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
 use yii\helpers\Url;
-
+use yii\bootstrap4\Modal;
 $this->title = Yii::$app->name;
 ?>
 <div class="site-index">
@@ -51,10 +51,38 @@ $this->title = Yii::$app->name;
                                   <tr>
                                     <td scope="row">
                                       <ul class="icon-img">
-                                          <li><?=Html::img('@web/img/icon1.png'); ?>
-                                              <?=Html::img('@web/img/icon2.png'); ?></li>
-                                          <li><?=Html::img('@web/img/icon3.png'); ?>
-                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                        <li><?php
+                                        echo Html::a(Html::img('@web/img/icon1.png'),$rData['external_link1'],['target'=>'_blank']); 
+                                        if(!empty($rData['video_url'])){
+                                          preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $rData['video_url'], $matches); 
+                                          $videoId = !empty($matches[1])?$matches[1]:0;
+                                        Modal::begin([
+                                          'title' => 'Video',
+                                          'toggleButton' => [
+                                            'tag' => 'a',
+                                            'label' => Html::img('@web/img/icon2.png')],
+                                        ]); 
+                                        if($videoId) {
+                                          echo '<iframe src="https://www.youtube.com/embed/'.$videoId.'" autoplay="0" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen width="450" height="400"></iframe>';
+                                        }
+                                        Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon2.png');
+                                        } ?></li>
+                                        <li><?php
+                                        if(!empty($rData['description'])){
+                                          Modal::begin([
+                                            'title' => 'Notes',
+                                            'toggleButton' => [
+                                              'tag' => 'a',
+                                              'label' => Html::img('@web/img/icon3.png')],
+                                          ]); 
+                                          echo $rData['description'];
+                                          Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon3.png');
+                                        } ?><?php 
+                                        echo Html::a(Html::img('@web/img/icon4.png'),$rData['external_link2'],['target'=>'_blank']); ?></li>
                                       </ul>
                                     </td>
                                     <td>
@@ -110,10 +138,39 @@ $this->title = Yii::$app->name;
                                   <tr>
                                     <td scope="row">
                                       <ul class="icon-img">
-                                          <li><?=Html::img('@web/img/icon1.png'); ?>
-                                              <?=Html::img('@web/img/icon2.png'); ?></li>
-                                          <li><?=Html::img('@web/img/icon3.png'); ?>
-                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                        <li><?php
+                                        echo Html::a(Html::img('@web/img/icon1.png'),$rData['external_link1'],['target'=>'_blank']); 
+                                        if(!empty($rData['video_url'])){
+                                          preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $rData['video_url'], $matches); 
+                                          $videoId = !empty($matches[1])?$matches[1]:0;
+                                        Modal::begin([
+                                          'title' => 'Video',
+                                          'toggleButton' => [
+                                            'tag' => 'a',
+                                            'label' => Html::img('@web/img/icon2.png')],
+                                        ]); 
+                                        if($videoId) {
+                                          echo '<iframe src="https://www.youtube.com/embed/'.$videoId.'" autoplay="0" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen width="450" height="400"></iframe>';
+                                        }
+                                        Modal::end(); ?>
+                                        <div class="clearfix"></div><?php
+                                        }else{
+                                          echo Html::img('@web/img/icon2.png');
+                                        } ?></li>
+                                        <li><?php
+                                        if(!empty($rData['description'])){
+                                          Modal::begin([
+                                            'title' => 'Notes',
+                                            'toggleButton' => [
+                                              'tag' => 'a',
+                                              'label' => Html::img('@web/img/icon3.png')],
+                                          ]); 
+                                          echo $rData['description'];
+                                          Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon3.png');
+                                        } ?><?php 
+                                        echo Html::a(Html::img('@web/img/icon4.png'),$rData['external_link2'],['target'=>'_blank']); ?></li>
                                       </ul>
                                     </td>
                                     <td>
@@ -170,10 +227,38 @@ $this->title = Yii::$app->name;
                                   <tr>
                                     <td scope="row">
                                       <ul class="icon-img">
-                                          <li><?=Html::img('@web/img/icon1.png'); ?>
-                                              <?=Html::img('@web/img/icon2.png'); ?></li>
-                                          <li><?=Html::img('@web/img/icon3.png'); ?>
-                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                        <li><?php
+                                        echo Html::a(Html::img('@web/img/icon1.png'),$rData['external_link1'],['target'=>'_blank']); 
+                                        if(!empty($rData['video_url'])){
+                                          preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $rData['video_url'], $matches); 
+                                          $videoId = !empty($matches[1])?$matches[1]:0;
+                                        Modal::begin([
+                                          'title' => 'Video',
+                                          'toggleButton' => [
+                                            'tag' => 'a',
+                                            'label' => Html::img('@web/img/icon2.png')],
+                                        ]); 
+                                        if($videoId) {
+                                          echo '<iframe src="https://www.youtube.com/embed/'.$videoId.'" autoplay="0" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen width="450" height="400"></iframe>';
+                                        }
+                                        Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon2.png');
+                                        } ?></li>
+                                        <li><?php
+                                        if(!empty($rData['description'])){
+                                          Modal::begin([
+                                            'title' => 'Notes',
+                                            'toggleButton' => [
+                                              'tag' => 'a',
+                                              'label' => Html::img('@web/img/icon3.png')],
+                                          ]); 
+                                          echo $rData['description'];
+                                          Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon3.png');
+                                        } ?><?php 
+                                        echo Html::a(Html::img('@web/img/icon4.png'),$rData['external_link2'],['target'=>'_blank']); ?></li>
                                       </ul>
                                     </td>
                                     <td>
@@ -228,10 +313,38 @@ $this->title = Yii::$app->name;
                                   <tr>
                                     <td scope="row">
                                       <ul class="icon-img">
-                                          <li><?=Html::img('@web/img/icon1.png'); ?>
-                                              <?=Html::img('@web/img/icon2.png'); ?></li>
-                                          <li><?=Html::img('@web/img/icon3.png'); ?>
-                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                        <li><?php
+                                        echo Html::a(Html::img('@web/img/icon1.png'),$rData['external_link1'],['target'=>'_blank']); 
+                                        if(!empty($rData['video_url'])){
+                                          preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $rData['video_url'], $matches); 
+                                          $videoId = !empty($matches[1])?$matches[1]:0;
+                                        Modal::begin([
+                                          'title' => 'Video',
+                                          'toggleButton' => [
+                                            'tag' => 'a',
+                                            'label' => Html::img('@web/img/icon2.png')],
+                                        ]); 
+                                        if($videoId) {
+                                          echo '<iframe src="https://www.youtube.com/embed/'.$videoId.'" autoplay="0" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen width="450" height="400"></iframe>';
+                                        }
+                                        Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon2.png');
+                                        } ?></li>
+                                        <li><?php
+                                        if(!empty($rData['description'])){
+                                          Modal::begin([
+                                            'title' => 'Notes',
+                                            'toggleButton' => [
+                                              'tag' => 'a',
+                                              'label' => Html::img('@web/img/icon3.png')],
+                                          ]); 
+                                          echo $rData['description'];
+                                          Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon3.png');
+                                        } ?><?php 
+                                        echo Html::a(Html::img('@web/img/icon4.png'),$rData['external_link2'],['target'=>'_blank']); ?></li>
                                       </ul>
                                     </td>
                                     <td>
@@ -286,10 +399,38 @@ $this->title = Yii::$app->name;
                                   <tr>
                                     <td scope="row">
                                       <ul class="icon-img">
-                                          <li><?=Html::img('@web/img/icon1.png'); ?>
-                                              <?=Html::img('@web/img/icon2.png'); ?></li>
-                                          <li><?=Html::img('@web/img/icon3.png'); ?>
-                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                        <li><?php
+                                        echo Html::a(Html::img('@web/img/icon1.png'),$rData['external_link1'],['target'=>'_blank']); 
+                                        if(!empty($rData['video_url'])){
+                                          preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $rData['video_url'], $matches); 
+                                          $videoId = !empty($matches[1])?$matches[1]:0;
+                                        Modal::begin([
+                                          'title' => 'Video',
+                                          'toggleButton' => [
+                                            'tag' => 'a',
+                                            'label' => Html::img('@web/img/icon2.png')],
+                                        ]); 
+                                        if($videoId) {
+                                          echo '<iframe src="https://www.youtube.com/embed/'.$videoId.'" autoplay="0" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen width="450" height="400"></iframe>';
+                                        }
+                                        Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon2.png');
+                                        } ?></li>
+                                        <li><?php
+                                        if(!empty($rData['description'])){
+                                          Modal::begin([
+                                            'title' => 'Notes',
+                                            'toggleButton' => [
+                                              'tag' => 'a',
+                                              'label' => Html::img('@web/img/icon3.png')],
+                                          ]); 
+                                          echo $rData['description'];
+                                          Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon3.png');
+                                        } ?><?php 
+                                        echo Html::a(Html::img('@web/img/icon4.png'),$rData['external_link2'],['target'=>'_blank']); ?></li>
                                       </ul>
                                     </td>
                                     <td>
@@ -344,10 +485,38 @@ $this->title = Yii::$app->name;
                                   <tr>
                                     <td scope="row">
                                       <ul class="icon-img">
-                                          <li><?=Html::img('@web/img/icon1.png'); ?>
-                                              <?=Html::img('@web/img/icon2.png'); ?></li>
-                                          <li><?=Html::img('@web/img/icon3.png'); ?>
-                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                        <li><?php
+                                        echo Html::a(Html::img('@web/img/icon1.png'),$rData['external_link1'],['target'=>'_blank']); 
+                                        if(!empty($rData['video_url'])){
+                                          preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $rData['video_url'], $matches); 
+                                          $videoId = !empty($matches[1])?$matches[1]:0;
+                                        Modal::begin([
+                                          'title' => 'Video',
+                                          'toggleButton' => [
+                                            'tag' => 'a',
+                                            'label' => Html::img('@web/img/icon2.png')],
+                                        ]); 
+                                        if($videoId) {
+                                          echo '<iframe src="https://www.youtube.com/embed/'.$videoId.'" autoplay="0" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen width="450" height="400"></iframe>';
+                                        }
+                                        Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon2.png');
+                                        } ?></li>
+                                        <li><?php
+                                        if(!empty($rData['description'])){
+                                          Modal::begin([
+                                            'title' => 'Notes',
+                                            'toggleButton' => [
+                                              'tag' => 'a',
+                                              'label' => Html::img('@web/img/icon3.png')],
+                                          ]); 
+                                          echo $rData['description'];
+                                          Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon3.png');
+                                        } ?><?php 
+                                        echo Html::a(Html::img('@web/img/icon4.png'),$rData['external_link2'],['target'=>'_blank']); ?></li>
                                       </ul>
                                     </td>
                                     <td>
@@ -420,10 +589,38 @@ $this->title = Yii::$app->name;
                                   <tr>
                                     <td scope="row">
                                       <ul class="icon-img">
-                                          <li><?=Html::img('@web/img/icon1.png'); ?>
-                                              <?=Html::img('@web/img/icon2.png'); ?></li>
-                                          <li><?=Html::img('@web/img/icon3.png'); ?>
-                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                        <li><?php
+                                        echo Html::a(Html::img('@web/img/icon1.png'),$rData['external_link1'],['target'=>'_blank']); 
+                                        if(!empty($rData['video_url'])){
+                                          preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $rData['video_url'], $matches); 
+                                          $videoId = !empty($matches[1])?$matches[1]:0;
+                                        Modal::begin([
+                                          'title' => 'Video',
+                                          'toggleButton' => [
+                                            'tag' => 'a',
+                                            'label' => Html::img('@web/img/icon2.png')],
+                                        ]); 
+                                        if($videoId) {
+                                          echo '<iframe src="https://www.youtube.com/embed/'.$videoId.'" autoplay="0" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen width="450" height="400"></iframe>';
+                                        }
+                                        Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon2.png');
+                                        } ?></li>
+                                        <li><?php
+                                        if(!empty($rData['description'])){
+                                          Modal::begin([
+                                            'title' => 'Notes',
+                                            'toggleButton' => [
+                                              'tag' => 'a',
+                                              'label' => Html::img('@web/img/icon3.png')],
+                                          ]); 
+                                          echo $rData['description'];
+                                          Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon3.png');
+                                        } ?><?php 
+                                        echo Html::a(Html::img('@web/img/icon4.png'),$rData['external_link2'],['target'=>'_blank']); ?></li>
                                       </ul>
                                     </td>
                                     <td>
@@ -479,10 +676,38 @@ $this->title = Yii::$app->name;
                                   <tr>
                                     <td scope="row">
                                       <ul class="icon-img">
-                                          <li><?=Html::img('@web/img/icon1.png'); ?>
-                                              <?=Html::img('@web/img/icon2.png'); ?></li>
-                                          <li><?=Html::img('@web/img/icon3.png'); ?>
-                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                        <li><?php
+                                        echo Html::a(Html::img('@web/img/icon1.png'),$rData['external_link1'],['target'=>'_blank']); 
+                                        if(!empty($rData['video_url'])){
+                                          preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $rData['video_url'], $matches); 
+                                          $videoId = !empty($matches[1])?$matches[1]:0;
+                                        Modal::begin([
+                                          'title' => 'Video',
+                                          'toggleButton' => [
+                                            'tag' => 'a',
+                                            'label' => Html::img('@web/img/icon2.png')],
+                                        ]); 
+                                        if($videoId) {
+                                          echo '<iframe src="https://www.youtube.com/embed/'.$videoId.'" autoplay="0" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen width="450" height="400"></iframe>';
+                                        }
+                                        Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon2.png');
+                                        } ?></li>
+                                        <li><?php
+                                        if(!empty($rData['description'])){
+                                          Modal::begin([
+                                            'title' => 'Notes',
+                                            'toggleButton' => [
+                                              'tag' => 'a',
+                                              'label' => Html::img('@web/img/icon3.png')],
+                                          ]); 
+                                          echo $rData['description'];
+                                          Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon3.png');
+                                        } ?><?php 
+                                        echo Html::a(Html::img('@web/img/icon4.png'),$rData['external_link2'],['target'=>'_blank']); ?></li>
                                       </ul>
                                     </td>
                                     <td>
@@ -539,10 +764,38 @@ $this->title = Yii::$app->name;
                                   <tr>
                                     <td scope="row">
                                       <ul class="icon-img">
-                                          <li><?=Html::img('@web/img/icon1.png'); ?>
-                                              <?=Html::img('@web/img/icon2.png'); ?></li>
-                                          <li><?=Html::img('@web/img/icon3.png'); ?>
-                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                        <li><?php
+                                        echo Html::a(Html::img('@web/img/icon1.png'),$rData['external_link1'],['target'=>'_blank']); 
+                                        if(!empty($rData['video_url'])){
+                                          preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $rData['video_url'], $matches); 
+                                          $videoId = !empty($matches[1])?$matches[1]:0;
+                                        Modal::begin([
+                                          'title' => 'Video',
+                                          'toggleButton' => [
+                                            'tag' => 'a',
+                                            'label' => Html::img('@web/img/icon2.png')],
+                                        ]); 
+                                        if($videoId) {
+                                          echo '<iframe src="https://www.youtube.com/embed/'.$videoId.'" autoplay="0" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen width="450" height="400"></iframe>';
+                                        }
+                                        Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon2.png');
+                                        } ?></li>
+                                        <li><?php
+                                        if(!empty($rData['description'])){
+                                          Modal::begin([
+                                            'title' => 'Notes',
+                                            'toggleButton' => [
+                                              'tag' => 'a',
+                                              'label' => Html::img('@web/img/icon3.png')],
+                                          ]); 
+                                          echo $rData['description'];
+                                          Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon3.png');
+                                        } ?><?php 
+                                        echo Html::a(Html::img('@web/img/icon4.png'),$rData['external_link2'],['target'=>'_blank']); ?></li>
                                       </ul>
                                     </td>
                                     <td>
@@ -597,10 +850,38 @@ $this->title = Yii::$app->name;
                                   <tr>
                                     <td scope="row">
                                       <ul class="icon-img">
-                                          <li><?=Html::img('@web/img/icon1.png'); ?>
-                                              <?=Html::img('@web/img/icon2.png'); ?></li>
-                                          <li><?=Html::img('@web/img/icon3.png'); ?>
-                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                        <li><?php
+                                        echo Html::a(Html::img('@web/img/icon1.png'),$rData['external_link1'],['target'=>'_blank']); 
+                                        if(!empty($rData['video_url'])){
+                                          preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $rData['video_url'], $matches); 
+                                          $videoId = !empty($matches[1])?$matches[1]:0;
+                                        Modal::begin([
+                                          'title' => 'Video',
+                                          'toggleButton' => [
+                                            'tag' => 'a',
+                                            'label' => Html::img('@web/img/icon2.png')],
+                                        ]); 
+                                        if($videoId) {
+                                          echo '<iframe src="https://www.youtube.com/embed/'.$videoId.'" autoplay="0" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen width="450" height="400"></iframe>';
+                                        }
+                                        Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon2.png');
+                                        } ?></li>
+                                        <li><?php
+                                        if(!empty($rData['description'])){
+                                          Modal::begin([
+                                            'title' => 'Notes',
+                                            'toggleButton' => [
+                                              'tag' => 'a',
+                                              'label' => Html::img('@web/img/icon3.png')],
+                                          ]); 
+                                          echo $rData['description'];
+                                          Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon3.png');
+                                        } ?><?php 
+                                        echo Html::a(Html::img('@web/img/icon4.png'),$rData['external_link2'],['target'=>'_blank']); ?></li>
                                       </ul>
                                     </td>
                                     <td>
@@ -655,10 +936,38 @@ $this->title = Yii::$app->name;
                                   <tr>
                                     <td scope="row">
                                       <ul class="icon-img">
-                                          <li><?=Html::img('@web/img/icon1.png'); ?>
-                                              <?=Html::img('@web/img/icon2.png'); ?></li>
-                                          <li><?=Html::img('@web/img/icon3.png'); ?>
-                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                        <li><?php
+                                        echo Html::a(Html::img('@web/img/icon1.png'),$rData['external_link1'],['target'=>'_blank']); 
+                                        if(!empty($rData['video_url'])){
+                                          preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $rData['video_url'], $matches); 
+                                          $videoId = !empty($matches[1])?$matches[1]:0;
+                                        Modal::begin([
+                                          'title' => 'Video',
+                                          'toggleButton' => [
+                                            'tag' => 'a',
+                                            'label' => Html::img('@web/img/icon2.png')],
+                                        ]); 
+                                        if($videoId) {
+                                          echo '<iframe src="https://www.youtube.com/embed/'.$videoId.'" autoplay="0" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen width="450" height="400"></iframe>';
+                                        }
+                                        Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon2.png');
+                                        } ?></li>
+                                        <li><?php
+                                        if(!empty($rData['description'])){
+                                          Modal::begin([
+                                            'title' => 'Notes',
+                                            'toggleButton' => [
+                                              'tag' => 'a',
+                                              'label' => Html::img('@web/img/icon3.png')],
+                                          ]); 
+                                          echo $rData['description'];
+                                          Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon3.png');
+                                        } ?><?php 
+                                        echo Html::a(Html::img('@web/img/icon4.png'),$rData['external_link2'],['target'=>'_blank']); ?></li>
                                       </ul>
                                     </td>
                                     <td>
@@ -713,12 +1022,39 @@ $this->title = Yii::$app->name;
                                   <tr>
                                     <td scope="row">
                                       <ul class="icon-img">
-                                          <li><?=Html::img('@web/img/icon1.png'); ?>
-                                              <?=Html::img('@web/img/icon2.png'); ?></li>
-                                          <li><?=Html::img('@web/img/icon3.png'); ?>
-                                              <?=Html::img('@web/img/icon4.png'); ?></li>
+                                        <li><?php
+                                        echo Html::a(Html::img('@web/img/icon1.png'),$rData['external_link1'],['target'=>'_blank']); 
+                                        if(!empty($rData['video_url'])){
+                                          preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $rData['video_url'], $matches); 
+                                          $videoId = !empty($matches[1])?$matches[1]:0;
+                                        Modal::begin([
+                                          'title' => 'Video',
+                                          'toggleButton' => [
+                                            'tag' => 'a',
+                                            'label' => Html::img('@web/img/icon2.png')],
+                                        ]); 
+                                        if($videoId) {
+                                          echo '<iframe src="https://www.youtube.com/embed/'.$videoId.'" autoplay="0" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen width="450" height="400"></iframe>';
+                                        }
+                                        Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon2.png');
+                                        } ?></li>
+                                        <li><?php
+                                        if(!empty($rData['description'])){
+                                          Modal::begin([
+                                            'title' => 'Notes',
+                                            'toggleButton' => [
+                                              'tag' => 'a',
+                                              'label' => Html::img('@web/img/icon3.png')],
+                                          ]); 
+                                          echo $rData['description'];
+                                          Modal::end();
+                                        }else{
+                                          echo Html::img('@web/img/icon3.png');
+                                        } ?><?php 
+                                        echo Html::a(Html::img('@web/img/icon4.png'),$rData['external_link2'],['target'=>'_blank']); ?></li>
                                       </ul>
-                                    </td>
                                     <td>
                                       <ul class="room-type">
                                           <li>Type: <?=$rData['property_type']?></li>

@@ -45,6 +45,7 @@ class RetsController extends Controller
 
     public function actionUpdate($id)
     {
+        //die('sss');
         $model = new Rets();
         $model->attributes = $model->getDataById($id); 
         if ($model->load(Yii::$app->request->post())) {
