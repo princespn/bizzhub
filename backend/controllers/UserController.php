@@ -11,7 +11,8 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-
+use yii\helpers\Json;
+use backend\modules\rbac\models\RbacAuthAssignment;
 /**
  * UserController implements the CRUD actions for User model.
  */
@@ -88,10 +89,21 @@ class UserController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         }
+        $roles = Yii::$app->params['roles'];
+        $profileSelector = User::findByRole($roles['profileSelector']);
+        $successManager = User::findByRole($roles['successManager']);
+        $agent = User::findByRole($roles['agent']);
+        $attorney = User::findByRole($roles['attorney']);
+        $mortgageLender = User::findByRole($roles['mortgageLender']);
 
         return $this->render('create', [
             'model' => $model,
-            'roles' => ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'name')
+            'roles' => ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'name'),
+            'profileSelector'=>$profileSelector,
+            'successManager'=>$successManager,
+            'agent'=>$agent,
+            'attorney'=>$attorney,
+            'mortgageLender'=>$mortgageLender
         ]);
     }
 
@@ -107,10 +119,21 @@ class UserController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         }
-
+        $roles = Yii::$app->params['roles'];
+        $profileSelector = User::findByRole($roles['profileSelector']);
+        $successManager = User::findByRole($roles['successManager']);
+        $agent = User::findByRole($roles['agent']);
+        $attorney = User::findByRole($roles['attorney']);
+        $mortgageLender = User::findByRole($roles['mortgageLender']);
+        //print_r($successManager);die;
         return $this->render('update', [
             'model' => $model,
-            'roles' => ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'name')
+            'roles' => ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'name'),
+            'profileSelector'=>$profileSelector,
+            'successManager'=>$successManager,
+            'agent'=>$agent,
+            'attorney'=>$attorney,
+            'mortgageLender'=>$mortgageLender
         ]);
     }
 
@@ -145,6 +168,64 @@ class UserController extends Controller
     }
 
 
+public function actionAjaxgettype() {
+      $list = RbacAuthAssignment::find()->select(['user_id'])->where(['item_name'=>'Profile Selector'])->all();
+      \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    $out = ['results' => ['id' => '', 'text' => '']];
+      foreach ($list as $key => $value) {
+           //echo $value['user_id'];
+      $query = new \yii\db\Query;
+        $query->select('id, username AS text')
+            ->from('user')
+             ->where('id in ('.$value['user_id'].')')
+             ->andwhere(['status'=>'2'])
+            ->limit(20);
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+      }
+      $out['results'] = array_values($data);
+       return $out;
+    }
+
+
+public function actionSuccessmanager() {
+      $list = RbacAuthAssignment::find()->select(['user_id'])->where(['item_name'=>''])->all();
+      \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    $out = ['results' => ['id' => '', 'text' => '']];
+      foreach ($list as $key => $value) {
+           //echo $value['user_id'];
+      $query = new \yii\db\Query;
+        $query->select('id, username AS text')
+            ->from('user')
+             ->where([ 'like', 'id', $value['user_id']])
+             ->andwhere(['status'=>'2'])
+            ->limit(20);
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+      }
+      $out['results'] = array_values($data);
+       return $out;
+    }
+
+
+public function actionEstateagent() {
+      $list = RbacAuthAssignment::find()->select(['user_id'])->where(['item_name'=>''])->all();
+      \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    $out = ['results' => ['id' => '', 'text' => '']];
+      foreach ($list as $key => $value) {
+           //echo $value['user_id'];
+      $query = new \yii\db\Query;
+        $query->select('id, username AS text')
+            ->from('user')
+             ->where([ 'like', 'id', $value['user_id']])
+             ->andwhere(['status'=>'2'])
+            ->limit(20);
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+      }
+      $out['results'] = array_values($data);
+       return $out;
+    }
     /**
      * Lists all User Role models.
      * @return mixed

@@ -43,7 +43,7 @@ class TrainingController extends Controller
                     [                    
                         'actions' => ['index'],
                         'allow' => true,
-                        'roles' => ['agent'],
+                        'roles' => ['admin','agent'],
                     ],                   
 
                 ],
@@ -79,7 +79,7 @@ class TrainingController extends Controller
     {
         $model = new Training();
         $trainingData = $model->getData();
-        //print_r($documentData);die;
+        //print_r($trainingData);die;
 
         return $this->render('index',[
             'trainingData'=>$trainingData,

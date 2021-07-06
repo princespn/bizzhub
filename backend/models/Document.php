@@ -7,7 +7,6 @@ use yii\base\Model;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
-
 /**
  * Account form
  */
@@ -19,6 +18,7 @@ class Document extends Model
     public $file_path;
     public $category;
     public $status;
+    public $file_image;
 
 
 
@@ -47,7 +47,7 @@ class Document extends Model
             ],
             [['file_path'],'required','on'=>['add']],
             ['category', 'required'],
-            [[ "doc_name", "file_path", "category","status"], "safe"]
+            [[ "doc_name", "file_path", "category","status",'file_image'], "safe"]
         ];
     }
 
@@ -71,6 +71,7 @@ class Document extends Model
                 [
                     'doc_name'=>$this->doc_name,
                     'file_path'=>$this->file_path,
+                    'file_image'=>$this->file_image,
                     'category'=>$this->category,
                     'status'=>$this->status,
                     'created_at'=>time(),

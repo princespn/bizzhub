@@ -1,4 +1,5 @@
 <?php
+//defined('YII_DEBUG') or define('YII_DEBUG', true);
 // Composer
 require(__DIR__ . '/../../vendor/autoload.php');
 

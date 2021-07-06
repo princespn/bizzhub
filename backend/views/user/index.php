@@ -96,7 +96,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         },
                     ],
                     'visibleButtons' => [
-                        'login' => Yii::$app->user->can('administrator')
+                        'login' => Yii::$app->user->can('admin')
                     ]
 
                 ],

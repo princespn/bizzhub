@@ -1,7 +1,5 @@
 <?php
-
 namespace common\models;
-
 use common\commands\AddToTimelineCommand;
 use common\models\query\UserQuery;
 use Yii;
@@ -10,7 +8,6 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
-
 /**
  * User model
  *
@@ -39,7 +36,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     const ROLE_USER = 'user';
     const ROLE_MANAGER = 'manager';
-    const ROLE_ADMINISTRATOR = 'administrator';
+    const ROLE_ADMINISTRATOR = 'admin';
 
     const EVENT_AFTER_SIGNUP = 'afterSignup';
     const EVENT_AFTER_LOGIN = 'afterLogin';
@@ -55,6 +52,11 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @inheritdoc
      */
+    //public $userrole;
+   
+    //public $password;
+    //public $status;
+    //public $roles;
     public function init()
     {
         $this->on(self::EVENT_AFTER_INSERT, [$this, 'notifySignup']);
@@ -121,6 +123,41 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Finds all users by assignment role
+     *
+     * @param  \yii\rbac\Role $role
+     * @return static|null
+     */
+    public static function findByRole($role)
+    {
+        $users = [];
+        $user_array =  static::find()
+        ->join('LEFT JOIN','rbac_auth_assignment','rbac_auth_assignment.user_id = id')
+        ->where(['rbac_auth_assignment.item_name' => $role])
+        ->all();
+        if(!empty($user_array)){
+            foreach($user_array as $user){
+                $users[$user->id] = $user->username;
+            }
+        }
+        return $users;        
+    }
+
+
+    public static  function getUser($ids)
+    {
+        $users = [];
+        $users = (new \yii\db\Query())
+            ->select('*')
+            ->from('user')
+            ->leftjoin('user_profile up', 'user.id = up.user_id')
+            ->where(['in', 'id', $ids])
+            ->All(); 
+        //print_r($users);die;        
+        return $users;
+    }
+
+    /**
      * @inheritdoc
      */
     public function behaviors()
@@ -167,10 +204,16 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'email'], 'unique'],
+             [['username', 'email'], 'unique'],
+             //[['userrole'], 'string'],
             ['status', 'default', 'value' => self::STATUS_NOT_ACTIVE],
             ['status', 'in', 'range' => array_keys(self::statuses())],
-            [['username'], 'filter', 'filter' => '\yii\helpers\Html::encode']
+            [['username'], 'filter', 'filter' => '\yii\helpers\Html::encode'],
+            [['profileselector','successmanager','agent'], 'safe'],
+
+            //['password', 'string', 'min' => 6],
+            //['password', 'required', 'on' => 'create']
+            
         ];
     }
 
@@ -245,6 +288,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function setPassword($password)
     {
+
         $this->password_hash = Yii::$app->getSecurity()->generatePasswordHash($password);
     }
 
@@ -262,7 +306,7 @@ class User extends ActiveRecord implements IdentityInterface
         $this->trigger(self::EVENT_AFTER_SIGNUP);
         // Default role
         $auth = Yii::$app->authManager;
-        $auth->assign($auth->getRole(User::ROLE_USER), $this->getId());
+        //$auth->assign($auth->getRole(User::ROLE_USER), $this->getId());
     }
 
     public function notifySignup($event)
@@ -313,4 +357,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->getPrimaryKey();
     }
+
+
+
 }

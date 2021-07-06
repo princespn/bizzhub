@@ -11,7 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\db\Query;
 use yii\data\ArrayDataProvider;
 use yii\web\UploadedFile;
-
+use yii\filters\AccessControl;
 /**
  * Application timeline controller
  */
@@ -24,6 +24,34 @@ class RetsController extends Controller
      * @return mixed
      */
 
+ public function behaviors()
+        {       
+         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index', 'add','update','delete','category','add-category'],
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['listRets'],
+                    ],
+                    
+                ],
+
+                'denyCallback' => function ($rule, $action) {
+                    $this->redirect("@web/timeline-event/index");
+                }
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
+        ];
+    }
+    
     public function actionAdd()
     {
         $model = new Rets();

@@ -14,6 +14,7 @@ $config = [
             'errorAction' => 'site/error',
         ],
         'request' => [
+            'enableCsrfValidation' => env('ENABLE_CSRF_VALIDATION'),
             'cookieValidationKey' => env('BACKEND_COOKIE_VALIDATION_KEY'),
             'baseUrl' => $baseUrl,
         ],
@@ -24,10 +25,17 @@ $config = [
             'enableAutoLogin' => true,
             'as afterLogin' => common\behaviors\LoginTimestampBehavior::class,
         ],
+        /*'mongodb' => [
+            'class' => '\yii\mongodb\Connection',
+            'dsn' => 'mongodb://fub_admin:hylmovuisnes6x3k@cluster0.ljump.mongodb.net/fub_webhooks',
+        ],*/
     ],
     'modules' => [
         'content' => [
             'class' => backend\modules\content\Module::class,
+        ],
+        'client' => [
+            'class' => backend\modules\client\Module::class,
         ],
         'widget' => [
             'class' => backend\modules\widget\Module::class,
@@ -45,6 +53,9 @@ $config = [
             'class' => backend\modules\rbac\Module::class,
             'defaultRoute' => 'rbac-auth-item/index',
         ],
+        'treemanager' =>  [
+            'class' => '\kartik\tree\Module',
+        ]
     ],
     'as globalAccess' => [
         'class' => common\behaviors\GlobalAccessBehavior::class,
@@ -74,13 +85,13 @@ $config = [
                 'roles' => ['?'],
             ],
             [
-                'controllers' => ['user'],
+                'controllers' => ['user', 'buildings', 'document', 'rets'],
                 'allow' => true,
                // 'roles' => ['administrator'],
                 'roles' => ['admin'],
             ],
             [
-                'controllers' => ['user'],
+                'controllers' => ['user', 'buildings', 'document', 'rets'],
                 'allow' => false,
             ],
             [

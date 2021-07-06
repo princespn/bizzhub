@@ -60,14 +60,12 @@ class DefaultController extends Controller
     {
         $accountForm = new AccountForm();
         $accountForm->setUser(Yii::$app->user->identity);
-
         $model = new MultiModel([
             'models' => [
                 'account' => $accountForm,
                 'profile' => Yii::$app->user->identity->userProfile
             ]
         ]);
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $locale = $model->getModel('profile')->locale;
             Yii::$app->session->setFlash('forceUpdateLocale');

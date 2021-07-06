@@ -91,6 +91,7 @@ class SignInController extends \yii\web\Controller
      */
     public function actionLogin()
     {
+        $this->layout = '@app/views/layouts/guest';
         $model = new LoginForm();
         if (Yii::$app->request->isAjax) {
             $model->load($_POST);
@@ -98,6 +99,10 @@ class SignInController extends \yii\web\Controller
             return ActiveForm::validate($model);
         }
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            $role = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
+            if(Yii::$app->user->can('client')){
+                return $this->redirect(Yii::$app->urlManager->createAbsoluteUrl(['common/index']));
+            }
             return $this->goBack();
             //return $this->goHome();
         }
@@ -145,6 +150,7 @@ class SignInController extends \yii\web\Controller
      */
     public function actionSignup()
     {
+        $this->layout = '@app/views/layouts/guest';
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             $user = $model->signup();
@@ -205,6 +211,7 @@ class SignInController extends \yii\web\Controller
      */
     public function actionRequestPasswordReset()
     {
+        $this->layout = '@app/views/layouts/guest';
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {

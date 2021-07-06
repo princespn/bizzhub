@@ -19,9 +19,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="card">
     <div class="card-header">
+        <?php if (Yii::$app->user->can('createDocumentcategory')) {
+          ?>
         <?php echo Html::a(FAS::icon('user-plus').' '.Yii::t('backend', 'Add New Document Category', [
             'modelClass' => 'DocumentCategory',
         ]), ['add-category'], ['class' => 'btn btn-success']) ?>
+    <?php  } ?>
     </div>
 
     <div class="card-body p-0">

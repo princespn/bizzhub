@@ -2,7 +2,7 @@
 
 namespace backend\controllers;
 
-use backend\models\Training;
+use common\models\Training;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -11,7 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\db\Query;
 use yii\data\ArrayDataProvider;
 use yii\web\UploadedFile;
-
+use yii\filters\AccessControl;
 /**
  * Application timeline controller
  */
@@ -24,11 +24,56 @@ class TrainingController extends Controller
      * @return mixed
      */
 
+ public function behaviors()
+        {       
+         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index', 'add','update','delete'],
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['listTraining'],
+                    ],
+                    [
+                        'actions' => ['add'],
+                        'allow' => true,
+                        'roles' => ['createTraining'],
+                    ],
+                    
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['updateTraining'],
+                    ],
+
+                    [
+                        'actions' => ['delete'],
+                        'allow' => true,
+                        'roles' => ['deleteTraining'],
+                    ],
+                ],
+
+                'denyCallback' => function ($rule, $action) {
+                    $this->redirect("@web/timeline-event/index");
+                }
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
+        ];
+    }
+    
+    
     public function actionAdd()
     {
         $model = new Training();           
         if ($model->load(Yii::$app->request->post())) {
-            $model->attributes = Yii::$app->request->post();  
+            /*$model->attributes = Yii::$app->request->post();  
             $rows = (new \yii\db\Query())
                     ->select(['id', 'title'])
                     ->from('training')
@@ -37,12 +82,12 @@ class TrainingController extends Controller
             if(!empty($rows)){
                 Yii::$app->session->setFlash('error', "This is already added.");
                 return $this->redirect(['add']);
-            }else{    
+            }else{  */  
                 $model->save();
                 //return $this->redirect(['index']);
-                return $this->redirect(['add']);
+                return $this->redirect(['index']);
                 Yii::$app->session->setFlash('success', "Training saved successfull.");
-            }
+            //}
         }           
         return $this->render('add', [
             'model'=>$model,
@@ -54,16 +99,17 @@ class TrainingController extends Controller
     public function actionUpdate($id)
     {
         $model = new Training();
-        $model->attributes = $model->getDataById($id);           
+        $model = $this->findModel($id);
+        //$model->attributes = $model->getDataById($id);           
         if ($model->load(Yii::$app->request->post())) {
-            $model->attributes = Yii::$app->request->post(); 
+            /*$model->attributes = Yii::$app->request->post(); 
             foreach($model->attributes as $key => $data){
                 if(!empty($data)){
                     $updateData[$key] = $data;
                 }
             }
-            $updateData['updated_at']=time();
-            $model->update($updateData);
+            $updateData['updated_at']=time();*/
+            $model->save();
             return $this->redirect(['index']);
             Yii::$app->session->setFlash('success', "Document saved successfull.");
         }           
@@ -107,6 +153,15 @@ class TrainingController extends Controller
                 'dataProvider' => $provider,
                 'model' => $models,
             ]);
+    }
+
+    protected function findModel($id)
+    {
+        if (($model = Training::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 
     public function actionAddCategory()

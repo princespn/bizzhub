@@ -6,7 +6,12 @@ use Yii;
 use yii\base\Model;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
-use yii\web\UploadedFile;
+//use yii\web\UploadedFile;
+use trntv\filekit\behaviors\UploadBehavior;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\SluggableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * Account form
@@ -19,6 +24,8 @@ class Training extends Model
     public $description;
     public $external_link;
     public $item_order;
+    public $image;
+    //public $image_base_url;
 
 
 
@@ -36,6 +43,22 @@ class Training extends Model
         ];
     }
 
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+            BlameableBehavior::class,
+            [
+                'class' => UploadBehavior::class,
+                'attribute' => 'image',
+                'pathAttribute' => 'image_path',
+                'baseUrlAttribute' => 'image_base_url',
+            ],
+        ];
+    }
+
+
     /**
      * @inheritdoc
      */
@@ -43,7 +66,8 @@ class Training extends Model
     {
         return [
             ['title', 'required'],
-            [[ "title", "description", "external_link","item_order"], "safe"]
+            [['image_base_url', 'image_path'], 'string', 'max' => 1024],
+            [[ "title", "description", "external_link","item_order","image"], "safe"]
         ];
     }
 
@@ -57,6 +81,7 @@ class Training extends Model
             'description' => Yii::t('backend', 'Description'),
             'external_link' => Yii::t('backend', 'External Link'),
             'item_order' => Yii::t('backend', 'Order'),
+            'image' => Yii::t('backend', 'Image'),
         ];
     }
 
@@ -72,6 +97,7 @@ class Training extends Model
                     'description'=>$this->description,
                     'external_link'=>$this->external_link,
                     'item_order'=>$this->item_order,
+                    'image'=>$this->image,
                     'created_at'=>time(),
                 ]
             )
@@ -95,7 +121,7 @@ class Training extends Model
         return null;
     }
 
-
+ 
     public function getDataById($id)
     {
         //die('dddd');

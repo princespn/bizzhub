@@ -4,6 +4,8 @@ namespace frontend\controllers;
 
 use cheatsheet\Time;
 use common\sitemap\UrlsIterator;
+use common\models\Settings;
+use common\models\EmailTemplate;
 use frontend\models\Resources;
 use Sitemaped\Element\Urlset\Urlset;
 use Yii;
@@ -15,6 +17,10 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\RFCValidation;
+use yii\helpers\Json;
+use yii\helpers\Html;
+use yii\helpers\Url;
+use MongoDB;
 
 /**
  * Site controller
@@ -36,6 +42,12 @@ class ResourcesController extends Controller
         ];
     }*/
 
+    public function beforeAction($action) 
+    { 
+        $this->enableCsrfValidation = false; 
+        return parent::beforeAction($action); 
+    }
+
     public function behaviors()
     {
         return [            
@@ -43,9 +55,9 @@ class ResourcesController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [                   
                     [                    
-                        'actions' => ['index','supports','ajaxsearch'],
+                        'actions' => ['index','supports','ajaxsearch','ajax-document-send'],
                         'allow' => true,
-                        'roles' => ['agent'],
+                        'roles' => ['admin','agent'],
                     ],                   
 
                 ],
@@ -79,12 +91,16 @@ class ResourcesController extends Controller
      */
     public function actionIndex()
     {
+        
         $model = new Resources();
-        $supportsData = $model->getSupportsData();
-        //print_r($documentData);die;
-
+        $buldingData = [];
+        if(Yii::$app->request->post()){
+            $data = Yii::$app->request->post();
+            $data['resource_search_query'] = '4 Bogardus Place 2F';
+            $buldingData = $model->buildingSearch($data['resource_search_query']);
+        }
         return $this->render('index',[
-            'supportsData'=>$supportsData,
+            'buldingData'=>$buldingData,
         ]);
     }
 
@@ -115,6 +131,58 @@ class ResourcesController extends Controller
 
         }
         return $return;
+    }
+
+
+    public function actionAjaxDocumentSend()
+    {
+        $http = Yii::$app->params['http'];
+        $base_url = Url::base($http);
+        $request = \Yii::$app->request;
+        $return = "fail";
+        //print_r($request->post());
+        if ($request->isPost) {
+            $postData = $request->post();
+            //print_r($postData);die;
+            if(!empty($postData['contacts']) && !empty($postData['document_id'])){
+                $settingmodel = new Settings();
+                $emailTemplatemodel = new EmailTemplate();
+                $settings = $settingmodel->getsetting();
+                $template = $emailTemplatemodel->gettemplate('RESOURCE_DOCUMENT'); 
+                //print_r($template);die;    
+                $server = $settings['mongodb_URI_connection_url']['value']; 
+                $c = new MongoDB\Client( $server );
+                $db = $c->fub_webhooks;
+                $collection = $db->people;                
+                foreach($postData['contacts'] as $contact_id){
+                    $contact_id_arr = explode('_',$contact_id);
+                    $cont_id = end($contact_id_arr);
+                    $pepoles = $collection->find(['_id'=>(int)$cont_id], ['projection' =>['_id'=>TRUE,'firstName' => TRUE,'lastName' => TRUE,'emails'=>TRUE,'picture'=>TRUE]])->toArray();
+                    //print_r($pepoles);die;
+                } 
+                $document_path = $postData['form_doc_path_'.$postData['document_id']];
+                //echo $document_path;die;              
+                $document_Arr = explode('_',$postData['document_id']);
+                $emailArr = [0=>'dharmraj.objects@gmail.com',1=>'bizzhub1@mailinator.com'];
+                $subject = $template['subject'];
+                $body = $template['header'].'</br></br>'.$template['content'].'</br></br>'.$template['footer'];
+                $success=Yii::$app->mailer->compose()
+                ->setFrom('developers.wdp@gmail.com')
+                ->setTo($emailArr)
+                ->setSubject($subject)
+                //->setTextBody('This is document send mail')
+                ->setHtmlBody($body)
+                ->attach($document_path)
+                ->send();
+                if(!empty($success)){
+                    $return = "success";
+                }else{
+                    $return = "fail";
+                }
+
+            }
+        }
+        return  $return;
     }
 
     public function actionAjaxsearch()

@@ -11,7 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\db\Query;
 use yii\data\ArrayDataProvider;
 use yii\web\UploadedFile;
-
+use yii\filters\AccessControl;
 /**
  * Application timeline controller
  */
@@ -23,6 +23,51 @@ class SupportsController extends Controller
      * Lists all TimelineEvent models.
      * @return mixed
      */
+
+    public function behaviors()
+        {       
+         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index', 'add','update','delete'],
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['listSupports'],
+                    ],
+                    [
+                        'actions' => ['add'],
+                        'allow' => true,
+                        'roles' => ['createSupports'],
+                    ],
+                    
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['updateSupports'],
+                    ],
+
+                    [
+                        'actions' => ['delete'],
+                        'allow' => true,
+                        'roles' => ['deleteSupports'],
+                    ],
+                ],
+
+                'denyCallback' => function ($rule, $action) {
+                    $this->redirect("@web/timeline-event/index");
+                }
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
+        ];
+    }
+    
 
     public function actionAdd()
     {

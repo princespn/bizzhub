@@ -8,19 +8,30 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap4\Breadcrumbs;
 //$this->registerCssFile("@web/css/front/style.css");
     $this->registerCssFile("@web/css/font-awesome.css");
-    $this->registerCssFile("@web/css/style.css"); 
-    $this->registerCssFile("@web/css/responsive.css");     
+
+   
+    //$this->registerCssFile("@web/css/style.css");
+    $this->registerCssFile("@web/css/style01.css");  
     $this->registerCssFile("@web/css/bootstrap.min.css");
+    $this->registerCssFile("@web/css/owl.carousel.min.css");
+    $this->registerCssFile("@web/css/owl.theme.css");
+    $this->registerCssFile("@web/css/AdminLTE.css");
+    $this->registerCssFile("@web/css/_all-skins.css");
+     $this->registerCssFile("@web/css/responsive.css");
     
 //////////////js
-    $this->registerJsFile('@web/js/jquery.min.js');
-    $this->registerJsFile('@web/js/bootstrap.min.js');
-    $this->registerJsFile('@web/js/popper.min.js');
+    $this->registerJsFile('@web/js/jquery.min.js',['position' => $this::POS_HEAD]);
+    $this->registerJsFile('@web/js/bootstrap.min.js',['position' => $this::POS_HEAD]);
+    $this->registerJsFile('@web/js/adminlte.js',['position' => $this::POS_HEAD]);
+    //$this->registerJsFile('@web/js/demo.js',['position' => $this::POS_HEAD]);
+    $this->registerJsFile('@web/js/jquery-ui.min.js',['position' => $this::POS_HEAD]);
+    $this->registerJsFile('@web/js/owl.carousel.min.js',['position' => $this::POS_HEAD]);
+    $this->registerJsFile('@web/js/jquery-1.11.3.js');
     /////end
 $this->beginContent('@frontend/views/layouts/base.php')
 ?>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 <div class="">
 
     <?php echo Breadcrumbs::widget([

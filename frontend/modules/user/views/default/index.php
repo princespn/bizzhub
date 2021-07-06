@@ -11,80 +11,74 @@ use yii\bootstrap4\ActiveForm;
 $this->title = Yii::t('frontend', 'User Settings')
 ?>
 
-<div class="user-profile-form">
-    <div class="container">
-         <div class="list-head">
-          <h2><?php echo Yii::t('frontend', 'Profile settings') ?></h2>
-        </div>
-        <div class="profile-detail">
-        <?php $form = ActiveForm::begin(); ?>
-
-       
-
-        <!-- <h2><?php echo Yii::t('frontend', 'Profile settings') ?></h2> -->
-
-        <?php echo $form->field($model->getModel('profile'), 'picture')->widget(
-            Upload::class,
-            [
-                'url' => ['avatar-upload']
-            ]
-        )?>
-
-        <div class="row">
-            <div class="col">
-                <?php echo $form->field($model->getModel('profile'), 'firstname')->textInput(['maxlength' => 255]) ?>
-            </div>
-            <div class="col">
-                <?php echo $form->field($model->getModel('profile'), 'middlename')->textInput(['maxlength' => 255]) ?>
-            </div>
-            <div class="col">
-                <?php echo $form->field($model->getModel('profile'), 'lastname')->textInput(['maxlength' => 255]) ?>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col">
-                <?php echo $form->field($model->getModel('profile'), 'locale')->dropDownlist(Yii::$app->params['availableLocales']) ?>
-            </div>
-            <div class="col">
-                <?php echo $form->field($model->getModel('profile'), 'gender')->dropDownlist([
-                    \common\models\UserProfile::GENDER_FEMALE => Yii::t('frontend', 'Female'),
-                    \common\models\UserProfile::GENDER_MALE => Yii::t('frontend', 'Male')
-                ], ['prompt' => '']) ?>
-            </div>
-        </div>
+<div class="content-wrapper" style="min-height: 902.8px;">
+    <div class="dashboard_right_detail">
+        <div class="setting-page">
+            <?php $form = ActiveForm::begin(); ?>
+                <div class="setting-form">
+                    <div class="setting-rofile">
+                    <?php echo $form->field($model->getModel('profile'), 'picture')->widget(
+                        Upload::class,
+                        [
+                            'url' => ['avatar-upload']
+                        ]
+                    )?>
+                    </div>
+                    <h3 class="setting-title">General</h3>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <?php echo $form->field($model->getModel('profile'), 'firstname')->textInput(['maxlength' => 255, 'class'=>'form-control']) ?>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <?php echo $form->field($model->getModel('profile'), 'middlename')->textInput(['maxlength' => 255]) ?>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <?php echo $form->field($model->getModel('profile'), 'lastname')->textInput(['maxlength' => 255]) ?>
+                            </div>
+                            </div>
+                        </div>
+                   
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <?php echo $form->field($model->getModel('account'), 'email')->input('email') ?>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <?php echo $form->field($model->getModel('profile'), 'phone')->textInput(['maxlength' => 10]) ?>
+                            </div>
+                        </div>   
+                    </div>
+                        </div>
+                <div class="setting-form setting-form33">
+                    <h3 class="setting-title">Change Password</h3>
+                    <div class="row"><?php /*
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="disabledTextInput">OLD PASSWORD</label>
+                                <input type="password" id="disabledTextInput" class="form-control" value="00000">
+                            </div>
+                        </div>*/ ?>
+                        <div class="col-md-4 col-sm-12 col-lg-3">
+                            <?php echo $form->field($model->getModel('account'), 'password')->passwordInput() ?>
+                        </div>
+                        <div class="col-md-4 col-sm-12 col-lg-3">
+                            <?php echo $form->field($model->getModel('account'), 'password_confirm')->passwordInput() ?>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <?php echo Html::submitButton(Yii::t('frontend', 'Update'), ['class' => 'btn btn-primary']) ?>
+                    </div>                    
+                </div>
+                
+            <?php ActiveForm::end(); ?>            
+        </div>    
     </div>
-
-
-    <div class="list-head">
-        <h2><?php echo Yii::t('frontend', 'Account Settings') ?></h2>
-    </div>
-    <div class="acc-sec">
-        <div class="row">
-            <div class="col">
-                <?php echo $form->field($model->getModel('account'), 'username') ?>
-            </div>
-            <div class="col">
-                <?php echo $form->field($model->getModel('account'), 'email')->input('email') ?>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col">
-                <?php echo $form->field($model->getModel('account'), 'password')->passwordInput() ?>
-            </div>
-            <div class="col">
-                <?php echo $form->field($model->getModel('account'), 'password_confirm')->passwordInput() ?>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <?php echo Html::submitButton(Yii::t('frontend', 'Update'), ['class' => 'btn update-btn']) ?>
-        </div>
-
-        <?php ActiveForm::end(); ?>
-
-    </div>
-</div>
 </div>
 

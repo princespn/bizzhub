@@ -43,7 +43,7 @@ class FileController extends Controller
                     [                    
                         'actions' => ['download'],
                         'allow' => true,
-                        'roles' => ['agent'],
+                        'roles' => ['agent','admin'],
                     ],                   
 
                 ],
@@ -77,11 +77,8 @@ class FileController extends Controller
      */
     public function actionDownload($n,$p,$a) {    
         $file = \Yii::getAlias('@storage').'/web/'.$p.'/'.$n;
-        // Download file to user
         if (file_exists($file)) {
-            //die('ssss');
            Yii::$app->response->sendFile($file);
         }
-        //return $this->redirect([$p.'/'.$a]);
     }
 }

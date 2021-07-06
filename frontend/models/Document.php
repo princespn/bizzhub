@@ -11,7 +11,6 @@ use yii\db\Query;
 use yii\base\Exception;
 use yii\helpers\Url;
 
-
 /**
  * ArticleSearch represents the model behind the search form about `common\models\Article`.
  */
@@ -20,6 +19,7 @@ class Document extends Model
     public $id;
     public $file_path;
     public $doc_name;
+    public $file_image;
 
 
 
@@ -49,7 +49,7 @@ class Document extends Model
     {
         $category = [];
         $category = (new \yii\db\Query())
-                    ->select(['id', 'title'])
+                    ->select(['*'])
                     ->from('document_category')
                     ->where(['status' => 1])
                     ->All();
@@ -67,16 +67,22 @@ class Document extends Model
         return $document;
     }
 
-    public function getDocumentData(){
+    public function getDocumentData($param){
         $data = [];
         $query = new Query;
         $query  ->select([
-                'document.*','document_category.*']
+                'document.*','document_category.id as cat_id','document_category.title as cat_name']
                 )  
                 ->from('document')
                 ->join('LEFT JOIN', 'document_category',
-                    'document_category.id =document.category'); 
-                
+                    'document_category.id =document.category')
+                ->where(['document.status'=>1]);
+                if(!empty($param['cat_id']) && strtolower($param['cat_id']) != 'all'){
+                    $query->andwhere(['document.category'=>$param['cat_id']]);
+                } 
+                if(!empty($param['text'])){
+                    $query->andwhere(['or',['like', 'doc_name', $param['text']]]);
+                }
         $command = $query->createCommand();
         $data = $command->queryAll();
         return $data;

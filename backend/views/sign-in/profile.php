@@ -28,6 +28,8 @@ $this->title = Yii::t('backend', 'Edit profile')
 
         <?php echo $form->field($model, 'locale')->dropDownlist(Yii::$app->params['availableLocales']) ?>
 
+         <?php echo $form->field($model, 'phone')->textInput(['maxlength' => 10]) ?>
+
         <?php echo $form->field($model, 'gender')->dropDownlist([
             UserProfile::GENDER_FEMALE => Yii::t('backend', 'Female'),
             UserProfile::GENDER_MALE => Yii::t('backend', 'Male')

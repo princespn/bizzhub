@@ -13,7 +13,7 @@ use rmrevin\yii\fontawesome\FAS;
 
 <?php $form = ActiveForm::begin([
     'enableClientValidation' => false,
-    'enableAjaxValidation' => true,
+    'enableAjaxValidation' => false,
 ]) ?>
     <div class="card">
         <div class="card-body">

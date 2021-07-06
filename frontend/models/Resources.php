@@ -60,7 +60,7 @@ class Resources extends Model
             ->from($table)
             ->where(['status'=>1])
             ->andwhere($condition)
-            ->all();
+            ->one();
         return $data;
     }
     

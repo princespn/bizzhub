@@ -10,6 +10,7 @@ use backend\assets\BackendAsset;
 use backend\modules\system\models\SystemLog;
 use backend\widgets\MainSidebarMenu;
 use common\models\TimelineEvent;
+use common\models\ContactList;
 use yii\bootstrap4\Alert;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
@@ -25,6 +26,24 @@ use common\components\keyStorage\FormWidget;
 
 $bundle = BackendAsset::register($this);
 Yii::info(Yii::$app->components["i18n"]["translations"]['*']['class'], 'test');
+$user_id = Yii::$app->user->id;
+$contact_list = 0;
+if(!Yii::$app->user->can('admin')){
+    $contact_list = ContactList::find()
+    ->where(new \yii\db\Expression('FIND_IN_SET(:user_id,user_id)'))
+    ->addParams([':user_id' => $user_id])
+    ->exists();
+}
+/*
+$query = new Query();
+$contact_list = $query->select("*")
+->from('contact_list');
+if(!Yii::$app->user->can('admin')){
+   $contact_list->andWhere(new \yii\db\Expression('FIND_IN_SET(:user_id,user_id)')); 
+   $contact_list->addParams([':user_id' => $user_id]);
+}
+$contact_list = $contact_list->all();*/
+
 
 $keyStorage = Yii::$app->keyStorage;
 
@@ -90,7 +109,7 @@ $logEntries[] = [
             'options' => ['class' => ['navbar-nav', 'ml-auto']],
             'encodeLabels' => false,
             'items' => [
-                /*[
+                [
                     // timeline events
                     'label' => FAR::icon('bell').' <span class="badge badge-success navbar-badge">'.TimelineEvent::find()->today()->count().'</span>',
                     'url'  => ['/timeline-event/index']
@@ -104,7 +123,7 @@ $logEntries[] = [
                         'class' => ['dropdown-menu', 'dropdown-menu-lg', 'dropdown-menu-right'],
                     ],
                     'items' => $logEntries,
-                ],*/
+                ],
                 '<li class="nav-item dropdown user-menu">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         '.Html::img(Yii::$app->user->identity->userProfile->getAvatar('/img/anonymous.png'), ['class' => ['img-circle', 'elevation-2', 'bg-white', 'user-image'], 'alt' => 'User imagesss']).'
@@ -209,6 +228,7 @@ $logEntries[] = [
                             'url' => ['/timeline-event/index'],
                             'badge' => TimelineEvent::find()->today()->count(),
                             'badgeBgClass' => 'badge-success',
+                            'visible' => (Yii::$app->user->can('admin') || Yii::$app->user->can('listTimelineevent')), 
                         ],
                         [
                             'label' => Yii::t('backend', 'Users'),
@@ -247,18 +267,21 @@ $logEntries[] = [
                             'options' => ['class' => 'nav-item has-treeview'],
                             'active' => 'document' === Yii::$app->controller->id &&
                                 ('index' === Yii::$app->controller->action->id || 'category' === Yii::$app->controller->action->id || 'add' === Yii::$app->controller->action->id || 'update' === Yii::$app->controller->action->id || 'add-category' === Yii::$app->controller->action->id || 'cat-update' === Yii::$app->controller->action->id),
+                                'visible' => (Yii::$app->user->can('admin') || Yii::$app->user->can('listDocument') || Yii::$app->user->can('listDocumentcategory')), 
                                 'items' => [
                                 [
                                     'label' => Yii::t('backend', 'Document'),
                                     'url' => ['/document/index'],
                                     'icon' => FAR::icon('file-pdf', ['class' => ['nav-icon']]),
                                     'active' => Yii::$app->controller->action->id === 'index' || 'add' === Yii::$app->controller->action->id || 'update' === Yii::$app->controller->action->id,
+                                    'visible' => (Yii::$app->user->can('admin') || Yii::$app->user->can('listDocument')), 
                                 ],
                                 [
                                     'label' => Yii::t('backend', 'Categories'),
                                     'url' => ['/document/category'],
                                     'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
                                     'active' => Yii::$app->controller->action->id === 'category' || 'add-category' === Yii::$app->controller->action->id || 'cat-update' === Yii::$app->controller->action->id,
+                                    'visible' => (Yii::$app->user->can('admin') || Yii::$app->user->can('listSupports') || Yii::$app->user->can('listDocumentcategory')), 
                                 ],
                             ],
                         ],
@@ -267,28 +290,150 @@ $logEntries[] = [
                             'icon' => FAS::icon('chalkboard', ['class' => ['nav-icon']]),
                             'url' => ['/training/index'],
                             'active' => Yii::$app->controller->id === 'training',
-                            'visible' => Yii::$app->user->can('admin'),
+                            //'visible' => Yii::$app->user->can('admin'),
+                            'visible' => (Yii::$app->user->can('admin') || Yii::$app->user->can('listTraining')), 
                         ],
                         [
                             'label' => Yii::t('backend', 'Supports'),
                             'icon' => FAS::icon('question-circle', ['class' => ['nav-icon']]),
                             'url' => ['/supports/index'],
                             'active' => Yii::$app->controller->id === 'supports',
-                            'visible' => Yii::$app->user->can('admin'),
+                            //'visible' => Yii::$app->user->can('admin'),
+                            'visible' => (Yii::$app->user->can('admin') || Yii::$app->user->can('listSupports')), 
                         ],
                         [
                             'label' => Yii::t('backend', 'Buildings'),
                             'icon' => FAS::icon('building', ['class' => ['nav-icon']]),
                             'url' => ['/buildings/index'],
                             'active' => Yii::$app->controller->id === 'buildings',
-                            'visible' => Yii::$app->user->can('admin'),
+                            'visible' => (Yii::$app->user->can('admin') || Yii::$app->user->can('listBuildings')), 
                         ],
                         [
                             'label' => Yii::t('backend', 'Rets Property'),
                             'icon' => FAS::icon('building', ['class' => ['nav-icon']]),
                             'url' => ['/rets/index'],
                             'active' => Yii::$app->controller->id === 'rets',
-                            'visible' => Yii::$app->user->can('admin'),
+                             'visible' => (Yii::$app->user->can('admin') || Yii::$app->user->can('listRets')),
+                        ],
+                        [
+                            'label' => Yii::t('backend', 'Leaderboard'),
+                            'icon' => FAS::icon('book', ['class' => ['nav-icon']]),
+                            'url' => ['/leaderboard/index'],
+                            'active' => Yii::$app->controller->id === 'leaderboard',
+                             'visible' => (Yii::$app->user->can('admin') || Yii::$app->user->can('listLeaderboard')),
+                             ],
+                        [
+                            'label' => Yii::t('backend', 'Client'),
+                            'url' => '#',
+                            'icon' => FAS::icon('newspaper', ['class' => ['nav-icon']]),
+                            'options' => ['class' => 'nav-item has-treeview'],
+                            'active' => 'client' === Yii::$app->controller->module->id &&
+                                ('template' === Yii::$app->controller->id || 'category' === Yii::$app->controller->id || 'form' === Yii::$app->controller->id  || 'clientdata' === Yii::$app->controller->id),
+                            'visible' => (Yii::$app->user->can('admin') || Yii::$app->user->can('listTemplate') || Yii::$app->user->can('listCategory') || Yii::$app->user->can('listForm')),  
+                            'items' => [
+                                [
+                                    'label' => Yii::t('backend', 'Template'),
+                                    'url' => ['/client/template/index'],
+                                    'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
+                                    'active' => Yii::$app->controller->id === 'template',
+                                     'visible' =>(Yii::$app->user->can('admin') || Yii::$app->user->can('listTemplate')),
+                                ],
+                                [
+                                    'label' => Yii::t('backend', 'Categories'),
+                                    'url' => ['/client/category/index'],
+                                    'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
+                                    'active' => Yii::$app->controller->id === 'category',
+                                     'visible' =>(Yii::$app->user->can('admin') || Yii::$app->user->can('listCategory') || Yii::$app->user->can('listClientData')),
+                                ],
+                                [
+                                    'label' => Yii::t('backend', 'Form'),
+                                    'url' => ['/client/form/index'],
+                                    'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
+                                    'active' => Yii::$app->controller->id === 'form',
+                                    'visible' =>(Yii::$app->user->can('admin') || Yii::$app->user->can('listForm')),
+                                ],
+                                [
+                                    'label' => Yii::t('backend', 'Client Data'),
+                                    'url' => ['/client/clientdata'],
+                                    'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
+                                    'active' => Yii::$app->controller->id === 'clientdata',
+                                    'visible' =>(Yii::$app->user->can('admin') || Yii::$app->user->can('listClientData')),
+                                ],
+                            ],
+                        ],
+                        [
+                            'label' => Yii::t('backend', 'Contacts'),
+                            'url' => '#',
+                            'icon' => FAS::icon('address-book', ['class' => ['nav-icon']]),
+                            'options' => ['class' => 'nav-item has-treeview'],
+                            'active' => 'contacts' === Yii::$app->controller->id || 'contactlist' === Yii::$app->controller->id,
+                            'visible' => (Yii::$app->user->can('admin') || Yii::$app->user->can('listContact') || Yii::$app->user->can('listContactlist') || Yii::$app->user->can('importContact') || Yii::$app->user->can('addContact') || $contact_list == 1),  
+                            'items' => [
+                                [
+                                    'label' => Yii::t('backend', 'Contacts'),
+                                    'url' => ['/contacts/index'],
+                                    'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
+                                    'active' => Yii::$app->controller->id === 'contacts' && 'index' === Yii::$app->controller->action->id,
+                                    'visible' =>(Yii::$app->user->can('admin') || Yii::$app->user->can('listContact')),
+                                ],
+                                [
+                                    'label' => Yii::t('backend', 'Contacts List'),
+                                    'url' => ['/contactlist/index'],
+                                    'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
+                                    'active' => Yii::$app->controller->id === 'contactlist' && ('index' === Yii::$app->controller->action->id || 'create' === Yii::$app->controller->action->id || 'update' === Yii::$app->controller->action->id),
+                                     'visible' =>(Yii::$app->user->can('admin') || Yii::$app->user->can('listContactlist')),
+                                    
+                                ],
+                                /*[
+                                    'label' => Yii::t('backend', 'Import'),
+                                    'url' => ['/contacts/import'],
+                                    'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
+                                    'active' => Yii::$app->controller->id === 'contacts' && 'import' === Yii::$app->controller->action->id,
+                                    'visible' =>(Yii::$app->user->can('admin') || Yii::$app->user->can('importContact')),
+                                ],*/
+
+                             
+
+                                ],
+
+                          
+                        ],
+                        [
+                            'label' => Yii::t('backend', 'Email-template'),
+                            'icon' => FAS::icon('envelope', ['class' => ['nav-icon']]),
+                            'url' => ['/email-template/index'],
+                            'active' => Yii::$app->controller->id === 'email-template',
+                            //'visible' => Yii::$app->user->can('admin'),
+                            'visible' => (Yii::$app->user->can('admin')), 
+                        ],
+                        [
+                            'label' => Yii::t('backend', 'Admin Settings'),
+                            'url' => '#',
+                            'icon' => FAS::icon('cog', ['class' => ['nav-icon']]),
+                            'options' => ['class' => 'nav-item has-treeview'],
+                            'active' => 'settings' === Yii::$app->controller->id,
+                            'visible' => (Yii::$app->user->can('admin')),  
+                            'items' => [
+                                [
+                                    'label' => Yii::t('backend', 'All Settings'),
+                                    'url' => ['/settings/index'],
+                                    'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
+                                    'active' => Yii::$app->controller->id === 'settings' && 'index' === Yii::$app->controller->action->id,
+                                ],
+                                [
+                                    'label' => Yii::t('backend', 'Add Settings'),
+                                    'url' => ['/settings/add'],
+                                    'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
+                                    'active' => Yii::$app->controller->id === 'settings' && ('add' === Yii::$app->controller->action->id || 'update' === Yii::$app->controller->action->id),
+                                ],
+
+                                [
+                                    'label' => Yii::t('backend', 'Backend Permission'),
+                                    'url' => ['/usergroups/index'],
+                                    'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
+                                    'active' => Yii::$app->controller->id === 'usergroups' && ('add' === Yii::$app->controller->action->id || 'update' === Yii::$app->controller->action->id),
+                                ],
+                            ],
                         ],
                         [
                             'label' => Yii::t('backend', 'Content'),
@@ -299,6 +444,7 @@ $logEntries[] = [
                             'url' => ['/content/page/index'],
                             'icon' => FAS::icon('thumbtack', ['class' => ['nav-icon']]),
                             'active' => Yii::$app->controller->id === 'page',
+                            'visible' =>(Yii::$app->user->can('admin') || Yii::$app->user->can('listStaticPage')),
                         ],
                         [
                             'label' => Yii::t('backend', 'Articles'),
@@ -307,18 +453,21 @@ $logEntries[] = [
                             'options' => ['class' => 'nav-item has-treeview'],
                             'active' => 'content' === Yii::$app->controller->module->id &&
                                 ('article' === Yii::$app->controller->id || 'category' === Yii::$app->controller->id),
+                            'visible' =>(Yii::$app->user->can('admin') || Yii::$app->user->can('listArticle') || Yii::$app->user->can('listCategorycon')),
                             'items' => [
                                 [
                                     'label' => Yii::t('backend', 'Articles'),
                                     'url' => ['/content/article/index'],
                                     'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
                                     'active' => Yii::$app->controller->id === 'article',
+                                    'visible' =>(Yii::$app->user->can('admin') || Yii::$app->user->can('listArticle')),
                                 ],
                                 [
                                     'label' => Yii::t('backend', 'Categories'),
                                     'url' => ['/content/category/index'],
                                     'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
                                     'active' => Yii::$app->controller->id === 'category',
+                                    'visible' =>(Yii::$app->user->can('admin') || Yii::$app->user->can('listCategorycon')),
                                 ],
                             ],
                         ],

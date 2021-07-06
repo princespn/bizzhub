@@ -11,7 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\db\Query;
 use yii\data\ArrayDataProvider;
 use yii\web\UploadedFile;
-
+use yii\filters\AccessControl;
 /**
  * Application timeline controller
  */
@@ -24,6 +24,51 @@ class BuildingsController extends Controller
      * @return mixed
      */
 
+
+public function behaviors()
+        {       
+         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index', 'add','update','delete'],
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['listBuildings'],
+                    ],
+                    [
+                        'actions' => ['add'],
+                        'allow' => true,
+                        'roles' => ['createBuildings'],
+                    ],
+                    
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['updateBuildings'],
+                    ],
+
+                    [
+                        'actions' => ['delete'],
+                        'allow' => true,
+                        'roles' => ['deleteBuildings'],
+                    ],
+                ],
+
+                'denyCallback' => function ($rule, $action) {
+                    $this->redirect("@web/timeline-event/index");
+                }
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
+        ];
+    }
+    
     public function actionAdd()
     {
         $model = new Buildings();

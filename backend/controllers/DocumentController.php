@@ -3,7 +3,7 @@
 namespace backend\controllers;
 
 use backend\models\Document;
-use backend\models\DocumentCategory;
+use common\models\DocumentCategory;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -12,7 +12,8 @@ use yii\web\NotFoundHttpException;
 use yii\db\Query;
 use yii\data\ArrayDataProvider;
 use yii\web\UploadedFile;
-
+use yii\filters\AccessControl;
+use yii\helpers\Url;
 /**
  * Application timeline controller
  */
@@ -24,6 +25,63 @@ class DocumentController extends Controller
      * Lists all TimelineEvent models.
      * @return mixed
      */
+
+
+public function behaviors()
+        {       
+         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index', 'add','update','delete','category','add-category'],
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['listDocument'],
+                    ],
+                    [
+                        'actions' => ['add'],
+                        'allow' => true,
+                        'roles' => ['createDocument'],
+                    ],
+
+                    [
+                        'actions' => ['category'],
+                        'allow' => true,
+                        'roles' => ['listDocumentcategory'],
+                    ],
+
+                    [
+                        'actions' => ['add-category'],
+                        'allow' => true,
+                        'roles' => ['createDocumentcategory'],
+                    ],
+                    
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['updateDocument'],
+                    ],
+
+                    [
+                        'actions' => ['delete'],
+                        'allow' => true,
+                        'roles' => ['deleteDocument'],
+                    ],
+                ],
+
+                'denyCallback' => function ($rule, $action) {
+                    $this->redirect("@web/timeline-event/index");
+                }
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
+        ];
+    }
 
     public function actionAdd()
     {
@@ -43,6 +101,42 @@ class DocumentController extends Controller
             $storage = \Yii::getAlias('@storage');
             $f_path = '/web/document/'.$model->file_path->baseName . '.' . $model->file_path->extension;
             $model->file_path->saveAs($storage.$f_path);
+
+                $fPath = Yii::$app->params['document_path_image'];
+                if(!is_dir($fPath)) {
+                    mkdir($fPath, 0777, true);
+                }  
+                $Imagefilename=$model->file_path->baseName;
+                $converted_images = '/web/document/image/'.$model->file_path->baseName;
+                $Converted_path_Multi=$storage.$converted_images;
+            
+                $Converted_path=$storage.$converted_images.'.png';
+                if(extension_loaded('imagick')){
+                    $imagick = new \Imagick();
+                    $imagick->readImage($storage.$f_path);
+                    $pages = (int)$imagick->getNumberImages();
+                    if ($pages < 3) {
+                       $resolution = 600; 
+                     } else {
+                      $resolution = floor(sqrt(1000000/$pages)); 
+                     }
+                     $imagick->setResolution($resolution, $resolution);
+                    #How to combine a multi-page pdf file into a single long image:
+                    // $imagick->resetIterator();
+                    // $ima = $imagick->appendImages(true);
+                    // $ima->setImageFormat("png");
+                    // $ima->writeImages($Converted_path, true);
+                    // $model->file_image =$Imagefilename.'.png';
+
+                     # How to combine a multi-page pdf file into a pagewise multi image:
+                         foreach($imagick as $i=>$imagick) { 
+                      $imagick->writeImage($Converted_path_Multi. " page ". ($i+1) ." of ".  $pages.".png"); 
+                        if($i==0){
+                        $model->file_image =$Imagefilename. " page ". ($i+1) ." of ".  $pages.".png";
+                        }
+                       }
+                  }
+
             if(empty($model->doc_name)){
                 $model->doc_name = $model->file_path->baseName;              
             }
@@ -63,6 +157,7 @@ class DocumentController extends Controller
             }
 
             $model->save();
+
             return $this->redirect(['index']);
             Yii::$app->session->setFlash('success', "Document saved successfull.");
         }           
@@ -88,17 +183,53 @@ class DocumentController extends Controller
         $cat_list=[];            
         foreach($category as $cat){
             $cat_list[$cat['id']]=$cat['title'];
-        }            
+        } 
         if ($model->load(Yii::$app->request->post())) {
             $model->file_path = UploadedFile::getInstance($model,'file_path');
-            if(!empty($model->file_path)){
-                //die('ddd');                
+            if(!empty($model->file_path)){             
                 $storage = \Yii::getAlias('@storage');
                 $f_path = '/web/document/'.$model->file_path->baseName . '.' . $model->file_path->extension;
                 $model->file_path->saveAs($storage.$f_path);
-                if(empty($model->doc_name)){
+
+                $fPath = Yii::$app->params['document_path_image'];
+                if(!is_dir($fPath)) {
+                    mkdir($fPath, 0777, true);
+                }   
+                $Imagefilename=$model->file_path->baseName;
+                $converted_images = '/web/document/image/'.$model->file_path->baseName;
+                $Converted_path_Multi=$storage.$converted_images;
+            
+                $Converted_path=$storage.$converted_images.'.png';
+                if(extension_loaded('imagick')){
+                    $imagick = new \Imagick();
+                    $imagick->readImage($storage.$f_path);
+                    $pages = (int)$imagick->getNumberImages();
+                    if ($pages < 3) {
+                       $resolution = 600; 
+                     } else {
+                      $resolution = floor(sqrt(1000000/$pages)); 
+                     }
+                     $imagick->setResolution($resolution, $resolution);
+                    #How to combine a multi-page pdf file into a single long image:
+                    // $imagick->resetIterator();
+                    // $ima = $imagick->appendImages(true);
+                    // $ima->setImageFormat("png");
+                    // $ima->writeImages($Converted_path, true);
+                    // $model->file_image =$Imagefilename.'.png';
+
+                     # How to combine a multi-page pdf file into a pagewise multi image:
+                         foreach($imagick as $i=>$imagick) { 
+                      $imagick->writeImage($Converted_path_Multi. " page ". ($i+1) ." of ".  $pages.".png"); 
+                        if($i==0){
+                        $model->file_image =$Imagefilename. " page ". ($i+1) ." of ".  $pages.".png";
+
+                        }
+                       }
+                  }
+
+                 if(empty($model->doc_name)){
                     $model->doc_name = $model->file_path->baseName;              
-                }
+                 }
                 $model->file_path = $model->file_path->name;
             }
             if(empty($model->file_path)){
@@ -175,20 +306,10 @@ class DocumentController extends Controller
     public function actionAddCategory()
     {
         $model = new DocumentCategory();
-        if ($model->load(Yii::$app->request->post())) {
-            $model->attributes = Yii::$app->request->post();
-            $rows = (new \yii\db\Query())
-                    ->select(['id', 'title'])
-                    ->from('document_category')
-                    ->where(['title' => $model->attributes['title']])
-                    ->One();
-            if(!empty($rows)){
-                Yii::$app->session->setFlash('error', "This category is already use.");
-            }else{    
+        if ($model->load(Yii::$app->request->post())) {  
                 $model->save();
                 return $this->redirect(['category']);
                 Yii::$app->session->setFlash('success', "Category saved successfull.");
-            }
         }
         return $this->render('add_category', [
             'model'=>$model,
@@ -198,13 +319,13 @@ class DocumentController extends Controller
     public function actionCatUpdate($id)
     {
         $model = new DocumentCategory();
-        $model->attributes = $model->getDataById($id);
+        $model = $this->findCatModel($id);
         
         if(!empty(Yii::$app->request->post())){            
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-                $model->attributes= Yii::$app->request->post();
+                //$model->attributes= Yii::$app->request->post();
                 //print_r($model);die;
-                $model->update();
+                $model->save();
                 return $this->redirect(['category']);
             }
         }
@@ -245,8 +366,17 @@ class DocumentController extends Controller
     {
         $model = new DocumentCategory();        
         if(!empty($id)){
-            $model->deleteById($id);           
+            $this->findCatModel($id)->delete();          
             return $this->redirect(['category']);            
+        }
+    }
+
+    protected function findCatModel($id)
+    {
+        if (($model = DocumentCategory::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
 }

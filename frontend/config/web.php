@@ -2,11 +2,12 @@
 use \yii\web\Request;
 $baseUrl = str_replace('/frontend/web', '', (new Request)->getBaseUrl());
 //echo $baseUrl;die;
+
 $params = require(__DIR__ . '/params.php');
 $config = [
     'homeUrl' => $baseUrl,
     'controllerNamespace' => 'frontend\controllers',
-    'defaultRoute' => 'home/index',
+    'defaultRoute' => 'common/index',
     'bootstrap' => ['maintenance'],
     'modules' => [
         'user' => [

@@ -4,7 +4,10 @@ namespace frontend\controllers;
 
 use cheatsheet\Time;
 use common\sitemap\UrlsIterator;
-use frontend\models\Contact;
+use frontend\models\Contacts;
+use common\models\Settings;
+use common\models\EmailTemplate;
+use common\models\ContactList;
 use Sitemaped\Element\Urlset\Urlset;
 use Sitemaped\Sitemap;
 use Yii;
@@ -21,6 +24,11 @@ use yii\filters\AccessControl;
 use yii\db\ActiveRecord;
 use yii\db\BaseActiveRecord;
 use yii\web\UploadedFile;
+use yii\helpers\Json;
+use MongoDB;
+use yii\data\Pagination;
+use yii\helpers\Url;
+
 //use yii\db\ActiveQuery;
 
 
@@ -51,9 +59,9 @@ class ContactsController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [                   
                     [                    
-                        'actions' => ['index','add','edit','delete'],
+                        'actions' => ['index','add','edit','delete','ajax-contacts-display','send-email','add-list','delete-contacts'],
                         'allow' => true,
-                        'roles' => ['agent'],
+                        'roles' => ['admin','agent'],
                     ],                   
 
                 ],
@@ -86,170 +94,206 @@ class ContactsController extends Controller
      * @return string
      */
     public function actionIndex()
-    {
-        $model = new Contact();
+    { 
+        
+        $model = new Contacts();
         $agent = $model->getuserByRole('agent');
         foreach($agent as $a_id){
             $agent_id_arr[$a_id['id']]=strtolower($a_id['username']);
         }
-        if(!empty(Yii::$app->request->post())){
-             $model->csv_file = UploadedFile::getInstance($model, 'csv_file');
-             if ( $model->csv_file )
+        $postData = Yii::$app->request->post();
+        $getData = Yii::$app->request->get();        
+        if(!empty($postData)){
+            $model->csv_file = UploadedFile::getInstance($model, 'csv_file');
+            if ( $model->csv_file ){
+                $storage = \Yii::getAlias('@storage');            
+                $time = time();
+                $model->csv_file->saveAs($storage.'/web/csv/' .$time. '.' . $model->csv_file->extension);
+                $model->csv_file = $storage.'/web/csv/' .$time. '.' . $model->csv_file->extension;
+                $handle = fopen($model->csv_file, "r");
+                $cnt = 0;
+                while (($fileop = fgetcsv($handle, 1000, ",")) !== false) 
                 {
-                    $storage = \Yii::getAlias('@storage');            
-                    $time = time();
-                    $model->csv_file->saveAs($storage.'/web/csv/' .$time. '.' . $model->csv_file->extension);
-                    $model->csv_file = $storage.'/web/csv/' .$time. '.' . $model->csv_file->extension;
-
-                     $handle = fopen($model->csv_file, "r");
-                      $cnt = 0;
-                     while (($fileop = fgetcsv($handle, 1000, ",")) !== false) 
-                     {
-                        $first_name = $last_name = $email = $phone = $list = $agent = "";
-                        if ($cnt!=0){
-                            $first_name = $fileop[0];
-                            $last_name = $fileop[1];
-                            $pos = strpos($fileop[2], ',');
-                            if ($pos!== false) {
-                                $agent_ids = explode(',', $fileop[2]);
-                                foreach ($agent_ids as $key => $a_name) {
-                                    $a_name = trim($a_name);
-                                    $agentA[] = array_search(strtolower($a_name),$agent_id_arr);
-                                }
-                                $agents = implode(',', $agentA);
-                            } else {
-                                $agents = array_search(strtolower($fileop[2]),$agent_id_arr);
-                            }
-                            $email = $fileop[3];
-                            $phone = $fileop[4];
-                            $list = $fileop[5];
-                            $rows = (new \yii\db\Query())
-                            ->select(['id', 'email','agent_id'])
-                            ->from('contact')
-                            ->where(['email' => $email])
-                            ->One();
-                            if (!empty($rows)) {
-                                if($rows['agent_id'] != $agents){
-                                    $array1 = explode(',', $rows['agent_id']);
-                                    $array2 = explode(',', $agents);
-                                    $ag_id_arr = array_unique(array_merge($array1,$array2), SORT_REGULAR);
-                                    $ag_id = implode(',', $ag_id_arr);
-                                    Yii::$app->db->createCommand()
-                                     ->update('contact', ['agent_id' => $ag_id], ['id' => $rows['id']])
-                                     ->execute();
-                                }else{
-                                    continue;
-                                } 
-                            }else{
+                    //print_r($fileop);die;
+                    $first_name = $last_name = $email = $phone = $list = $agent = "";
+                    if ($cnt!=0){
+                        $data['name'] = $fileop[0];
+                        $data['first_name'] = $fileop[1];
+                        $data['last_name'] = $fileop[2];
+                        $data['email'] = $fileop[3];
+                        $data['phone'] = $fileop[4];
+                        $data['gender'] = $fileop[5];
+                        $data['age'] = $fileop[6];
+                        $data['company'] = $fileop[7];
+                        $data['bio'] = utf8_encode($fileop[8]);
+                        $data['list'] = $fileop[9];
+                        //print_r($data);die;
+                        $rows = (new \yii\db\Query())
+                        ->select(['id', 'email'])
+                        ->from('contact')
+                        ->where(['email' => $email])
+                        ->One();
+                        if (!empty($rows)) {
                                 Yii::$app->db->createCommand()
-                                ->insert('contact',
-                                    [
-                                        'first_name'=>$first_name,
-                                        'last_name'=>$last_name,
-                                        'email'=>$email,
-                                        'agent_id'=>$agents,
-                                        'phone'=>$phone,
-                                        'list'=>$list,
-                                        'created_date'=>time(),
-                                    ]
-                                )
-                                ->execute(); 
-                            }
+                                    ->update('contacts', $data, ['id' => $rows['id']])
+                                    ->execute();
+                        }else{
+                            Yii::$app->db->createCommand()
+                            ->insert('contacts',$data)
+                            ->execute(); 
                         }
-                        $cnt++;
-                     }
-
-                     if ($cnt >= 1) 
-                     {
-                        echo "data upload successfully";
-                        $this->refresh();
-                     }
-
+                    }
+                    $cnt++;
+                    }
+                if ($cnt >= 1) 
+                {
+                    echo "data upload successfully";
+                    $this->refresh();
                 }
+            }
         }
+        $limit = 10;
         $user_id = Yii::$app->user->identity->id;
-        $query = new Query();        
-            $rows = $query->select("*")
-            ->from('contact')
-            ->where(['status' => 1])
-            ->andWhere(new \yii\db\Expression('FIND_IN_SET(:agent_id,agent_id)'))
-            ->addParams([':agent_id' => $user_id])
-            //->andwhere(['FIND_IN_SET','agent_id', 2])
-            ->all();            
-            $contacts_data = $data_arr = [];
-            foreach($rows as $key => $data){
-                if($data['agent_id']){
-                    $agentid = explode(",", $data['agent_id']);
-                    $contacts_data['agent_name'] = [];
-                    foreach($agentid as $aid){
-                        $contacts_data['agent_name'][]=ucfirst($agent_id_arr[$aid]);
+        $query = new Query();
+        $contact_list = $query->select("id")
+            ->from('contact_list');
+            if(!Yii::$app->user->can('admin')){
+               $contact_list->andWhere(new \yii\db\Expression('FIND_IN_SET(:user_id,user_id)')); 
+               $contact_list->addParams([':user_id' => $user_id]);
+            }
+        $contact_list = $contact_list->all();
+
+        $query = (new \yii\db\Query())
+            ->select(['id', 'concat(first_name, SPACE(1), last_name) as name', 'email', 'phone', 'mongo_contact_id','mail_send_status','deleted_by'])
+            ->from('contacts');
+            if(!empty($getData) && !empty($getData['q'])){
+                $query->andFilterWhere([
+                    'or',
+                    ['like', 'name', $getData['q']],
+                    ['like', 'first_name', $getData['q']],
+                    ['like', 'last_name', $getData['q']],
+                    ['like', 'email', $getData['q']],
+                ]);
+            }
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count(),'pageSize' => $limit]);
+        $contacts = $query->offset($pages->offset)
+            ->andwhere(['status'=>1])
+            ->limit($pages->limit)
+            ->all();
+        $mysql_data = []; 
+        $mongo_ids = []; 
+        $continue_count = 0;       
+        foreach($contacts as $contact){
+            if (strpos($contact['deleted_by'], (string)$user_id) !== false) {
+                $continue_count++;
+                continue;   
+            }
+            if(!empty($contact['mongo_contact_id'])){
+                $mongo_ids[] = (int)$contact['mongo_contact_id'];
+            }else{
+                $contact['mongo_status'] = 0;
+                $mysql_data[] = $contact;
+            }
+        } 
+        $settingmodel = new Settings();
+        $settings = $settingmodel->getsetting();        
+        $server = $settings['mongodb_URI_connection_url']['value']; 
+            // Connecting to server
+        $c = new MongoDB\Client( $server );
+        $db = $c->fub_webhooks;
+        $collection = $db->people;
+        $filter = $pepoles = [];
+        if(!empty($mongo_ids)){
+            $filter = ['_id'=>['$in'=>$mongo_ids]];                        
+            $pepoles = $collection->find($filter, ['projection' =>['_id'=>TRUE,'firstName' => TRUE,'lastName' => TRUE,'emails'=>TRUE,'phones'=>TRUE]])->toArray();
+        }
+        if(!empty($getData['q'])){
+            $filter = $a = $where = [];
+            $a['$and'][] = ['$or'=>[['firstName'=>['$regex'=>$getData['q']]],['lastName'=>['$regex'=>$getData['q']]],['name'=>['$regex'=>$getData['q']]],['emails.value'=>['$regex'=>$getData['q']]]]];
+            $pepoles = $collection->find($a, ['projection' =>['_id'=>TRUE,'firstName' => TRUE,'lastName' => TRUE,'emails'=>TRUE,'picture'=>TRUE]])->toArray(); 
+        }
+        //print_r($pepoles);die;
+        $count = 1;
+        $viewData = [];
+        $contactsData = [];
+        $count = 0;
+        if(!empty($pepoles)){
+            foreach($pepoles as $data){
+                $key = $this->searchForId($data->_id,$contacts); 
+                $viewData['mail_send_status'] = $contacts[$key]['mail_send_status'];
+                $viewData['id'] = $data->_id;
+                $viewData['mongo_status'] = 1;
+                $viewData['name'] = utf8_encode($data->firstName).' '.utf8_encode($data->lastName); 
+                if(!empty($data->emails)){ 
+                    foreach($data->emails as $email_value){
+                        if($email_value->isPrimary == 1){
+                            $viewData['email'] = $email_value->value;
+                        }
                     }
                 }
-                $contacts_data['agent_name'] = implode(',', $contacts_data['agent_name']);
-                $contacts_data['id'] = $data['id'];
-                $contacts_data['first_name'] = $data['first_name'];
-                $contacts_data['last_name'] = $data['last_name'];
-                $contacts_data['email'] = $data['email'];
-                $contacts_data['phone'] = $data['phone'];
-                $contacts_data['agent_id'] = $data['agent_id'];
-                $contacts_data['list'] = $data['list'];
-                $contacts_data['status'] = $data['status'];
-                $contacts_data['updated_date'] = $data['updated_date'];
-                $contacts_data['created_date'] = $data['created_date'];
-                $data_arr[] = $contacts_data;
+                if(!empty($data->phones)){                        
+                    foreach($data->phones as $phones_value){
+                        if($phones_value->isPrimary == 1){
+                            $viewData['phone'] = $phones_value->value;
+                        }
+                    }
+                }
+                $contactsData[] = $viewData;
             }
-        $provider = new ArrayDataProvider([
-            'allModels' => $data_arr,
-            'sort' => [
-                'attributes' => ['first_name','last_name'],
-            ],
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-        ]);
-
-        $models = $provider->getModels();
+        }  
+        $result = array_merge($mysql_data, $contactsData);
 
         return $this->render('index',[
-                'dataProvider' => $provider,
-                'model' => $models,
-                'models'=>$model
+                'contactData' => $result,
+                'pages' => $pages,
+                'models'=>$model,
+                'contact_list'=>$contact_list,
+                'getData' => $getData,
+                'continue_count' => $continue_count
             ]);
     }
+
+    function searchForId($id, $array) {
+        foreach ($array as $key => $val) {
+            if ($val['mongo_contact_id'] == $id) {
+                return $key;
+            }
+        }
+        return null;
+     }
+
+    
 
     /**
      * @return string|Response
      */
     public function actionAdd()
     {
-        $role = Yii::$app->authManager->getRoles();
-        
-        $model = new Contact();
-        if(!empty(Yii::$app->request->post())){            
-            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-                $model->attributes= Yii::$app->request->post();
+        $user_id = Yii::$app->user->id;
+        $model = new Contacts();
+        if(!empty(Yii::$app->request->post())){ 
+            $post_data = Yii::$app->request->post(); 
+            $post_data['Contacts']['list'] = implode(',', $post_data['Contacts']['list']);     
+            if ($model->load($post_data) && $model->validate()) {
+                $model->attributes= $post_data;
                 $rows = (new \yii\db\Query())
-                    ->select(['id', 'email','agent_id'])
-                    ->from('contact')
+                    ->select(['id', 'email', 'list'])
+                    ->from('contacts')
                     ->where(['email' => $model->attributes['email']])
                     ->One();
                 if(!empty($rows)){
-                    $agents = implode(',', $model->attributes['agent_id']);
-                    if($rows['agent_id'] != $agents){
-                        $array1 = explode(',', $rows['agent_id']);
-                        $array2 = explode(',', $agents);
-                        $ag_id_arr = array_unique(array_merge($array1,$array2), SORT_REGULAR);
-                        $ag_id = implode(',', $ag_id_arr);
-                        //$agentids = $rows['agent_id'];
-                        Yii::$app->db->createCommand()
-                         ->update('contact', ['agent_id' => $ag_id], ['id' => $rows['id']])
-                         ->execute();
-                        
-                        Yii::$app->session->setFlash('success', "Contact saved successfull.");
-                        return $this->redirect(['index']);
-                    }else{
-                        Yii::$app->session->setFlash('error', "This email id is already use.");
-                    }                    
+                    $array1 = explode(',', $rows['list']);
+                    $array2 = explode(',', $model->attributes['list']);
+                    $list_id_arr = array_unique(array_merge($array1,$array2), SORT_REGULAR);
+                    $list_id = implode(',', $list_id_arr);
+                    //$agentids = $rows['agent_id'];
+                    Yii::$app->db->createCommand()
+                     ->update('contacts', ['list' => $list_id], ['id' => $rows['id']])
+                     ->execute();
+                    
+                    Yii::$app->session->setFlash('success', "Contact saved successfull.");
+                    return $this->redirect(['index']);                    
                 }else{    
                     $model->save();                    
                     Yii::$app->session->setFlash('success', "Contact saved successfull.");
@@ -257,19 +301,40 @@ class ContactsController extends Controller
                 }
             }
         }
-        $agent_array = $model->getuserByRole('agent');
-        foreach($agent_array as $a_user){
-            $agent_arr[$a_user['id']]=$a_user['username'];
+        
+        $list_array = $model->getcontactList($user_id);
+        foreach($list_array as $list_value){
+            $list_arr[$list_value['id']]=$list_value['list_name'];
         }
         return $this->render('add', [
             'model' => $model,
-            'agent_array'=>$agent_arr
+            'list_array'=>$list_arr
+        ]);
+    }
+
+
+    public function actionAddList()
+    {
+        $user_id = Yii::$app->user->id;
+        $model = new ContactList();
+        if(!empty(Yii::$app->request->post())){ 
+            $post_data = Yii::$app->request->post(); 
+            if ($model->load($post_data) && $model->validate()) {
+                $model->user_id = $user_id;
+                $model->save();                    
+                Yii::$app->session->setFlash('success', "Contact saved successfull.");
+                return $this->redirect(['index']);
+            }
+        }
+        return $this->render('add-list', [
+            'model' => $model,
         ]);
     }
 
     public function actionEdit($id)
     {
-        $model = new Contact();
+        $model = new Contacts();
+        $user_id = Yii::$app->user->id;
         $agent_array = $model->getuserByRole('agent');
         foreach($agent_array as $a_user){
             $agent_arr[$a_user['id']]=$a_user['username'];
@@ -282,54 +347,138 @@ class ContactsController extends Controller
                 return $this->redirect(['index']);
             }
         }
+        $list_array = $model->getcontactList($user_id);
+        foreach($list_array as $list_value){
+            $list_arr[$list_value['id']]=$list_value['list_name'];
+        }
+        //print_r($list_arr);die;
         
         return $this->render('edit', [
             'model' => $model,
-            'agent_array'=>$agent_arr
+            'list_array'=>$list_arr
         ]);
     }
 
     public function actionDelete($id)
     {
-        $model = new Contact();        
+        $model = new Contacts();        
         if(!empty($id)){
             $model->deleteContatsById($id);           
             return $this->redirect(['index']);            
         }
     }
 
-    /**
-     * @param string $format
-     * @param bool $gzip
-     * @return string
-     * @throws BadRequestHttpException
-     */
-    public function actionSitemap($format = Sitemap::FORMAT_XML, $gzip = false)
+    public function actionSendEmail()
     {
-        $links = new UrlsIterator();
-        $sitemap = new Sitemap(new Urlset($links));
+        $http = Yii::$app->params['http'];
+        $base_url = Url::base($http);
+        $request = \Yii::$app->request;
+        $response_array['status'] = "fail";
+        if ($request->isPost) {
+            $postData = $request->post();
+            if(!empty($postData['contact_id'])){
+                $settingmodel = new Settings();
+                $emailTemplatemodel = new EmailTemplate();
+                $settings = $settingmodel->getsetting();
+                $template = $emailTemplatemodel->gettemplate('CONTACT_PAGE_EMAIL_TEMPLATE'); 
+                $dataArr = [];
+                if($postData['mongo_status'] == 1){
+                    $server = $settings['mongodb_URI_connection_url']['value']; 
+                    $c = new MongoDB\Client( $server );
+                    $db = $c->fub_webhooks;
+                    $collection = $db->people;     
+                    $pepoles = $collection->find(['_id'=>(int)$postData['contact_id']], ['projection' =>['_id'=>TRUE,'firstName' => TRUE,'lastName' => TRUE,'emails'=>TRUE,'picture'=>TRUE]])->toArray();
+                    $dataArr['name'] = utf8_encode($pepoles[0]->firstName).' '.utf8_encode($pepoles[0]->lastName); 
+                    if(!empty($pepoles[0]->emails)){ 
+                        foreach($pepoles[0]->emails as $email_value){
+                            if($email_value->isPrimary == 1){
+                                $dataArr['email'] = $email_value->value;
+                            }
+                        }
+                    }
+                    //print_r($dataArr);die;
+                }else{
+                    $pepoles = (new \yii\db\Query())
+                        ->select(['id','first_name','last_name','email'])
+                        ->from('{{contacts}}')
+                        ->where(['id' => (int)$postData['contact_id']])
+                        ->one();
+                    $dataArr['name'] = $pepoles['first_name'].' '.$pepoles['last_name']; 
+                    $dataArr['email'] = $pepoles['email'];  
+                } 
+                $external_url = $settings['Contect_url1']['value'];
+                $email = 'dharmraj.objects@gmail.com';
+                $subject = $template['subject'];
+                $body = $template['header'].'<br>'.$template['content'].'<br><a href="'.$external_url.'">link</a><br><br>'.$template['footer'];
+                $success=Yii::$app->mailer->compose()
+                ->setFrom('developers.wdp@gmail.com')
+                ->setTo($email)
+                ->setSubject($subject)
+                //->setTextBody('This is document send mail')
+                ->setHtmlBody($body)
+                ->send();
+                if(!empty($success)){
+                    if($postData['mongo_status'] == 1){
+                        $response_array['status'] = "success";
+                        Yii::$app->db->createCommand()
+                                ->update('{{contacts}}', ['mail_send_status' => 1],['mongo_contact_id' => (int)$postData['contact_id']])
+                                ->execute();
+                    }else{
+                        Yii::$app->db->createCommand()
+                                ->update('{{contacts}}', ['mail_send_status' => 1],['id' => (int)$postData['contact_id']])
+                                ->execute();
+                    }
+                }else{
+                    $response_array['status'] = "fail";
+                }
 
-        Yii::$app->response->format = Response::FORMAT_RAW;
-
-        if ($gzip === true) {
-            Yii::$app->response->headers->add('Content-Encoding', 'gzip');
+            }
         }
-
-        if ($format === Sitemap::FORMAT_XML) {
-            Yii::$app->response->headers->add('Content-Type', 'application/xml');
-            $content = $sitemap->toXmlString($gzip);
-        } else if ($format === Sitemap::FORMAT_TXT) {
-            Yii::$app->response->headers->add('Content-Type', 'text/plain');
-            $content = $sitemap->toTxtString($gzip);
-        } else {
-            throw new BadRequestHttpException('Unknown format');
-        }
-
-        $linksCount = $sitemap->getCount();
-        if ($linksCount > 50000) {
-            Yii::warning(\sprintf('Sitemap links count is %d'), $linksCount);
-        }
-
-        return $content;
+        echo json_encode($response_array);
     }
+
+    public function actionDeleteContacts()
+    {
+        $status = 0;
+        $model = new Contacts(); 
+        $http = Yii::$app->params['http'];
+        $base_url = Url::base($http);
+        $request = \Yii::$app->request;
+        $response_array['status'] = "fail";     
+        if ($request->isPost) {
+            $postData = $request->post();
+            //print_r($postData['selected']);die;
+            foreach($postData['selected'] as $contact_id){
+                $getContactData = explode('_', $contact_id);
+                //print_r($getContactData);die;
+                if($getContactData[1] == 1){
+                    $contact = (new \yii\db\Query())
+                    ->select(['id','mongo_contact_id'])
+                    ->from('{{contacts}}')
+                    ->where(['mongo_contact_id' => (int)$getContactData[0]])
+                    ->one();
+                }else{
+                    $contact = (new \yii\db\Query())
+                    ->select(['id','mongo_contact_id'])
+                    ->from('{{contacts}}')
+                    ->where(['id' => (int)$getContactData[0]])
+                    ->one();
+                }
+                //print_r($contact);die;
+                //print_r($contact);die;
+                if(!empty($contact['mongo_contact_id'])){
+                    $status = $model->deletemongoContatsById($contact['id']);
+                }else{
+                    $status = $model->deleteContatsById($contact['id']);
+                } 
+            }         
+        }
+        if($status == 1){
+            $response_array['status'] = "success";
+        }else{
+            $response_array['status'] = "false";
+        }
+        echo json_encode($response_array);
+    }
+    
 }

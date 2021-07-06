@@ -15,7 +15,12 @@ $this->params['breadcrumbs'][] = ['label'=>Yii::t('backend', 'Update')];
 
     <?php echo $this->render('_form', [
         'model' => $model,
-        'roles' => $roles
+        'roles' => $roles,
+        'profileSelector'=>$profileSelector,
+        'successManager'=>$successManager,
+        'agent'=>$agent,
+        'attorney'=>$attorney,
+        'mortgageLender'=>$mortgageLender
     ]) ?>
 
 </div>

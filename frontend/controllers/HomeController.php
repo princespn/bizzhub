@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use cheatsheet\Time;
 use common\sitemap\UrlsIterator;
 use frontend\models\ContactForm;
+use common\models\Settings;
 use Sitemaped\Element\Urlset\Urlset;
 use Sitemaped\Sitemap;
 use Yii;
@@ -14,8 +15,10 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use frontend\models\Contact;
+use frontend\models\Contacts;
 use frontend\models\Home;
+use yii\helpers\BaseFileHelper;
+use yii\data\Pagination;
 
 
 /**
@@ -45,9 +48,9 @@ class HomeController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [                   
                     [                    
-                        'actions' => ['index','ajax-add-contact','get-retsdata','get-retsfiledata'],
+                        'actions' => ['index','ajax-add-contacts','get-retsdata','get-retsfiledata','generate-docx'],
                         'allow' => true,
-                        'roles' => ['agent'],
+                        'roles' => ['admin','agent'],
                     ],                   
 
                 ],
@@ -79,21 +82,66 @@ class HomeController extends Controller
     /**
      * @return string
      */
+
+    
+
     public function actionIndex()
     {
-        $contact = new Contact();
+        $request = Yii::$app->request;
+        $view = !empty($request->get('v'))?$request->get('v'):'list';
+        $limit = 8;
+        if($view == 'list'){
+            $limit = 5;
+        }        
+        $postData = Yii::$app->request->post();
+        //print_r($q);die;
+        //echo $view;die;
         $home = new Home();
         $retsData = $home->getRetsData();
-        return $this->render('index',[
-            'contact' => $contact,
-            'retsData'=> $retsData
+        $query = (new \yii\db\Query())
+            ->select(['rets_property.address_with_unit','rets_property.place_name','rets_property.property_type','rets_property.num_baths','rets_property.num_bedrooms','rets_property.vacant','rets_property.rets_keys','rets_property.building_pets','rets_property.hoa_fee','rets_property.assessment_no','rets_property.maximum_financing_percent','rets_property.listing_price','rets_property.virtual_tour_url','rets_property.video_url','rets_property.id','agent.first_name','agent.last_name','agent.status','agent.agent_image_base_url','agent.agent_image'])
+            ->from('rets_property')
+            ->leftjoin('rets_agent agent', 'agent.agent_id=rets_property.agent1_id');
+            if(!empty($postData)){
+                $query->andFilterWhere([
+                    'or',
+                    ['like', 'rets_property.address_with_unit', $postData['q']],
+                    ['like', 'rets_property.place_name', $postData['q']],
+                ]);
+                //$query->where(['rets_property.address_with_unit'=>$postData['q'],'rets_property.place_name'=>$postData['q']]);
+            }
+            $query->orderBy(['id' => SORT_DESC]);
+            //->limit(7)
+            //->All();
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count(),'pageSize' => $limit]);
+        $models = $query->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+            //print_r($models);die;
+        $propertyData = [];    
+        foreach($models as $key => $pData){
+          $rpi = (new \yii\db\Query())
+            ->select(['*'])
+            ->from('rets_property_image')
+            ->where(['property_id'=>$pData['id']])
+            ->All();
+          $propertyData[$key] = $pData; 
+          $propertyData[$key]['images'] = $rpi; 
+        }
+        //echo count($propertyData); die;       
+        //print_r($propertyData);die;
+        return $this->render($view,[
+            //'retsData'=> $retsData,
+            'retsData' => $propertyData,
+            'pages' => $pages,
         ]);
     }
 
 
-    public function actionAjaxAddContact()
+    public function actionAjaxAddContacts()
     {
-        $model = new Contact();
+        $model = new Contacts();
         $return = "fail";  
     $user_id = Yii::$app->user->getId();
     $role = Yii::$app->db
@@ -106,8 +154,8 @@ class HomeController extends Controller
                 $data = Yii::$app->request->post(); 
                 $rows = (new \yii\db\Query())
                         ->select(['id', 'email','agent_id'])
-                        ->from('contact')
-                        ->where(['email' => $data['Contact']['email']])
+                        ->from('contacts')
+                        ->where(['email' => $data['Contacts']['email']])
                         ->One();                                     
                 if(!empty($rows)){
                     $agents = $user_id;
@@ -118,7 +166,7 @@ class HomeController extends Controller
                         $ag_id = implode(',', $ag_id_arr);
                         //$agentids = $rows['agent_id'];
                         Yii::$app->db->createCommand()
-                         ->update('contact', ['agent_id' => $ag_id], ['id' => $rows['id']])
+                         ->update('contacts', ['agent_id' => $ag_id], ['id' => $rows['id']])
                          ->execute();
                          $success = 'Contact saved successfull.';                      
                     }else{
@@ -126,11 +174,11 @@ class HomeController extends Controller
                     }                    
                 }else{ 
                     Yii::$app->db->createCommand()
-                    ->insert('contact',
+                    ->insert('contacts',
                         [
-                            'first_name'=>$data['Contact']['first_name'],
-                            'last_name'=>$data['Contact']['last_name'],
-                            'email'=>$data['Contact']['email'],
+                            'first_name'=>$data['Contacts']['first_name'],
+                            'last_name'=>$data['Contacts']['last_name'],
+                            'email'=>$data['Contacts']['email'],
                             'agent_id'=>$user_id,
                             'created_date'=>time()
                         ]
@@ -150,161 +198,6 @@ class HomeController extends Controller
             $return = $error;
        }
        return json_encode($return);        
-    }
-
-    public function actionGetRetsdata()
-    {
-        $rets_login_url = 'http://rets.perchwell.com:6103/login';
-        $rets_username = 'bizzarro';
-        $rets_password = 'y4w-u62-q3j-675';
-        $rets_user_agent_password = '';
-
-        date_default_timezone_set('America/New_York');
-        $config = new \PHRETS\Configuration;
-        $config->setLoginUrl('http://rets.perchwell.com:6103/login')
-                ->setUsername('bizzarro')
-                ->setPassword('y4w-u62-q3j-675')
-                ->setRetsVersion('1.7.2');
-
-        $config->setUserAgent('PHRETS/2.0');
-        $config->setHttpAuthenticationMethod('basic');
-        $rets = new \PHRETS\Session($config);
-        $connect = $rets->Login();
-
-        //$results = $rets->Search('Listing', 'Listing', "(BrokerageID=2528),(StatusCode=100),(SaleOrRental=S)", [
-        $results = $rets->Search('Listing', 'Listing', "(BrokerageID=2528),(StatusCode=100)", [
-                'QueryType' => 'DMQL2',
-                'Count' => 1,
-                'Format' => 'COMPACT-DECODED',
-                'Limit' => 99999,
-                'StandardNames' => 1
-            ]);
-        $data = $results->toJSON();
-        $path = Yii::$app->params['rets_path'];
-        $fullpath = $path.'rets.json';
-        $fp = fopen($fullpath, 'w+');
-        fwrite($fp, $data);
-        fclose($fp);
-
-    }
-
-    public function actionGetRetsfiledata()
-    {
-        $path = Yii::$app->params['rets_path'];
-        $fullpath = $path.'rets.json';
-        if (file_exists($fullpath)) {
-            $jsonData = file_get_contents($fullpath);
-            $dataArr = json_decode($jsonData);
-            //print_r($dataArr);die;
-            foreach($dataArr as $propertyData) {
-                $saveData['address'] = !empty($propertyData->Address)?$propertyData->Address:'';
-                $saveData['address_display'] = !empty($propertyData->AddressDisplay)?$propertyData->AddressDisplay:'';
-                $saveData['address_with_unit'] = !empty($propertyData->AddressWithUnit)?$propertyData->AddressWithUnit:'';
-                $saveData['agent1_id'] = !empty($propertyData->Agent1Id)?$propertyData->Agent1Id:'';
-                $saveData['agent1_image'] = !empty($propertyData->Agent1Image)?$propertyData->Agent1Image:'';
-                $saveData['approval_status'] = !empty($propertyData->ApprovalStatus)?$propertyData->ApprovalStatus:'';
-                $saveData['brokerage_id'] = !empty($propertyData->BrokerageID)?$propertyData->BrokerageID:'';
-                $saveData['brokerage_name'] = !empty($propertyData->BrokerageName)?$propertyData->BrokerageName:'';
-                $saveData['brokerage_url'] = !empty($propertyData->BrokerageUrl)?$propertyData->BrokerageUrl:'';
-                $saveData['brokerage_website'] = !empty($propertyData->BrokerageWebsite)?$propertyData->BrokerageWebsite:'';
-                $saveData['building_bike_storage'] = !empty($propertyData->BuildingBikeStorage)?$propertyData->BuildingBikeStorage:'';
-                $saveData['building_class'] = !empty($propertyData->BuildingClass)?$propertyData->BuildingClass:'';
-                $saveData['building_doorman'] = !empty($propertyData->BuildingDoorman)?$propertyData->BuildingDoorman:'';
-                $saveData['building_elevator'] = !empty($propertyData->BuildingElevator)?$propertyData->BuildingElevator:'';
-                $saveData['building_garage'] = !empty($propertyData->BuildingGarage)?$propertyData->BuildingGarage:'';
-                $saveData['building_gym'] = !empty($propertyData->BuildingGym)?$propertyData->BuildingGym:'';
-                $saveData['building_id'] = !empty($propertyData->BuildingId)?$propertyData->BuildingId:'';
-                $saveData['building_laundry'] = !empty($propertyData->BuildingLaundry)?$propertyData->BuildingLaundry:'';
-                $saveData['building_name'] = !empty($propertyData->BuildingName)?$propertyData->BuildingName:'';
-                $saveData['building_pets'] = !empty($propertyData->BuildingPets)?$propertyData->BuildingPets:'';
-                $saveData['building_pool'] = !empty($propertyData->BuildingPool)?$propertyData->BuildingPool:'';
-                $saveData['building_prewar'] = !empty($propertyData->BuildingPrewar)?$propertyData->BuildingPrewar:'';
-                $saveData['buildingr_rooftop'] = !empty($propertyData->BuildingRooftop)?$propertyData->BuildingRooftop:'';
-                $saveData['building_storage'] = !empty($propertyData->BuildingStorage)?$propertyData->BuildingStorage:'';
-                $saveData['city'] = !empty($propertyData->City)?$propertyData->City:'';
-                $saveData['coexclusive'] = !empty($propertyData->Coexclusive)?$propertyData->Coexclusive:'';
-                $saveData['commission_amount'] = !empty($propertyData->CommissionAmount)?$propertyData->CommissionAmount:'';
-                $saveData['courtyard'] = !empty($propertyData->Courtyard)?$propertyData->Courtyard:'';
-                $saveData['expiration_date'] = !empty($propertyData->ExpirationDate)?strtotime($propertyData->ExpirationDate):'';
-                $saveData['flip_fax_description'] = !empty($propertyData->FlipTaxDescription)?$propertyData->FlipTaxDescription:'';
-                $saveData['floor_number'] = !empty($propertyData->FloorNumber)?$propertyData->FloorNumber:'';
-                $saveData['garden'] = !empty($propertyData->Garden)?$propertyData->Garden:'';
-                $saveData['has_fireplace'] = !empty($propertyData->HasFireplace)?$propertyData->HasFireplace:'';
-                $saveData['has_outdoor_space'] = !empty($propertyData->HasOutdoorSpace)?$propertyData->HasOutdoorSpace:'';
-                $saveData['hoa_fee'] = !empty($propertyData->HoaFee)?$propertyData->HoaFee:'';
-                $saveData['home_offices'] = !empty($propertyData->HomeOffices)?$propertyData->HomeOffices:'';
-                $saveData['id_x_display'] = !empty($propertyData->IDXDisplay)?$propertyData->IDXDisplay:'';
-                $saveData['latitude'] = !empty($propertyData->Latitude)?$propertyData->Latitude:'';
-                $saveData['list_date'] = !empty($propertyData->ListDate)?strtotime($propertyData->ListDate):'';
-                $saveData['listing_price'] = !empty($propertyData->ListingPrice)?$propertyData->ListingPrice:'';
-                $saveData['listing_price_per_sqft'] = !empty($propertyData->ListingPricePerSqft)?$propertyData->ListingPricePerSqft:'';
-                $saveData['listing_url'] = !empty($propertyData->ListingUrl)?$propertyData->ListingUrl:'';
-                $saveData['live_in_super'] = !empty($propertyData->LiveInSuper)?$propertyData->LiveInSuper:'';
-                $saveData['longitude'] = !empty($propertyData->Longitude)?$propertyData->Longitude:'';
-                $saveData['marketing_description'] = !empty($propertyData->MarketingDescription)?$propertyData->MarketingDescription:'';
-                $saveData['marketing_description_truncated'] = !empty($propertyData->BrokerageUrl)?$propertyData->BrokerageUrl:'';
-                $saveData['maximum_financing_percent'] = !empty($propertyData->MarketingDescriptionTruncated)?$propertyData->MarketingDescriptionTruncated:'';
-                $saveData['maximum_financing_percent'] = !empty($propertyData->MaximumFinancingPercent)?$propertyData->MaximumFinancingPercent:'';
-                $saveData['neighborhood'] = !empty($propertyData->Neighborhood)?$propertyData->Neighborhood:'';
-                $saveData['new_development'] = !empty($propertyData->NewDevelopment)?$propertyData->NewDevelopment:'';
-                $saveData['num_baths'] = !empty($propertyData->NumBaths)?$propertyData->NumBaths:'';
-                $saveData['num_bedrooms'] = !empty($propertyData->NumBedrooms)?$propertyData->NumBedrooms:'';
-                $saveData['num_half_baths'] = !empty($propertyData->NumHalfBaths)?$propertyData->NumHalfBaths:'';
-                $saveData['num_rooms'] = !empty($propertyData->NumRooms)?$propertyData->NumRooms:'';
-                $saveData['num_building_units'] = !empty($propertyData->NumBuildingUnits)?$propertyData->NumBuildingUnits:'';
-                $saveData['num_building_stories'] = !empty($propertyData->NumBuildingStories)?$propertyData->NumBuildingStories:'';
-                $saveData['original_price'] = !empty($propertyData->OriginalPrice)?$propertyData->OriginalPrice:'';
-                $saveData['property_type'] = !empty($propertyData->PropertyType)?$propertyData->PropertyType:'';
-                $saveData['property_type_code'] = !empty($propertyData->PropertyTypeCode)?$propertyData->PropertyTypeCode:'';
-                $saveData['real_estate_tax'] = !empty($propertyData->RealEstateTax)?$propertyData->RealEstateTax:'';
-                $saveData['sale_or_rental'] = !empty($propertyData->SaleOrRental)?$propertyData->SaleOrRental:'';
-                $saveData['sponsored'] = !empty($propertyData->Sponsored)?$propertyData->Sponsored:'';
-                $saveData['state'] = !empty($propertyData->State)?$propertyData->State:'';
-                $saveData['status_code'] = !empty($propertyData->StatusCode)?$propertyData->StatusCode:'';
-                $saveData['status_last_changed'] = !empty($propertyData->StatusLastChanged)?strtotime($propertyData->StatusLastChanged):'';
-                $saveData['unit_balcony'] = !empty($propertyData->UnitBalcony)?$propertyData->UnitBalcony:'';
-                $saveData['unit_garden'] = !empty($propertyData->UnitGarden)?$propertyData->UnitGarden:'';
-                $saveData['unit_laundry'] = !empty($propertyData->UnitLaundry)?$propertyData->UnitLaundry:'';
-                $saveData['unit_number'] = !empty($propertyData->UnitNumber)?$propertyData->UnitNumber:'';
-                $saveData['updated_at'] = !empty($propertyData->UpdatedAt)?strtotime($propertyData->UpdatedAt):'';
-                $saveData['virtual_tour_url'] = !empty($propertyData->VirtualTourURL)?$propertyData->VirtualTourURL:'';
-                $saveData['vow_address_display'] = !empty($propertyData->VOWAddressDisplay)?$propertyData->VOWAddressDisplay:'';
-                $saveData['vow_automated_valuation_display'] = !empty($propertyData->VOWAutomatedValuationDisplay)?$propertyData->VOWAutomatedValuationDisplay:'';
-                $saveData['vow_consumer_comment'] = !empty($propertyData->VOWConsumerComment)?$propertyData->VOWConsumerComment:'';
-                $saveData['vow_entire_listing_display'] = !empty($propertyData->VOWEntireListingDisplay)?$propertyData->VOWEntireListingDisplay:'';
-                $saveData['year_built'] = !empty($propertyData->YearBuilt)?$propertyData->YearBuilt:'';
-                $saveData['zip'] = !empty($propertyData->Zip)?$propertyData->Zip:'';
-                $saveData['dishwasher'] = !empty($propertyData->Dishwasher)?$propertyData->Dishwasher:'';
-                $saveData['den'] = !empty($propertyData->Den)?$propertyData->Den:'';
-                $saveData['foyer'] = !empty($propertyData->Foyer)?$propertyData->Foyer:'';
-                $saveData['rebny_id'] = !empty($propertyData->RebnyID)?$propertyData->RebnyID:'';
-                $saveData['published'] = !empty($propertyData->Published)?$propertyData->Published:'';
-                $saveData['place_name'] = !empty($propertyData->PlaceName)?$propertyData->PlaceName:'';
-                $saveData['video_url'] = !empty($propertyData->VideoURL)?$propertyData->VideoURL:'';
-                $saveData['created_at'] = !empty($propertyData->CreatedAt)?strtotime($propertyData->CreatedAt):'';
-                $rets_property_tbl = 'rets_property';
-                $existdata_id = (new \yii\db\Query())
-                        ->select(['id'])
-                        ->from($rets_property_tbl)
-                        ->where(['address_with_unit' => $saveData['address_with_unit']])
-                        ->Scalar();
-                //print_r($existdata_id);die;  
-                //echo $existdata_id.'<br>';     
-                if(!empty($existdata_id)){
-                    Yii::$app->db->createCommand()
-                     ->update($rets_property_tbl, $saveData,['id' => $existdata_id])
-                     ->execute();  
-                }else{
-                    //die('sssfff');
-                    Yii::$app->db->createCommand()
-                        ->insert($rets_property_tbl,$saveData)
-                        ->execute(); 
-                }
-            }        
-            
-        } else {
-            exit('Failed to open rets.json.');
-        }
     }
    
     

@@ -7,7 +7,7 @@
  */
 
 namespace backend\controllers;
-
+use yii\filters\AccessControl;
 use backend\models\AccountForm;
 use backend\models\LoginForm;
 use Intervention\Image\ImageManagerStatic;
@@ -33,7 +33,8 @@ class SignInController extends Controller
                 ]
             ]
         ];
-    }
+     }
+
 
     public function actions()
     {
@@ -57,13 +58,16 @@ class SignInController extends Controller
 
     public function actionLogin()
     {
+        
         $this->layout = 'base';
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
+
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+
             return $this->goBack();
         } else {
             return $this->render('login', [

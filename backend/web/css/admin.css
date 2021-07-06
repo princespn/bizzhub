@@ -1,0 +1,33 @@
+/* custom css */
+ .add_btn {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+.add_btn a#add_field {
+    background: #007bff;
+    color: #fff;
+    padding: 5px;
+    border-radius: 3px;
+    width: auto;
+}
+#templete-category-list, #category-form-grid, #form-field-list tbody tr{
+    cursor: move;
+}
+.folder_status_img{
+	width: 25px;
+}
+
+
+
+/*<=============================>*/
+#main ul li {
+    display: block;
+}
+
+.groupContacts.contactcheck .custom-control.custom-checkbox .custom-control-label {
+	 font-weight: 400;
+}
+.save-btm-on {
+    padding:0px 0px 30px;
+}
